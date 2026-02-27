@@ -1,10 +1,25 @@
 .code-editor {
-  width: 1000px;
-  height: 400px;
-  padding: 10px;
-  font-family: 'Courier New', Courier, monospace;
-  font-size: 14px;
-  border: 1px solid #ccc;
-  border-radius: 4px;
-  resize: unset;
+  display: flex;
+  justify-content: start;
+  flex-direction: column;
+
+  .line-numbers {
+    display: flex;
+    flex-direction: column;
+    text-align: right;
+    padding: 5px;
+    background: #f0f0f0;
+  }
+
+  .code-editor__input {
+    width: 1000px;
+    height: 400px;
+    padding: 10px;
+    font-family: 'Courier New', Courier, monospace;
+    font-size: 14px;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+    resize: unset;
+    flex-grow: 1;
+  }
 }
