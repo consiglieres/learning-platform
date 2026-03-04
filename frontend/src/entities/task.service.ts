@@ -4,7 +4,7 @@ import { Observable } from 'rxjs';
 
 @Injectable()
 export class TaskService {
-  private url: string = '';
+  private readonly url: string = '';
 
   private _http = inject(HttpClient);
 
