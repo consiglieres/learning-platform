@@ -1,0 +1,14 @@
+services:
+  postgres:
+    image: docker-proxy.kontur.host/postgres:17-bookworm
+    environment:
+      POSTGRES_USER: "postgres"
+      POSTGRES_PASSWORD: "postgres"
+    ports:
+      - "5432:5432"
+  
+  mailhog:
+    image: mailhog/mailhog
+    ports:
+      - "1025:1025"
+      - "8025:8025"
