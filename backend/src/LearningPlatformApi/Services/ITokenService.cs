@@ -5,7 +5,7 @@ namespace LearningPlatformApi.Services;
 
 public interface ITokenService
 {
-    Task<string> GenerateAccessTokenAsync(AppUser user);
+    Task<string> GenerateAccessTokenAsync(UserEntity userEntity);
     string GenerateRefreshToken();
     ClaimsPrincipal? GetPrincipalFromExpiredToken(string token);
 }

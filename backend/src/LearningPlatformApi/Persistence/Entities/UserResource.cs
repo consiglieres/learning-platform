@@ -12,7 +12,7 @@ public class UserResource
 
     public string GrantedBy { get; set; } = string.Empty;
 
-    public virtual AppUser User { get; set; } = null!;
+    public virtual UserEntity UserEntity { get; set; } = null!;
 
     public virtual Resource Resource { get; set; } = null!;
 }

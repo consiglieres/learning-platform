@@ -13,13 +13,13 @@ namespace LearningPlatformApi.V1.Controllers;
 [ApiController]
 public class V1AccountController : ControllerBase
 {
-    private readonly UserManager<AppUser> userManager;
-    private readonly SignInManager<AppUser> signInManager;
+    private readonly UserManager<UserEntity> userManager;
+    private readonly SignInManager<UserEntity> signInManager;
     private readonly IEmailService emailService;
 
     public V1AccountController(
-        UserManager<AppUser> userManager,
-        SignInManager<AppUser> signInManager,
+        UserManager<UserEntity> userManager,
+        SignInManager<UserEntity> signInManager,
         IEmailService emailService)
     {
         this.userManager = userManager;
@@ -39,14 +39,16 @@ public class V1AccountController : ControllerBase
             return BadRequest(new { error = "User with this email already exists" });
         }
 
-        var user = new AppUser
+        var user = new UserEntity
         {
             UserName = registerDto.Email,
             Email = registerDto.Email,
             FirstName = registerDto.FirstName,
             LastName = registerDto.LastName,
             EmailConfirmed = false,
-            IsActive = true
+            IsActive = true,
+            CreatedAt = DateTimeOffset.UtcNow,
+            UpdatedAt = DateTimeOffset.UtcNow,
         };
 
         var result = await userManager.CreateAsync(user, registerDto.Password);
@@ -60,7 +62,7 @@ public class V1AccountController : ControllerBase
 
         var token = await userManager.GenerateEmailConfirmationTokenAsync(user);
         var encodedToken = WebEncoders.Base64UrlEncode(Encoding.UTF8.GetBytes(token));
-        
+
         var confirmationLink = Url.Action(
             nameof(ConfirmEmail),
             "V1Account",
@@ -116,7 +118,7 @@ public class V1AccountController : ControllerBase
             return Unauthorized(new { error = "Account is deactivated. Contact support." });
 
         var result = await signInManager.PasswordSignInAsync(
-            user, 
+            user,
             loginDto.Password,
             loginDto.RememberMe, // "Запомнить меня"
             lockoutOnFailure: true); // Блокировка при неудачных попытках
@@ -136,7 +138,7 @@ public class V1AccountController : ControllerBase
             return Unauthorized(new { error = "Invalid email or password" });
         }
 
-        user.LastLoginAt = DateTime.UtcNow;
+        user.LastLoginAt = DateTimeOffset.UtcNow;
         await userManager.UpdateAsync(user);
 
         var roles = await userManager.GetRolesAsync(user);
@@ -161,7 +163,7 @@ public class V1AccountController : ControllerBase
     public async Task<IActionResult> LogoutAsync()
     {
         await signInManager.SignOutAsync();
-        
+
         return Ok(new { message = "Logged out successfully" });
     }
 
@@ -170,11 +172,11 @@ public class V1AccountController : ControllerBase
     public async Task<IActionResult> LogoutAllDevicesAsync()
     {
         var user = await userManager.GetUserAsync(User);
-        
+
         await userManager.UpdateSecurityStampAsync(user);
-        
+
         await signInManager.SignOutAsync();
-        
+
         return Ok(new { message = "Logged out from all devices successfully" });
     }
 
@@ -183,7 +185,7 @@ public class V1AccountController : ControllerBase
     public async Task<IActionResult> GetCurrentUser()
     {
         var user = await userManager.GetUserAsync(User);
-        
+
         if (user == null)
             return NotFound();
 
@@ -215,8 +217,8 @@ public class V1AccountController : ControllerBase
             return NotFound();
 
         var result = await userManager.ChangePasswordAsync(
-            user, 
-            changePasswordDto.CurrentPassword, 
+            user,
+            changePasswordDto.CurrentPassword,
             changePasswordDto.NewPassword);
 
         if (!result.Succeeded)
@@ -226,7 +228,7 @@ public class V1AccountController : ControllerBase
 
         // После смены пароля обновляем Security Stamp для инвалидации всех сессий
         await userManager.UpdateSecurityStampAsync(user);
-        
+
         // Предлагаем пользователю войти заново
         await signInManager.SignOutAsync();
 
@@ -244,7 +246,7 @@ public class V1AccountController : ControllerBase
 
         var token = await userManager.GeneratePasswordResetTokenAsync(user);
         var encodedToken = WebEncoders.Base64UrlEncode(Encoding.UTF8.GetBytes(token));
-    
+
         await emailService.SendEmailAsync(
             user.Email,
             "Reset your password",
@@ -299,7 +301,7 @@ public class V1AccountController : ControllerBase
 
         var token = await userManager.GenerateEmailConfirmationTokenAsync(user);
         var encodedToken = WebEncoders.Base64UrlEncode(Encoding.UTF8.GetBytes(token));
-        
+
         var confirmationLink = Url.Action(
             nameof(ConfirmEmail),
             "V1Account",
