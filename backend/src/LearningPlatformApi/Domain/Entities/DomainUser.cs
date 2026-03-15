@@ -1,20 +1,20 @@
 using LearningPlatformApi.Models.Base;
 
-namespace LearningPlatformApi.Models;
+namespace LearningPlatformApi.Domain.Entities;
 
 public record DomainUser(string Id) : DomainEntity<string>(Id)
 {
-    public string? UserName { get; init; }
+    public required string UserName { get; set; }
 
-    public string? NormalizedUserName { get; init; }
+    public required string NormalizedUserName { get; init; }
 
-    public string? FirstName { get; set; }
+    public required string Email { get; set; }
 
-    public string? LastName { get; set; }
+    public required string FirstName { get; set; }
 
-    public string? Email { get; init; }
+    public required string LastName { get; set; }
 
-    public string? NormalizedEmail { get; set; }
+    public required string NormalizedEmail { get; set; }
 
     public bool EmailConfirmed { get; init; }
 

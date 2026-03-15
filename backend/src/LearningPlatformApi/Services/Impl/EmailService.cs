@@ -3,7 +3,7 @@ using MailKit.Net.Smtp;
 using Microsoft.Extensions.Options;
 using MimeKit;
 
-namespace LearningPlatformApi.Services.Service;
+namespace LearningPlatformApi.Services.Impl;
 
 public class EmailService(IOptions<EmailSettings> emailSettings) : IEmailService
 {

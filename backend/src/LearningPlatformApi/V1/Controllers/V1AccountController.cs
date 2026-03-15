@@ -1,11 +1,9 @@
-using System.Text;
-using LearningPlatformApi.Persistence.Entities;
+using LearningPlatformApi.Mapper;
 using LearningPlatformApi.Services;
 using LearningPlatformApi.V1.Models;
+using LearningPlatformApi.V1.Models.Req;
 using Microsoft.AspNetCore.Authorization;
-using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.AspNetCore.WebUtilities;
 
 namespace LearningPlatformApi.V1.Controllers;
 
@@ -13,18 +11,24 @@ namespace LearningPlatformApi.V1.Controllers;
 [ApiController]
 public class V1AccountController : ControllerBase
 {
-    private readonly UserManager<UserEntity> userManager;
-    private readonly SignInManager<UserEntity> signInManager;
-    private readonly IEmailService emailService;
+    private readonly IUserRegistrationService registrationService;
+    private readonly IUserAuthenticationService authenticationService;
+    private readonly IUserProfileService profileService;
+    private readonly IUserEmailService emailService;
+    private readonly IUserMapper userMapper;
 
     public V1AccountController(
-        UserManager<UserEntity> userManager,
-        SignInManager<UserEntity> signInManager,
-        IEmailService emailService)
+        IUserRegistrationService registrationService,
+        IUserAuthenticationService authenticationService,
+        IUserProfileService profileService,
+        IUserEmailService emailService,
+        IUserMapper userMapper)
     {
-        this.userManager = userManager;
-        this.signInManager = signInManager;
+        this.registrationService = registrationService;
+        this.authenticationService = authenticationService;
+        this.profileService = profileService;
         this.emailService = emailService;
+        this.userMapper = userMapper;
     }
 
     [HttpPost("register")]
@@ -33,53 +37,19 @@ public class V1AccountController : ControllerBase
         if (!ModelState.IsValid)
             return BadRequest(ModelState);
 
-        var existingUser = await userManager.FindByEmailAsync(registerDto.Email);
-        if (existingUser != null)
-        {
-            return BadRequest(new { error = "User with this email already exists" });
-        }
+        var registerDomain = userMapper.MapToDomain(registerDto);
+        var resultState = await registrationService.RegisterUserAsync(registerDomain);
 
-        var user = new UserEntity
-        {
-            UserName = registerDto.Email,
-            Email = registerDto.Email,
-            FirstName = registerDto.FirstName,
-            LastName = registerDto.LastName,
-            EmailConfirmed = false,
-            IsActive = true,
-            CreatedAt = DateTimeOffset.UtcNow,
-            UpdatedAt = DateTimeOffset.UtcNow,
-        };
-
-        var result = await userManager.CreateAsync(user, registerDto.Password);
-
-        if (!result.Succeeded)
-        {
-            return BadRequest(new { errors = result.Errors.Select(e => e.Description) });
-        }
-
-        await userManager.AddToRoleAsync(user, "Student");
-
-        var token = await userManager.GenerateEmailConfirmationTokenAsync(user);
-        var encodedToken = WebEncoders.Base64UrlEncode(Encoding.UTF8.GetBytes(token));
-
-        var confirmationLink = Url.Action(
-            nameof(ConfirmEmail),
-            "V1Account",
-            new { email = user.Email, token = encodedToken },
-            Request.Scheme);
-
-        await emailService.SendEmailAsync(
-            user.Email,
-            "Confirm your email",
-            $@"
-            <h2>Welcome to Learning Platform!</h2>
-            <p>Please confirm your email by clicking the link below:</p>
-            <a href={confirmationLink}>Confirm Email</a>
-            <p>If you didn't create an account, you can ignore this email.</p>"
+        return resultState.Match<IActionResult>(
+            exists => Conflict(new ProblemDetails
+            {
+                Title = "Registration Failed",
+                Detail = $"User with email {exists.Identification} already registered",
+                Status = StatusCodes.Status409Conflict
+            }),
+            notSuccess => BadRequest(notSuccess.OperationInfo),
+            _ => Ok(new { message = "Registration successful. Please check your email." })
         );
-
-        return Ok(new { message = "Registration successful. Please check your email to confirm your account." });
     }
 
     [HttpGet("confirm-email")]
@@ -88,17 +58,27 @@ public class V1AccountController : ControllerBase
         if (string.IsNullOrEmpty(email) || string.IsNullOrEmpty(token))
             return BadRequest("Invalid email confirmation request");
 
-        var user = await userManager.FindByEmailAsync(email);
-        if (user == null)
-            return BadRequest("User not found");
+        var confirmation = await emailService.ConfirmEmailAsync(email, token);
 
-        var decodedToken = Encoding.UTF8.GetString(WebEncoders.Base64UrlDecode(token));
-        var result = await userManager.ConfirmEmailAsync(user, decodedToken);
-
-        if (!result.Succeeded)
-            return BadRequest("Email confirmation failed");
-
-        return Ok(new { message = "Email confirmed successfully. You can now login." });
+        return confirmation.Match<IActionResult>(
+            notExists => NotFound(new ProblemDetails
+            {
+                Title = "Email confirmation failed",
+                Detail = $"User with email {notExists.EntityId} not found",
+                Status = StatusCodes.Status404NotFound
+            }),
+            notSuccess => BadRequest(new ProblemDetails
+            {
+                Title = "Email confirmation failed",
+                Detail = "Email confirmation error occured",
+                Status = StatusCodes.Status400BadRequest,
+                Extensions = new Dictionary<string, object>
+                {
+                    ["errors"] = notSuccess.OperationInfo.Select(e => e.Description)
+                }!
+            }),
+            _ => Ok(new { message = "Email confirmed successfully. You can now login." })
+        );
     }
 
     [HttpPost("login")]
@@ -107,48 +87,31 @@ public class V1AccountController : ControllerBase
         if (!ModelState.IsValid)
             return BadRequest(ModelState);
 
-        var user = await userManager.FindByEmailAsync(loginDto.Email);
-        if (user == null)
-            return Unauthorized(new { error = "Invalid email or password" });
-
-        if (!user.EmailConfirmed)
-            return Unauthorized(new { error = "Please confirm your email before logging in" });
-
-        if (!user.IsActive)
-            return Unauthorized(new { error = "Account is deactivated. Contact support." });
-
-        var result = await signInManager.PasswordSignInAsync(
-            user,
+        var result = await authenticationService.LoginAsync(
+            loginDto.Email,
             loginDto.Password,
-            loginDto.RememberMe, // "Запомнить меня"
-            lockoutOnFailure: true); // Блокировка при неудачных попытках
+            loginDto.RememberMe);
 
-        if (result.IsLockedOut)
-        {
-            return Unauthorized(new { error = "Account locked out. Try again later." });
-        }
+        return await result.Match<Task<IActionResult>>(
+            async _ => await LoginSuccessResponse(loginDto.Email),
+            authError => Task.FromResult<IActionResult>(Unauthorized(new { error = authError.Message })),
+            lockedError => Task.FromResult<IActionResult>(Unauthorized(new { error = lockedError.Message })),
+            emailNotConfirmed => Task.FromResult<IActionResult>(Unauthorized(new { error = emailNotConfirmed.Message })),
+            deactivatedError => Task.FromResult<IActionResult>(Unauthorized(new { error = deactivatedError.Message }))
+        );
+    }
 
-        if (result.RequiresTwoFactor)
-        {
-            return Ok(new { requiresTwoFactor = true, message = "Two-factor authentication required" });
-        }
-
-        if (!result.Succeeded)
-        {
-            return Unauthorized(new { error = "Invalid email or password" });
-        }
-
-        user.LastLoginAt = DateTimeOffset.UtcNow;
-        await userManager.UpdateAsync(user);
-
-        var roles = await userManager.GetRolesAsync(user);
+    private async Task<IActionResult> LoginSuccessResponse(string email)
+    {
+        var user = await profileService.GetUserByEmailAsync(email);
+        var roles = await profileService.GetUserRolesAsync(user!);
 
         return Ok(new
         {
             message = "Logged in successfully",
             user = new
             {
-                user.Id,
+                user!.Id,
                 user.Email,
                 user.FirstName,
                 user.LastName,
@@ -162,8 +125,7 @@ public class V1AccountController : ControllerBase
     [Authorize]
     public async Task<IActionResult> LogoutAsync()
     {
-        await signInManager.SignOutAsync();
-
+        await authenticationService.LogoutAsync();
         return Ok(new { message = "Logged out successfully" });
     }
 
@@ -171,12 +133,11 @@ public class V1AccountController : ControllerBase
     [Authorize]
     public async Task<IActionResult> LogoutAllDevicesAsync()
     {
-        var user = await userManager.GetUserAsync(User);
+        var user = await profileService.GetCurrentUserAsync(User);
+        if (user == null)
+            return NotFound();
 
-        await userManager.UpdateSecurityStampAsync(user);
-
-        await signInManager.SignOutAsync();
-
+        await authenticationService.LogoutAllDevicesAsync(user);
         return Ok(new { message = "Logged out from all devices successfully" });
     }
 
@@ -184,12 +145,11 @@ public class V1AccountController : ControllerBase
     [Authorize]
     public async Task<IActionResult> GetCurrentUser()
     {
-        var user = await userManager.GetUserAsync(User);
-
+        var user = await profileService.GetCurrentUserAsync(User);
         if (user == null)
             return NotFound();
 
-        var roles = await userManager.GetRolesAsync(user);
+        var roles = await profileService.GetUserRolesAsync(user);
 
         return Ok(new
         {
@@ -212,111 +172,37 @@ public class V1AccountController : ControllerBase
         if (!ModelState.IsValid)
             return BadRequest(ModelState);
 
-        var user = await userManager.GetUserAsync(User);
+        var user = await profileService.GetCurrentUserAsync(User);
         if (user == null)
             return NotFound();
 
-        var result = await userManager.ChangePasswordAsync(
+        var result = await profileService.ChangePasswordAsync(
             user,
             changePasswordDto.CurrentPassword,
             changePasswordDto.NewPassword);
 
-        if (!result.Succeeded)
-        {
-            return BadRequest(new { errors = result.Errors.Select(e => e.Description) });
-        }
-
-        // После смены пароля обновляем Security Stamp для инвалидации всех сессий
-        await userManager.UpdateSecurityStampAsync(user);
-
-        // Предлагаем пользователю войти заново
-        await signInManager.SignOutAsync();
-
-        return Ok(new { message = "Password changed successfully. Please login again." });
+        return result.Match<IActionResult>(
+            success => Ok(new { message = success.Message }),
+            failed => BadRequest(new { errors = failed.OperationInfo.Errors.Select(e => e.Description) })
+        );
     }
 
     [HttpPost("forgot-password")]
     public async Task<IActionResult> ForgotPasswordAsync([FromBody] V1ForgotPasswordDto forgotPasswordDto)
     {
-        var user = await userManager.FindByEmailAsync(forgotPasswordDto.Email);
-        if (user == null || !user.EmailConfirmed)
-        {
-            return Ok(new { message = "If the email exists, a password reset link has been sent" });
-        }
-
-        var token = await userManager.GeneratePasswordResetTokenAsync(user);
-        var encodedToken = WebEncoders.Base64UrlEncode(Encoding.UTF8.GetBytes(token));
-
-        await emailService.SendEmailAsync(
-            user.Email,
-            "Reset your password",
-            $@"
-        <h2>Password Reset Request</h2>
-        <p>Use this code to reset your password:</p>
-        <p><strong>Reset Code:</strong> {encodedToken}</p>
-        <p>Or click the link below (if you're using our web app):</p>
-        <a href='need url'>
-            Reset Password
-        </a>
-        <p>If you didn't request this, you can ignore this email.</p>"
-        );
-
+        // TODO: Implement password reset service
         return Ok(new { message = "If the email exists, a password reset link has been sent" });
-    }
-
-    [HttpPost("reset-password")]
-    public async Task<IActionResult> ResetPasswordAsync([FromBody] V1ResetPasswordDto resetPasswordDto)
-    {
-        if (!ModelState.IsValid)
-            return BadRequest(ModelState);
-
-        var user = await userManager.FindByEmailAsync(resetPasswordDto.Email);
-        if (user == null)
-        {
-            return BadRequest(new { error = "Invalid request" });
-        }
-
-        var decodedToken = Encoding.UTF8.GetString(WebEncoders.Base64UrlDecode(resetPasswordDto.Token));
-        var result = await userManager.ResetPasswordAsync(user, decodedToken, resetPasswordDto.NewPassword);
-
-        if (!result.Succeeded)
-        {
-            return BadRequest(new { errors = result.Errors.Select(e => e.Description) });
-        }
-
-        return Ok(new { message = "Password reset successfully. You can now login." });
     }
 
     [HttpPost("resend-confirmation")]
     public async Task<IActionResult> ResendConfirmationEmailAsync([FromBody] V1ResendConfirmationDto dto)
     {
-        var user = await userManager.FindByEmailAsync(dto.Email);
-        if (user == null)
-        {
-            return Ok(new { message = "If the email exists, a confirmation link has been sent" });
-        }
+        var result = await emailService.SendConfirmationEmailAsync(dto.Email);
 
-        if (user.EmailConfirmed)
-            return BadRequest(new { error = "Email is already confirmed" });
-
-        var token = await userManager.GenerateEmailConfirmationTokenAsync(user);
-        var encodedToken = WebEncoders.Base64UrlEncode(Encoding.UTF8.GetBytes(token));
-
-        var confirmationLink = Url.Action(
-            nameof(ConfirmEmail),
-            "V1Account",
-            new { email = user.Email, token = encodedToken },
-            Request.Scheme);
-
-        await emailService.SendEmailAsync(
-            user.Email,
-            "Confirm your email",
-            $@"
-            <h2>Learning Platform Email Confirmation</h2>
-            <p>Please confirm your email by clicking the link below:</p>
-            <a href='{confirmationLink}'>Confirm Email</a>"
+        return result.Match<IActionResult>(
+            success => Ok(new { message = "Confirmation email sent" }),
+            notExists => Ok(new { message = "If the email exists, a confirmation link has been sent" }),
+            alreadyConfirmed => BadRequest(new { error = alreadyConfirmed.Message })
         );
-
-        return Ok(new { message = "Confirmation email sent" });
     }
 }

@@ -11,7 +11,7 @@ public class InitializationService(IServiceScopeFactory scopeFactory,
     protected override async Task ExecuteAsync(CancellationToken stoppingToken)
     {
         logger.LogInformation("Starting initialization service");
-        
+
         using var scope = scopeFactory.CreateScope();
         var applicationContext = scope.ServiceProvider.GetRequiredService<ApplicationContext>();
 
@@ -26,7 +26,7 @@ public class InitializationService(IServiceScopeFactory scopeFactory,
             logger.LogCritical(ex, "Unable to initialize database");
             throw;
         }
-        
+
         if (!hostEnvironment.IsDevelopment())
         {
             logger.LogInformation("Host environment is '{HostEnvironment}', skipping initialization...",
@@ -61,7 +61,9 @@ public class InitializationService(IServiceScopeFactory scopeFactory,
                     Email = adminEmail,
                     EmailConfirmed = true,
                     CreatedAt = DateTime.UtcNow,
-                    UpdatedAt = DateTime.UtcNow
+                    UpdatedAt = DateTime.UtcNow,
+                    FirstName = "Root",
+                    LastName = "Admin"
                 };
 
                 var result = await userManager.CreateAsync(adminUser, "Admin123!");

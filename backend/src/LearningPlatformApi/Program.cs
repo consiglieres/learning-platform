@@ -1,9 +1,11 @@
 using LearningPlatformApi.Authorization.AuthorizationHandlers;
 using LearningPlatformApi.Hosting;
+using LearningPlatformApi.Mapper;
+using LearningPlatformApi.Mapper.Impl;
 using LearningPlatformApi.Persistence.Context;
 using LearningPlatformApi.Persistence.Entities;
 using LearningPlatformApi.Services;
-using LearningPlatformApi.Services.Service;
+using LearningPlatformApi.Services.Impl;
 using LearningPlatformApi.Settings;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
@@ -66,6 +68,13 @@ builder.Services.AddCors(options =>
 // Services
 builder.Services.AddScoped<IEmailService, EmailService>();
 builder.Services.AddScoped<IAuthorizationHandler, ResourceAuthorizationHandler>();
+
+// Mappers
+builder.Services.AddScoped<IUserMapper, UserMapper>();
+builder.Services.AddScoped<IUserRegistrationService, UserRegistrationService>();
+builder.Services.AddScoped<IUserAuthenticationService, UserAuthenticationService>();
+builder.Services.AddScoped<IUserProfileService, UserProfileService>();
+builder.Services.AddScoped<IUserEmailService, UserEmailService>();
 
 // Authorization policies
 builder.Services.AddAuthorization(options =>
