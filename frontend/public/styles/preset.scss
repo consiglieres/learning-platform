@@ -1,0 +1,48 @@
+.button-content, .input-content, .select-content {
+  min-width: 70px;
+}
+
+.button-content {
+  width: 189px;
+  border-radius: 74px;
+  color: #9889CF;
+}
+
+.input-content {
+  background-color: rgba($color: white, $alpha: 0.4);
+  color: white;
+  width: 840px;
+  border-radius: 100px;
+  padding-left: 59px;
+}
+
+.select-content {
+  appearance: none;
+  -webkit-appearance: none;
+  -moz-appearance: none;
+  width: 293px;
+  padding: 0 30px 0 30px;
+  border-radius: 74px;
+  background-image: url(../assets/arrow.png);
+  background-repeat: no-repeat;
+  background-position: right 23px center;
+  background-size: 24px;
+  cursor: pointer;
+  outline: none;
+  color: #9889CF;
+
+  option {
+    background-color: white;
+    padding: 12px;
+    border-radius: 10px;
+    border: none;
+
+    &:hover {
+      background-color: white;
+    }
+
+    &:checked {
+      color: #4A3B80;
+    }
+  }
+}

@@ -1,0 +1,67 @@
+<main class="main">
+  <section class="header">
+    <h1 class="header__title">
+      Лучшие курсы <br />
+      на одной платформе
+    </h1>
+    <p class="header__description">
+      Освойте востребованный стек технологий на практике. Проекты, максимально <br />
+      приближённые к реальным задачам индустрии, и экосистема поддержки, которая <br />
+      не даст сойти с дистанции.
+    </p>
+    <button class="header__button">Начать обучение</button>
+  </section>
+
+  <section class="list-header">
+    <h2 class="list-header__title" style="color: black">Каталог курсов</h2>
+    <section class="list-header__block">
+      <section class="search">
+        <input
+          class="search__input input-content"
+          type="text"
+          placeholder="Найти курс"
+          [value]="searchData()"
+          (input)="searchData.set($any($event.target).value)"
+        />
+        <button class="search__button button-content" (click)="sendFiltersData()">Найти</button>
+      </section>
+      <section class="filter">
+        <select
+          class="filter__category select-content"
+          name="Направление"
+          (change)="direction.set($any($event.target).value)"
+        >
+          <option value="">Направление</option>
+          <option value="python">Python-разработчик</option>
+          <option value="csharp">C#-разработчик</option>
+          <option value="devops">DevOps-инженер</option>
+        </select>
+        <select
+          class="filter__dificulty select-content"
+          name="Сложность"
+          (change)="difficulty.set($any($event.target).value)"
+        >
+          <option value="">Сложность</option>
+          <option value="all">Все курсы</option>
+          <option value="popular">Популярные</option>
+          <option value="new">Новые</option>
+        </select>
+        <select
+          class="filter__technology select-content"
+          name="Технология"
+          (change)="technology.set($any($event.target).value)"
+        >
+          <option value="">Технология</option>
+
+          <option value="all">Все курсы</option>
+          <option value="popular">Популярные</option>
+          <option value="new">Новые</option>
+        </select>
+      </section>
+    </section>
+  </section>
+
+  <section class="course-list">
+    <app-course-card> </app-course-card>
+  </section>
+</main>

@@ -1,14 +1,26 @@
 import { Routes } from '@angular/router';
-import { HomePage } from '../pages/home.page/home.page';
+import { MainLayout } from '../pages/layouts/main-layout/main-layout';
+import { MainPage } from '../pages/main.page/main.page';
 
 export const routes: Routes = [
   {
     path: '',
-    redirectTo: 'home',
+    redirectTo: 'learning-platform',
     pathMatch: 'full',
   },
   {
-    path: 'home',
-    component: HomePage,
+    path: 'learning-platform',
+    component: MainLayout,
+    children: [
+      {
+        path: '',
+        pathMatch: 'full',
+        redirectTo: 'courses-list',
+      },
+      {
+        path: 'courses-list',
+        component: MainPage,
+      },
+    ],
   },
 ];
