@@ -4,7 +4,7 @@ import { Observable } from 'rxjs';
 import { ICourse } from '../interfaces/courses.interface';
 
 @Injectable()
-export class ServiceNameService {
+export class CourseService {
   private readonly _apiUrl = 'http://localhost:3000/courses';
 
   constructor(private _http: HttpClient) {}
@@ -19,5 +19,9 @@ export class ServiceNameService {
 
   public deleteCourse(courseId: number): Observable<any> {
     return this._http.delete(`${this._apiUrl}/${courseId}`);
+  }
+
+  public filters(filtersData: Object) {
+    console.log(filtersData);
   }
 }

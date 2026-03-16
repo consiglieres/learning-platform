@@ -1,0 +1,59 @@
+body,
+html {
+  margin: 0;
+  padding: 0;
+  height: 100%;
+  width: 100%;
+}
+
+p,
+span,
+h1,
+h2,
+h3,
+h4,
+h5,
+h6,
+a{
+  font-family: 'Arial', sans-serif;
+  color: white;
+}
+
+h1 {
+  font-size: 82px;
+}
+
+h2 {
+  font-size: 62px;
+}
+
+p {
+  font-size: 24px;
+}
+
+a {
+  font-size: 20px;
+  text-decoration: none;
+}
+
+button, select {
+  color: black;
+  font-size: 22px;
+  height: 54px;
+  border: none;
+}
+
+input {
+  color: white;
+  font-size: 22px;
+  height: 54px;
+  border: none;
+
+  &::placeholder {
+    color: white;
+  }
+}
+
+input:focus, input:active {
+  border: none;
+}

@@ -1,0 +1,66 @@
+.header {
+  display: flex;
+  justify-content: space-between;
+  flex-direction: row;
+  align-items: center;
+  background-color: rgba($color: black, $alpha: 0);
+  padding: 0 120px 0 80px;
+  height: 100px;
+
+  .left,
+  .right {
+    display: flex;
+    justify-content: center;
+    flex-direction: row;
+    align-items: center;
+    gap: 40px;
+
+    .right__button-brightness {
+      background: none;
+      border: none;
+      background-image: url(../../../public/assets/brightness.png);
+      height: 28px;
+      width: 28px;
+    }
+
+    .right__link-registration {
+      font-size: 24px;
+    }
+
+    .right__link-authorization {
+      background-color: white;
+      color: black;
+      border-radius: 35px;
+      width: 156px;
+      height: 56px;
+      text-align: center;
+      align-content: center;
+    }
+  }
+
+  .left {
+    gap: 80px;
+
+    .logo {
+      display: flex;
+      justify-content: center;
+      flex-direction: row;
+      align-items: center;
+
+      .logo__img {
+        height: 68px;
+      }
+
+      .logo__title {
+        font-size: 40px;
+      }
+
+    }
+
+    .left__link {
+      font-size: 24px;
+    }
+  }
+
+
+}
