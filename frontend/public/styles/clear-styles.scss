@@ -1,3 +1,6 @@
+$gradient-start: rgba(152, 137, 207, 1);
+$gradient-end: rgba(52, 37, 106, 1);
+
 body,
 html {
   margin: 0;
@@ -27,6 +30,10 @@ h2 {
   font-size: 62px;
 }
 
+h6 {
+  font-size: 18px;
+  margin: 0;
+}
 p {
   font-size: 24px;
 }
@@ -47,13 +54,21 @@ input {
   color: white;
   font-size: 22px;
   height: 54px;
-  border: none;
 
-  &::placeholder {
-    color: white;
-  }
 }
 
-input:focus, input:active {
-  border: none;
+button:hover {
+  color: white;
+  background: linear-gradient(135deg, $gradient-start, $gradient-end);
 }
+
+button:active {
+  color: white;
+  background: rgba(38, 38, 38, 1);
+}
+
+button:disabled {
+  color: rgba(180, 180, 180, 1);
+  background: rgba(207, 207, 207, 1);
+}
+

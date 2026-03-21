@@ -1,0 +1,16 @@
+<section class="authorization-modal">
+  <button class="close-button" (click)="close()">×</button>
+  <section class="content">
+    <h3 class="content-title modal-text-title">Вход</h3>
+    <div class="intoconection-block">
+      <p class="modal-text-name">Email</p>
+      <input type="email" class="madal-input" placeholder="ivan@yandex.ru">
+    </div>
+    <div class="intoconection-block">
+      <p class="modal-text-name">Пароль</p>
+      <input type="password" class="madal-input" placeholder="qwerty123456">
+    </div>
+    <h6 class="redirect-text">Нет аккаунта? <button class="redirect-button" (click)="switchToRegistration()">Создать</button></h6>
+    <button class="modal-button" (click)="close()">Войти</button>
+  </section>
+</section>

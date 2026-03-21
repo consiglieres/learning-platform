@@ -1,0 +1,28 @@
+<section class="registration-modal">
+  <button class="close-button" (click)="close()">×</button>
+  <section class="content">
+    <h2 class="content-title modal-text-title">Регистрация</h2>
+    <div class="intoconection-block">
+      <p class="modal-text-name">Имя</p>
+      <input type="text" class="madal-input" placeholder="Иван">
+    </div>
+    <div class="intoconection-block">
+      <p class="modal-text-name">Email</p>
+      <input type="email" class="madal-input" placeholder="ivan@yandex.ru">
+    </div>
+    <div class="intoconection-block">
+      <p class="modal-text-name">Пароль</p>
+      <input type="password" class="madal-input" autocomplete="new-password" placeholder="qwerty123456">
+    </div>
+    <div class="intoconection-block">
+      <p class="modal-text-name">Повторите пароль</p>
+      <input type="password" class="madal-input" autocomplete="new-password" placeholder="qwerty123456">
+    </div>
+    <h6 class="redirect-text">Уже есть аккаунт? <button class="redirect-button" (click)="switchToAuthorization()">Войти</button></h6>
+    <div class="confidential-police">
+      <input type="checkbox" class="confidential-police__checkbox">
+      <h6 class="confidential-police__text modal-text-police">Я согласен с политикой конфиденциальности и даю согласие на обработку персональных данных</h6>
+    </div>
+    <button class="modal-button" (click)="close()">Создать аккаунт</button>
+  </section>
+</section>
