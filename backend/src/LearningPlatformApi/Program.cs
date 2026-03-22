@@ -2,6 +2,7 @@ using LearningPlatformApi.Authorization.AuthorizationHandlers;
 using LearningPlatformApi.Hosting;
 using LearningPlatformApi.Mapper;
 using LearningPlatformApi.Mapper.Impl;
+using LearningPlatformApi.Persistence;
 using LearningPlatformApi.Persistence.Context;
 using LearningPlatformApi.Persistence.Entities;
 using LearningPlatformApi.Services;
@@ -53,6 +54,8 @@ builder.Services.AddIdentity<UserEntity, IdentityRole>(options =>
 .AddDefaultTokenProviders()
 .AddSignInManager()
 .AddUserManager<UserManager<UserEntity>>();
+
+builder.Services.AddScoped<IUnitOfWork, UnitOfWork>();
 
 builder.Services.AddCors(options =>
 {

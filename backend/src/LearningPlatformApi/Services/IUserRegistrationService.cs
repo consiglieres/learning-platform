@@ -8,5 +8,6 @@ namespace LearningPlatformApi.Services;
 
 public interface IUserRegistrationService
 {
-    Task<OneOf<EntityAlreadyExists, OperationNotSucceeded<IdentityResult>, Success>> RegisterUserAsync(RegisterUser registerModel);
+    Task<OneOf<EntityAlreadyExists, OperationNotSucceeded<IdentityResult>, Success>> RegisterUserAsync(
+        RegisterUser registerModel, CancellationToken cancellationToken = default);
 }

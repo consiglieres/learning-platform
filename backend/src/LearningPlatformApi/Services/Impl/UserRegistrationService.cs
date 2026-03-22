@@ -2,6 +2,7 @@ using OneOf;
 using System.Text;
 using LearningPlatformApi.Domain.HandleStates;
 using LearningPlatformApi.Domain.ValueObjects;
+using LearningPlatformApi.Persistence;
 using LearningPlatformApi.Persistence.Entities;
 using LearningPlatformApi.Settings;
 using Microsoft.AspNetCore.Identity;
@@ -13,14 +14,15 @@ namespace LearningPlatformApi.Services.Impl;
 public class UserRegistrationService(
     UserManager<UserEntity> userManager,
     IEmailService emailService,
-    IOptions<EmailSettings> emailOptions)
-    : IUserRegistrationService
+    IOptions<EmailSettings> emailOptions,
+    IUnitOfWork unitOfWork) : IUserRegistrationService
 {
     private readonly EmailSettings emailSettings = emailOptions.Value;
 
     public async Task<OneOf<EntityAlreadyExists, OperationNotSucceeded<IdentityResult>, Success>>
-        RegisterUserAsync(RegisterUser registerModel)
+        RegisterUserAsync(RegisterUser registerModel, CancellationToken cancellationToken)
     {
+        await unitOfWork.BeginTransactionAsync(cancellationToken);
         var existingUser = await userManager.FindByEmailAsync(registerModel.Email);
         if (existingUser != null)
         {
@@ -48,6 +50,7 @@ public class UserRegistrationService(
         await userManager.AddToRoleAsync(user, "Student");
 
         await SendConfirmationEmailAsync(user);
+        await unitOfWork.CommitTransactionAsync(cancellationToken);
 
         return new Success("User registered successfully. Please check your email for confirmation.");
     }
@@ -65,7 +68,7 @@ public class UserRegistrationService(
             $@"
             <h2>Welcome to Learning Platform!</h2>
             <p>Please confirm your email by clicking the link below:</p>
-            <a href='{confirmationLink}'>Confirm Email</a>
+            <a href={confirmationLink}>Confirm Email</a>
             <p>If you didn't create an account, you can ignore this email.</p>"
         );
     }
