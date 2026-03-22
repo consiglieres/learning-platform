@@ -12,5 +12,4 @@ public interface IAuditable
 
     DateTimeOffset? DeletedAt { get; }
     User? DeletedBy { get; }
-    bool IsDeleted { get; }
 }

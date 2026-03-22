@@ -4,7 +4,7 @@ using LearningPlatformApi.Domain.ValueObjects.Page;
 namespace LearningPlatformApi.Domain.Entities.Page;
 
 public record CoursePage(string Id, PageType Type, IReadOnlyCollection<PageContentBlock> ContentBlocks)
-    : DomainEntity<string>(Id)
+    : AuditableEntity<string>(Id)
 {
     public int Order { get; set; }
 

@@ -1,7 +1,7 @@
 using LearningPlatformApi.Persistence.Context;
 using Microsoft.EntityFrameworkCore.Storage;
 
-namespace LearningPlatformApi.Persistence;
+namespace LearningPlatformApi.Persistence.Repositories.Base;
 
 public sealed class UnitOfWork : IUnitOfWork
 {

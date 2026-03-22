@@ -1,4 +1,4 @@
-namespace LearningPlatformApi.Persistence;
+namespace LearningPlatformApi.Persistence.Repositories.Base;
 
 public interface IUnitOfWork
 {

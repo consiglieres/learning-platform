@@ -13,7 +13,6 @@ public abstract record AuditableEntity<TKey>(TKey Id)
 
     public DateTimeOffset? DeletedAt { get; private set; }
     public User? DeletedBy { get; private set; }
-    public bool IsDeleted => DeletedAt.HasValue;
 
     public void MarkAsCreated(User createdBy, DateTimeOffset createdAt)
     {
@@ -26,7 +25,7 @@ public abstract record AuditableEntity<TKey>(TKey Id)
 
     public void MarkAsUpdated(User updatedBy, DateTimeOffset updatedAt)
     {
-        if (IsDeleted)
+        if (IsDeleted())
             throw new DomainException("Cannot update a deleted entity");
 
         UpdatedBy = updatedBy ?? throw new ArgumentNullException(nameof(updatedBy));
@@ -35,7 +34,7 @@ public abstract record AuditableEntity<TKey>(TKey Id)
 
     public void MarkAsDeleted(User deletedBy, DateTimeOffset deletedAt)
     {
-        if (IsDeleted)
+        if (IsDeleted())
             throw new DomainException("Entity is already deleted");
 
         DeletedBy = deletedBy ?? throw new ArgumentNullException(nameof(deletedBy));
@@ -44,10 +43,15 @@ public abstract record AuditableEntity<TKey>(TKey Id)
 
     public void Restore()
     {
-        if (!IsDeleted)
+        if (!IsDeleted())
             throw new DomainException("Entity is not deleted");
 
         DeletedBy = null;
         DeletedAt = null;
+    }
+
+    public bool IsDeleted()
+    {
+        return DeletedAt != null || DeletedBy != null;
     }
 }

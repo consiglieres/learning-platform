@@ -5,6 +5,7 @@ using LearningPlatformApi.Mapper.Impl;
 using LearningPlatformApi.Persistence;
 using LearningPlatformApi.Persistence.Context;
 using LearningPlatformApi.Persistence.Entities;
+using LearningPlatformApi.Persistence.Repositories.Base;
 using LearningPlatformApi.Services;
 using LearningPlatformApi.Services.Impl;
 using LearningPlatformApi.Settings;

@@ -4,6 +4,7 @@ using LearningPlatformApi.Domain.HandleStates;
 using LearningPlatformApi.Domain.ValueObjects;
 using LearningPlatformApi.Persistence;
 using LearningPlatformApi.Persistence.Entities;
+using LearningPlatformApi.Persistence.Repositories.Base;
 using LearningPlatformApi.Settings;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.WebUtilities;
