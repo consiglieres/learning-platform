@@ -1,8 +1,8 @@
-using LearningPlatformApi.Models.Base;
+using LearningPlatformApi.Domain.Base.Impl;
 
 namespace LearningPlatformApi.Domain.Entities;
 
-public record DomainUser(string Id) : DomainEntity<string>(Id)
+public record User(string Id) : AuditableEntity<string>(Id)
 {
     public required string UserName { get; set; }
 
@@ -31,10 +31,6 @@ public record DomainUser(string Id) : DomainEntity<string>(Id)
     public DateTimeOffset? LockoutEnd { get; init; }
 
     public int AccessFailedCount { get; init; }
-
-    public DateTimeOffset CreatedAt { get; set; }
-
-    public DateTimeOffset UpdatedAt { get; set; }
 
     public DateTimeOffset? LastLoginAt { get; set; }
 

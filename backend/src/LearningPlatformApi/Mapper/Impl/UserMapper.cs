@@ -9,9 +9,9 @@ namespace LearningPlatformApi.Mapper.Impl;
 [Mapper]
 internal partial class UserMapper : IUserMapper
 {
-    public partial DomainUser MapToDomain(UserEntity user);
+    public partial User MapToDomain(UserEntity user);
 
-    public partial UserEntity MapToEntity(DomainUser user);
+    public partial UserEntity MapToEntity(User user);
 
     public partial RegisterUser MapToDomain(V1RegisterUserDto user);
 }

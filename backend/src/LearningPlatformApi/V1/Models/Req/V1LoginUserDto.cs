@@ -1,6 +1,6 @@
 using System.ComponentModel.DataAnnotations;
 
-namespace LearningPlatformApi.V1.Models;
+namespace LearningPlatformApi.V1.Models.Req;
 
 public class V1LoginUserDto
 {

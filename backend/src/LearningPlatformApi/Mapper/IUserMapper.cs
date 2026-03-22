@@ -7,9 +7,9 @@ namespace LearningPlatformApi.Mapper;
 
 public interface IUserMapper
 {
-    DomainUser MapToDomain(UserEntity user);
+    User MapToDomain(UserEntity user);
 
-    UserEntity MapToEntity(DomainUser user);
+    UserEntity MapToEntity(User user);
 
     RegisterUser MapToDomain(V1RegisterUserDto user);
 }

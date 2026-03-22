@@ -1,4 +1,4 @@
-namespace LearningPlatformApi.V1.Models;
+namespace LearningPlatformApi.V1.Models.Res;
 
 public class V1AuthResponseDto
 {
