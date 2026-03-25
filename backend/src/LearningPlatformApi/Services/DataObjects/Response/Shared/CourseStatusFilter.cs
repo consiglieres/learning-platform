@@ -5,5 +5,5 @@ public enum CourseStatusFilter
     All = 0,
     Draft = 1,
     Published = 2,
-    Archived = 3    
+    Archived = 3
 }

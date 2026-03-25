@@ -1,4 +1,6 @@
-namespace LearningPlatformApi.Services.DataObjects.Response;
+using LearningPlatformApi.Services.DataObjects.Response.Module;
+
+namespace LearningPlatformApi.Services.DataObjects.Response.Course;
 
 public record CourseStatisticsDto(
     string CourseId,
@@ -10,4 +12,3 @@ public record CourseStatisticsDto(
     double AverageRating,
     int TotalReviews,
     List<ModuleStatisticsDto> ModulesStatistics);
-    

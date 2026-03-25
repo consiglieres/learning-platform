@@ -1,6 +1,6 @@
 using LearningPlatformApi.Services.DataObjects.Response.Shared;
 
-namespace LearningPlatformApi.Services.DataObjects.Response;
+namespace LearningPlatformApi.Services.DataObjects.Response.Course;
 
 public record CoursePreviewDto(
     string Id,

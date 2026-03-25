@@ -1,11 +1,12 @@
 using LearningPlatformApi.Services.DataObjects.Response.Shared;
 
-namespace LearningPlatformApi.Services.DataObjects.Response;
+namespace LearningPlatformApi.Services.DataObjects.Response.Task;
 
-public record TaskPreviewDto(
+public record TaskDto(
     string Id,
     string Name,
     string Difficulty,
     TaskType Type,
+    object Content,
     int Points,
-    bool IsCompleted);
+    int? Order);

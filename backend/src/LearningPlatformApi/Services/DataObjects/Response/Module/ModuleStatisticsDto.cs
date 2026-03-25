@@ -1,4 +1,4 @@
-namespace LearningPlatformApi.Services.DataObjects.Response;
+namespace LearningPlatformApi.Services.DataObjects.Response.Module;
 
 public record ModuleStatisticsDto(
     string ModuleId,

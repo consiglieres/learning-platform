@@ -1,4 +1,6 @@
-namespace LearningPlatformApi.Services.DataObjects.Response;
+using LearningPlatformApi.Services.DataObjects.Response.Module;
+
+namespace LearningPlatformApi.Services.DataObjects.Response.Course;
 
 public class CourseProgressDto(
     string CourseId,

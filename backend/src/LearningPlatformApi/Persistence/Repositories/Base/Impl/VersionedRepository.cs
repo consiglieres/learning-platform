@@ -32,8 +32,8 @@ public class VersionedRepository<TVersionableEntity, TDomainId, TVersionableDbEn
         var entities = await context.Set<TVersionableDbEntity>()
             .FirstOrDefaultAsync(x => x.Id.Equals(id) && x.Order == version.Order, cancellationToken: cancellationToken);
 
-        if(entities == null) throw new DomainException("Entity not found");
-        
+        if (entities == null) throw new DomainException("Entity not found");
+
         return mapper.Map(entities);
     }
 
@@ -44,8 +44,8 @@ public class VersionedRepository<TVersionableEntity, TDomainId, TVersionableDbEn
             .OrderByDescending(x => x.Order)
             .LastOrDefaultAsync(cancellationToken: cancellationToken);
 
-        if(entities == null) throw new DomainException("Entity not found");
-        
+        if (entities == null) throw new DomainException("Entity not found");
+
         return mapper.Map(entities);
     }
 
@@ -62,10 +62,10 @@ public class VersionedRepository<TVersionableEntity, TDomainId, TVersionableDbEn
         var dbId = mapper.MapId(entity.Id);
         var dbEntity = await context.Set<TVersionableDbEntity>()
             .FirstOrDefaultAsync(x => x.Id.Equals(dbId) && x.Order == entity.Version.Order, cancellationToken);
-        
+
         if (dbEntity == null)
             return;
-        
+
         var dbEntityDeleted = mapper.Map(dbEntity);
         context.Entry(dbEntity).CurrentValues.SetValues(dbEntityDeleted);
     }
@@ -81,7 +81,7 @@ public class VersionedRepository<TVersionableEntity, TDomainId, TVersionableDbEn
         {
             throw new DomainException("Entity is already created");
         }
-        
+
         var created = await CreateAsync(entity, cancellationToken);
         return created;
     }

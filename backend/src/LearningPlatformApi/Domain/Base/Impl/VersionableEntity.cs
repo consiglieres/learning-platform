@@ -9,7 +9,7 @@ public abstract record VersionableEntity<TKey> : AuditableEntity<TKey>, IVersion
         Version = EntityVersion.CreateDefault();
         AllVersions = [Version];
     }
-    
+
     protected VersionableEntity(TKey Id, EntityVersion Version, IReadOnlyCollection<EntityVersion> AllVersions) : base(Id)
     {
         this.Version = Version;
@@ -17,7 +17,7 @@ public abstract record VersionableEntity<TKey> : AuditableEntity<TKey>, IVersion
     }
 
     public EntityVersion CurrentVersion => Version;
-    
+
     public EntityVersion LatestVersion => Versions.Last();
     public IReadOnlyCollection<EntityVersion> Versions => AllVersions;
     public EntityVersion Version { get; init; }
