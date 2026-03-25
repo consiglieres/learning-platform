@@ -1,6 +1,7 @@
 using LearningPlatformApi.Domain.Base.Impl;
 using LearningPlatformApi.Domain.Entities.Page;
 using LearningPlatformApi.Domain.Exceptions;
+using LearningPlatformApi.Domain.ValueObjects;
 using LearningPlatformApi.Domain.ValueObjects.Page;
 
 namespace LearningPlatformApi.Domain.Entities.Courses;
@@ -30,8 +31,8 @@ public record Course : PublicationWorkflowEntity<string>
 
     public void AddModule(Module module)
     {
-        if (modules.Any(m => m.Order == module.Order))
-            throw new DomainException($"Module with order {module.Order} already exists");
+        if (modules.Any(m => m.ModuleOrder == module.ModuleOrder))
+            throw new DomainException($"Module with order {module.ModuleOrder} already exists");
 
         modules.Add(module);
     }

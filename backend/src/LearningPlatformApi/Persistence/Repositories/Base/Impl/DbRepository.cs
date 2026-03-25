@@ -26,7 +26,7 @@ public abstract class DbRepository<TDomainEntity, TDomainId, TDbEntity, TDbId>
         this.logger = logger;
     }
 
-    public async Task<TDomainEntity?> GetByIdAsync(TDomainId id, CancellationToken cancellationToken = default)
+    public virtual async Task<TDomainEntity?> GetByIdAsync(TDomainId id, CancellationToken cancellationToken = default)
     {
         var dbId = mapper.MapId(id);
         var dbEntity = await context.Set<TDbEntity>()
@@ -35,7 +35,7 @@ public abstract class DbRepository<TDomainEntity, TDomainId, TDbEntity, TDbId>
         return dbEntity != null ? mapper.Map(dbEntity) : null;
     }
 
-    public async Task<TDomainEntity> CreateAsync(TDomainEntity entity, CancellationToken cancellationToken = default)
+    public virtual async Task<TDomainEntity> CreateAsync(TDomainEntity entity, CancellationToken cancellationToken = default)
     {
         var dbEntity = mapper.Map(entity);
         await context.Set<TDbEntity>().AddAsync(dbEntity, cancellationToken);
@@ -43,7 +43,7 @@ public abstract class DbRepository<TDomainEntity, TDomainId, TDbEntity, TDbId>
         return mapper.Map(dbEntity);
     }
 
-    public async Task DeleteAsync(TDomainEntity entity, CancellationToken cancellationToken = default)
+    public virtual async Task DeleteAsync(TDomainEntity entity, CancellationToken cancellationToken = default)
     {
         var dbId = mapper.MapId(entity.Id);
         var dbEntity = await context.Set<TDbEntity>()
@@ -55,7 +55,7 @@ public abstract class DbRepository<TDomainEntity, TDomainId, TDbEntity, TDbId>
         context.Set<TDbEntity>().Remove(dbEntity);
     }
 
-    public async Task DeleteAsync(TDomainId id, CancellationToken cancellationToken = default)
+    public virtual async Task DeleteAsync(TDomainId id, CancellationToken cancellationToken = default)
     {
         var dbId = mapper.MapId(id);
         var dbEntity = await context.Set<TDbEntity>()
@@ -67,7 +67,7 @@ public abstract class DbRepository<TDomainEntity, TDomainId, TDbEntity, TDbId>
         context.Set<TDbEntity>().Remove(dbEntity);
     }
 
-    public async Task<TDomainEntity> UpdateAsync(TDomainEntity entity, CancellationToken cancellationToken = default)
+    public virtual async Task<TDomainEntity> UpdateAsync(TDomainEntity entity, CancellationToken cancellationToken = default)
     {
         var dbId = mapper.MapId(entity.Id);
         var dbEntity = await context.Set<TDbEntity>()

@@ -4,11 +4,11 @@ using LearningPlatformApi.Domain.Exceptions;
 
 namespace LearningPlatformApi.Domain.Entities.Courses;
 
-public record Lesson : PublicationWorkflowEntity<string>
+public record Lesson : VersionableEntity<string>
 {
     public string Name { get; private set; }
 
-    public int Order { get; private set; }
+    public int LessonOrder { get; private set; }
 
     public int PassThreshold { get; private set; }
 
@@ -24,11 +24,11 @@ public record Lesson : PublicationWorkflowEntity<string>
 
     private Lesson(string id) : base(id) { }
 
-    public Lesson(string name, int order, int passThreshold, Module module, User creator)
+    public Lesson(string name, int lessonOrder, int passThreshold, Module module, User creator)
         : base(Guid.NewGuid().ToString())
     {
         Name = name;
-        Order = order;
+        LessonOrder = lessonOrder;
         PassThreshold = passThreshold;
         Module = module;
         ModuleId = module.Id;
@@ -41,10 +41,5 @@ public record Lesson : PublicationWorkflowEntity<string>
             throw new DomainException($"Task with order {task.Order} already exists");
 
         tasks.Add(task);
-    }
-
-    public override bool CanBeSubmitted()
-    {
-        throw new NotImplementedException();
     }
 }

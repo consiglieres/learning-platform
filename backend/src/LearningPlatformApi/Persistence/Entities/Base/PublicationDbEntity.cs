@@ -2,7 +2,7 @@ using LearningPlatformApi.Domain.ValueObjects;
 
 namespace LearningPlatformApi.Persistence.Entities.Base;
 
-public abstract class PublicationDbEntity<TId>(TId id) : AuditableDbEntity<TId>(id)
+public abstract class PublicationDbEntity<TId>(TId id) : VersionableDbEntity<TId>(id)
 {
     public string? ModerationComment { get; private set; }
 
