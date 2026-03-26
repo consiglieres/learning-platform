@@ -21,7 +21,7 @@ public class ResourceAuthorizationHandler : AuthorizationHandler<ResourceOwnerRe
         Guid resourceId)
     {
         var userId = context.User.FindFirstValue(ClaimTypes.NameIdentifier);
-        
+
         if (string.IsNullOrEmpty(userId))
             return;
 
@@ -34,13 +34,13 @@ public class ResourceAuthorizationHandler : AuthorizationHandler<ResourceOwnerRe
 
         var userResource = await applicationContext.UserResources
             .FirstOrDefaultAsync(ur => ur.UserId == userId && ur.ResourceId == resourceId);
-        
+
         if (userResource != null && userResource.Permission == "Manage")
         {
             context.Succeed(requirement);
             return;
         }
-        
+
         if (context.User.IsInRole("Admin"))
         {
             context.Succeed(requirement);

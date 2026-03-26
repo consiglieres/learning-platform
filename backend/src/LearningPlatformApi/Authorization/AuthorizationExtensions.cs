@@ -10,10 +10,10 @@ public static class AuthorizationExtensions
         {
             options.AddPolicy("RequireAdminRole", policy =>
                 policy.RequireRole("Admin"));
-            
+
             options.AddPolicy("RequireTeacherRole", policy =>
                 policy.RequireRole("Teacher", "Admin"));
-            
+
             options.AddPolicy("RequireStudentRole", policy =>
                 policy.RequireRole("Student", "Teacher", "Admin"));
 

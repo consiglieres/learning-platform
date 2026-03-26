@@ -4,7 +4,7 @@ using Microsoft.EntityFrameworkCore;
 
 namespace LearningPlatformApi.Persistence.Context;
 
-public class ApplicationContext : IdentityDbContext<AppUser>
+public class ApplicationContext : IdentityDbContext<UserEntity>
 {
     public ApplicationContext(DbContextOptions<ApplicationContext> options)
         : base(options)
@@ -22,7 +22,7 @@ public class ApplicationContext : IdentityDbContext<AppUser>
             .HasKey(ur => new { ur.UserId, ur.ResourceId });
 
         builder.Entity<UserResource>()
-            .HasOne(ur => ur.User)
+            .HasOne(ur => ur.UserEntity)
             .WithMany(u => u.UserResources)
             .HasForeignKey(ur => ur.UserId)
             .OnDelete(DeleteBehavior.Cascade);

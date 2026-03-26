@@ -1,11 +1,13 @@
 using LearningPlatformApi.Authorization.AuthorizationHandlers;
 using LearningPlatformApi.Hosting;
+using LearningPlatformApi.Mapper;
+using LearningPlatformApi.Mapper.Impl;
+using LearningPlatformApi.Persistence;
 using LearningPlatformApi.Persistence.Context;
 using LearningPlatformApi.Persistence.Entities;
 using LearningPlatformApi.Services;
-using LearningPlatformApi.Services.Service;
+using LearningPlatformApi.Services.Impl;
 using LearningPlatformApi.Settings;
-using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
@@ -24,26 +26,26 @@ builder.Services.AddOptions<EmailSettings>()
     .ValidateOnStart();
 
 // Persistence
-builder.Services.AddDbContext<ApplicationContext>(options => 
+builder.Services.AddDbContext<ApplicationContext>(options =>
     options.UseNpgsql(configuration.GetConnectionString("ApplicationContext")));
 
 // Identity - ПОЛНАЯ настройка
-builder.Services.AddIdentity<AppUser, IdentityRole>(options =>
+builder.Services.AddIdentity<UserEntity, IdentityRole>(options =>
 {
     options.Password.RequireDigit = true;
     options.Password.RequiredLength = 6;
     options.Password.RequireNonAlphanumeric = false;
     options.Password.RequireUppercase = true;
     options.Password.RequireLowercase = true;
-    
+
     // Настройки блокировки
     options.Lockout.DefaultLockoutTimeSpan = TimeSpan.FromMinutes(5);
     options.Lockout.MaxFailedAccessAttempts = 5;
     options.Lockout.AllowedForNewUsers = true;
-    
+
     // Настройки пользователя
     options.User.RequireUniqueEmail = true;
-    
+
     // Настройки входа
     options.SignIn.RequireConfirmedEmail = true;
     options.SignIn.RequireConfirmedPhoneNumber = false;
@@ -51,7 +53,9 @@ builder.Services.AddIdentity<AppUser, IdentityRole>(options =>
 .AddEntityFrameworkStores<ApplicationContext>()
 .AddDefaultTokenProviders()
 .AddSignInManager()
-.AddUserManager<UserManager<AppUser>>();
+.AddUserManager<UserManager<UserEntity>>();
+
+builder.Services.AddScoped<IUnitOfWork, UnitOfWork>();
 
 builder.Services.AddCors(options =>
 {
@@ -68,19 +72,26 @@ builder.Services.AddCors(options =>
 builder.Services.AddScoped<IEmailService, EmailService>();
 builder.Services.AddScoped<IAuthorizationHandler, ResourceAuthorizationHandler>();
 
+// Mappers
+builder.Services.AddScoped<IUserMapper, UserMapper>();
+builder.Services.AddScoped<IUserRegistrationService, UserRegistrationService>();
+builder.Services.AddScoped<IUserAuthenticationService, UserAuthenticationService>();
+builder.Services.AddScoped<IUserProfileService, UserProfileService>();
+builder.Services.AddScoped<IUserEmailService, UserEmailService>();
+
 // Authorization policies
 builder.Services.AddAuthorization(options =>
 {
-    options.AddPolicy("RequireAdminRole", policy => 
+    options.AddPolicy("RequireAdminRole", policy =>
         policy.RequireRole("Admin"));
-    
-    options.AddPolicy("RequireTeacherRole", policy => 
+
+    options.AddPolicy("RequireTeacherRole", policy =>
         policy.RequireRole("Teacher", "Admin"));
-    
-    options.AddPolicy("RequireStudentRole", policy => 
+
+    options.AddPolicy("RequireStudentRole", policy =>
         policy.RequireRole("Student", "Teacher", "Admin"));
-    
-    options.AddPolicy("EmailConfirmed", policy => 
+
+    options.AddPolicy("EmailConfirmed", policy =>
         policy.RequireClaim("email_confirmed", "True"));
 });
 
@@ -94,9 +105,9 @@ if (app.Environment.IsDevelopment())
 {
     app.MapOpenApi();
     app.MapScalarApiReference();
-    
+
     // Для разработки разрешаем не-HTTPS
-    app.UseCors(policy => 
+    app.UseCors(policy =>
         policy.AllowAnyOrigin()
               .AllowAnyHeader()
               .AllowAnyMethod());

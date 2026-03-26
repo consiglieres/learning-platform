@@ -11,4 +11,6 @@ public class EmailSettings
     public required string SmtpUsername { get; set; }
 
     public required string SmtpPassword { get; set; }
+
+    public required string SendConfirmationUrl { get; set; }
 }
