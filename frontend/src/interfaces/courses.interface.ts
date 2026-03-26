@@ -4,3 +4,10 @@ export interface ICourse {
   description: string;
   duration: number;
 }
+
+export interface ITopic {
+  title: string,
+  time: string,
+  task: string
+  description: string
+}

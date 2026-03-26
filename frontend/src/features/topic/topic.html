@@ -1,0 +1,28 @@
+<section class="topic" [class.topic--expanded]="expandedTopic === topicInformation().title">
+    <section class="topic__content">
+      <div class="topic__header" (click)="toggleTopic(topicInformation().title)">
+        <h2 class="content__title">{{topicInformation().title}}</h2>
+        <section class="information">
+          <div class="time">
+            <img class="time__img" src="assets/time.png">
+            <p class="time__text">{{topicInformation().time}}</p>
+          </div>
+          <div class="task">
+            <img class="task__img" src="assets/task.png">
+            <p class="task__text">{{topicInformation().task}}</p>
+          </div>
+        </section>
+        <button class="topic__state" [class.topic__state--expanded]="expandedTopic === topicInformation().title">
+          <svg width="20" height="20" viewBox="0 0 24 24" fill="none">
+            <path d="M6 9l6 6 6-6" stroke="currentColor" stroke-width="2" stroke-linecap="round"/>
+          </svg>
+        </button>
+      </div>
+
+      <div class="topic__details" [@expandCollapse]="expandedTopic === topicInformation().title ? 'expanded' : 'collapsed'">
+        <div class="topic__description">
+          <p>{{topicInformation().description}}</p>
+        </div>
+      </div>
+    </section>
+  </section>

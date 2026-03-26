@@ -1,7 +1,7 @@
 import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { Observable } from 'rxjs';
-import { ICourse } from '../interfaces/courses.interface';
+import {ICourse, ITopic} from '../interfaces/courses.interface';
 
 @Injectable()
 export class CourseService {
@@ -14,6 +14,8 @@ export class CourseService {
   }
 
   public saveCourse(courseData: ICourse): void {
+
+    if(courseData.title) {}
     this._http.post(this._apiUrl, courseData);
   }
 
@@ -21,7 +23,9 @@ export class CourseService {
     return this._http.delete(`${this._apiUrl}/${courseId}`);
   }
 
-  public filters(filtersData: Object) {
-    console.log(filtersData);
+  public getCoursesContentTopic(): Observable<ITopic[]>{
+    return this._http.get<ITopic[]>(this._apiUrl)
   }
+
+
 }
