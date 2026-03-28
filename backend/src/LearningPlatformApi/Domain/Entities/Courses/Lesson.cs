@@ -12,7 +12,7 @@ public record Lesson : VersionableEntity<string>
 
     public int PassThreshold { get; private set; }
 
-    public Page.CoursePage CoursePageContent { get; private set; }
+    public Page.Page PageContent { get; private set; }
 
     public string ModuleId { get; private set; }
 

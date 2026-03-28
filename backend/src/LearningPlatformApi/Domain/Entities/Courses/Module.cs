@@ -15,7 +15,7 @@ public record Module : VersionableEntity<string>
 
     public IReadOnlyCollection<Lesson> Lessons => lessons.AsReadOnly();
 
-    public CoursePage IntroductionPage { get; }
+    public Page.Page IntroductionPage { get; }
 
     private Module(string id) : base(id) { }
 
@@ -25,7 +25,7 @@ public record Module : VersionableEntity<string>
         Name = name;
         ModuleOrder = moduleOrder;
         CourseId = courseId;
-        IntroductionPage = CoursePage.EmptyPage(PageType.Introduction);
+        IntroductionPage = Page.Page.EmptyPage(PageType.Introduction);
         MarkAsCreated(creator, DateTimeOffset.UtcNow);
     }
 

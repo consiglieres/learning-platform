@@ -9,7 +9,7 @@ public record CodingTask : BaseTask
     public string InitialCode { get; private set; }
     public string TestCode { get; private set; }
 
-    public CodingTask(string name, int order, Difficulty difficulty, Lesson lesson, CoursePage page,
+    public CodingTask(string name, int order, Difficulty difficulty, Lesson lesson, Page.Page page,
         string initialCode, string testCode)
         : base(Guid.NewGuid().ToString(), name, order, difficulty, lesson, page)
     {
@@ -20,7 +20,6 @@ public record CodingTask : BaseTask
 
     public override bool CheckAnswer(object answer)
     {
-        var code = answer as string;
-        return !string.IsNullOrEmpty(code);
+        throw new NotImplementedException();
     }
 }

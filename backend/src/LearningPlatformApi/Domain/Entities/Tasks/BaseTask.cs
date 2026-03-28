@@ -15,9 +15,9 @@ public abstract record BaseTask : AuditableEntity<string>
 
     public Lesson Lesson { get; private set; } = null!;
 
-    public CoursePage PageContent { get; private set; }
+    public Page.Page PageContent { get; private set; }
 
-    protected BaseTask(string id, string name, int order, Difficulty difficulty, Lesson lesson, CoursePage pageContent)
+    protected BaseTask(string id, string name, int order, Difficulty difficulty, Lesson lesson, Page.Page pageContent)
         : base(id)
     {
         Name = name;

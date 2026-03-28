@@ -19,13 +19,13 @@ public record Course : PublicationWorkflowEntity<string>
 
     public IReadOnlyCollection<Module> Modules => modules.AsReadOnly();
 
-    public CoursePage IntroductionCoursePage { get; }
+    public Page.Page IntroductionPage { get; }
 
     public Course(string title, string description, User creator) : base(Guid.NewGuid().ToString())
     {
         Title = title;
         Description = description;
-        IntroductionCoursePage = CoursePage.EmptyPage(PageType.Introduction);
+        IntroductionPage = Page.Page.EmptyPage(PageType.Introduction);
         MarkAsCreated(creator, DateTimeOffset.UtcNow);
     }
 

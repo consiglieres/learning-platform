@@ -7,4 +7,4 @@ public record UpdateCourseInfo(
     string Title,
     string Description,
     List<TypedCategory> Categories,
-    CoursePage IntroductionPage);
+    Page IntroductionPage);

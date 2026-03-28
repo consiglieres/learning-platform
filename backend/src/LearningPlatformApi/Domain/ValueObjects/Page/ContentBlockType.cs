@@ -1,37 +1,12 @@
 namespace LearningPlatformApi.Domain.ValueObjects.Page;
 
-public record ContentBlockType
+public record ContentBlockType(ContentCategory Category, ContentType ContentType)
 {
-    public ContentCategory Category { get; }
+    public static ContentBlockType CreateMarkup => new(ContentCategory.Markup, ContentType.Html);
 
-    public ContentType ContentType { get; }
+    public static ContentBlockType CreateImage => new(ContentCategory.Image, ContentType.Url);
 
-    public string Data { get; }
+    public static ContentBlockType CreateUrl => new(ContentCategory.Video, ContentType.Url);
 
-    private ContentBlockType(ContentCategory category, ContentType contentType, string data)
-    {
-        Category = category;
-        ContentType = contentType;
-        Data = data;
-    }
-
-    public static ContentBlockType CreateMarkup(string data)
-    {
-        return new ContentBlockType(ContentCategory.Markup, ContentType.Html, data);
-    }
-
-    public static ContentBlockType CreateImage(string data)
-    {
-        return new ContentBlockType(ContentCategory.Image, ContentType.Url, data);
-    }
-
-    public static ContentBlockType CreateUrl(string data)
-    {
-        return new ContentBlockType(ContentCategory.Video, ContentType.Url, data);
-    }
-
-    public static ContentBlockType CreateCode(string data)
-    {
-        return new ContentBlockType(ContentCategory.Code, ContentType.PlainText, data);
-    }
+    public static ContentBlockType CreateCode => new(ContentCategory.Code, ContentType.PlainText);
 }

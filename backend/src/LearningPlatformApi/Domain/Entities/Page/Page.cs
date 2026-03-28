@@ -3,7 +3,7 @@ using LearningPlatformApi.Domain.ValueObjects.Page;
 
 namespace LearningPlatformApi.Domain.Entities.Page;
 
-public record CoursePage(string Id, PageType Type, IReadOnlyCollection<PageContentBlock> ContentBlocks)
+public record Page(string Id, PageType Type, IReadOnlyCollection<PageContentBlock> ContentBlocks)
     : VersionableEntity<string>(Id)
 {
     public int Order { get; set; }
@@ -12,6 +12,6 @@ public record CoursePage(string Id, PageType Type, IReadOnlyCollection<PageConte
 
     public IReadOnlyCollection<PageContentBlock> ContentBlocks { get; set; } = ContentBlocks;
 
-    public static CoursePage EmptyPage(PageType pageType)
-        => new CoursePage(Guid.NewGuid().ToString(), pageType, []);
+    public static Page EmptyPage(PageType pageType)
+        => new (Guid.NewGuid().ToString(), pageType, []);
 }

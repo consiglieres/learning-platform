@@ -14,7 +14,7 @@ public record TestTask : BaseTask
 
     private readonly IReadOnlyCollection<string> correctAnswer;
 
-    public TestTask(string name, int order, Difficulty difficulty, Lesson lesson, CoursePage page,
+    public TestTask(string name, int order, Difficulty difficulty, Lesson lesson, Page.Page page,
         string question, IEnumerable<string> options, IEnumerable<string> correctAnswer)
         : base(Guid.NewGuid().ToString(), name, order, difficulty, lesson, page)
     {
