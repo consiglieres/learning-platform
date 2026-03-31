@@ -1,8 +1,10 @@
+using System.ComponentModel.DataAnnotations.Schema;
 using LearningPlatformApi.Persistence.Entities.Page;
 
 namespace LearningPlatformApi.Persistence.Entities.Base;
 
-public class TaskBaseEntity(string id) : VersionableDbEntity<string>(id)
+[NotMapped]
+public abstract class TaskBaseEntity(string id) : VersionableDbEntity<string>(id)
 {
     public string Name { get; set; }
 
