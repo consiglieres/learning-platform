@@ -13,5 +13,7 @@ public class CourseEntity(string id) : PublicationDbEntity<string>(id)
     
     public IReadOnlyCollection<ModuleEntity> Modules { get; set; }
     
+    public string PageId { get; set; }
+    
     public PageEntity IntroductionPage { get; set; }
 }

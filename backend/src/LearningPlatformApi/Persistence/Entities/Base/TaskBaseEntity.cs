@@ -1,6 +1,8 @@
+using LearningPlatformApi.Persistence.Entities.Page;
+
 namespace LearningPlatformApi.Persistence.Entities.Base;
 
-public class TaskBaseEntity(string id) : AuditableDbEntity<string>(id)
+public class TaskBaseEntity(string id) : VersionableDbEntity<string>(id)
 {
     public string Name { get; set; }
     
@@ -13,4 +15,8 @@ public class TaskBaseEntity(string id) : AuditableDbEntity<string>(id)
     public string LessonId { get; set; }
     
     public LessonEntity Lesson { get; set; }
+    
+    public string? PageId { get; set; }
+    
+    public PageEntity? Page { get; set; }
 }

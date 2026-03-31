@@ -5,7 +5,7 @@ using LearningPlatformApi.Domain.ValueObjects.Task;
 
 namespace LearningPlatformApi.Domain.Entities.Tasks;
 
-public abstract record BaseTask : AuditableEntity<string>
+public abstract record BaseTask : VersionableEntity<string>
 {
     public string Name { get; private set; }
     public int Order { get; private set; }
