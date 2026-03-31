@@ -8,7 +8,7 @@ namespace LearningPlatformApi.Persistence.Repositories;
 
 public class CoursesRepository : PublicationWorkflowRepository<Course, string, CourseEntity, string>
 {
-    public CoursesRepository(DbContext context, IDbEntityMapper<Course, string, CourseEntity, string> mapper, 
+    public CoursesRepository(DbContext context, IDbEntityMapper<Course, string, CourseEntity, string> mapper,
         ILogger<CoursesRepository> logger) : base(context, mapper, logger)
     {
     }

@@ -12,5 +12,5 @@ public abstract class AuditableDbEntityConfiguration<TEntity, TKey> : IEntityTyp
         OverrideConfigure(builder);
     }
 
-    protected abstract void OverrideConfigure(EntityTypeBuilder<TEntity> modelBuilder); 
+    protected abstract void OverrideConfigure(EntityTypeBuilder<TEntity> modelBuilder);
 }

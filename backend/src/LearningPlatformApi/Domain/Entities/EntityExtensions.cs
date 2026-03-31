@@ -9,7 +9,7 @@ public static class EntityExtensions
         {
             throw new InvalidOperationException("Invalid id");
         }
-        
+
         return (parts[0], parts[1]);
     }
 }

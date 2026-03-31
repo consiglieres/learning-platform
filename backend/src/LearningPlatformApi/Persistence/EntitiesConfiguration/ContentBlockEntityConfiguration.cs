@@ -11,7 +11,7 @@ public sealed class ContentBlockEntityConfiguration : VersionableDbEntityConfigu
     {
         modelBuilder.ToTable("ContentBlocks");
         modelBuilder.HasKey(x => x.Id);
-        
+
         modelBuilder.Property(x => x.PageId)
             .IsRequired();
         modelBuilder.Property(x => x.Order)

@@ -13,5 +13,5 @@ public record Page(string Id, PageType Type, IReadOnlyCollection<PageContentBloc
     public IReadOnlyCollection<PageContentBlock> ContentBlocks { get; set; } = ContentBlocks;
 
     public static Page EmptyPage(PageType pageType)
-        => new (Guid.NewGuid().ToString(), pageType, []);
+        => new(Guid.NewGuid().ToString(), pageType, []);
 }

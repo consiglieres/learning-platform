@@ -10,7 +10,7 @@ public class PageEntityConfiguration : VersionableDbEntityConfiguration<PageEnti
     protected override void OverrideConfigure(EntityTypeBuilder<PageEntity> modelBuilder)
     {
         modelBuilder.ToTable("Pages");
-        
+
         modelBuilder.HasKey(x => x.Id);
         modelBuilder.Property(x => x.Order)
             .IsRequired();
@@ -18,6 +18,6 @@ public class PageEntityConfiguration : VersionableDbEntityConfiguration<PageEnti
             .IsRequired();
         modelBuilder.Property(x => x.TypeName)
             .IsRequired();
-        
+
     }
 }

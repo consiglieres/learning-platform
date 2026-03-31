@@ -13,13 +13,13 @@ public sealed class CategoriesEntityConfiguration : IEntityTypeConfiguration<Cat
 
         builder.Property(x => x.TypeCode)
             .IsRequired();
-        
+
         builder.Property(x => x.ValueCode)
             .IsRequired();
-        
+
         builder.Property(x => x.TypeName)
             .IsRequired();
-        
+
         builder.Property(x => x.ValueName)
             .IsRequired();
     }
