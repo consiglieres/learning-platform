@@ -20,7 +20,7 @@
     </div>
     <h6 class="redirect-text">Уже есть аккаунт? <button class="redirect-button" (click)="switchToAuthorization()">Войти</button></h6>
 
-    <span class="notification-text" [style.color]="colorNotificationText()">{{notificationUser}}</span>
+    <span class="notification-text" [style.color]="colorNotificationText()">{{notificationUser()}}</span>
 
     <div class="confidential-police">
       <input type="checkbox" class="confidential-police__checkbox" [formField]="registrationForm.confirmPolice">

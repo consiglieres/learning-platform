@@ -1,31 +1,23 @@
-import {Component, inject} from '@angular/core';
+import {Component, inject, OnInit} from '@angular/core';
 import {RouterLink} from '@angular/router';
-import {CookieService} from '../../entities/cookie.service';
 import {ModalService} from '../../entities/modal.service';
+import {UserService} from '../../entities/user.service';
+import {AsyncPipe} from '@angular/common';
 
 @Component({
   selector: 'app-header',
   imports: [
     RouterLink,
+    AsyncPipe,
   ],
   templateUrl: './header.component.html',
   styleUrl: './header.component.scss',
-  providers: [CookieService]
 })
 export class HeaderComponent {
-  public tokenStatus: boolean = false;
-
+  private _userService = inject(UserService);
   private _modalService = inject(ModalService);
-  private _cookieService = inject(CookieService);
 
-  constructor (){
-    this.checkToken()
-  }
-
-  private checkToken() {
-    const token = this._cookieService.getCookies()
-    token !== "" && " " && null ? this.tokenStatus = true : false
-  }
+  public userData$ = this._userService.userData$
 
   public showModalRegistration(): void {
     this._modalService.openRegistration();

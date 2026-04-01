@@ -1,10 +1,21 @@
-import {CanActivateFn, Router} from '@angular/router';
 import {inject} from '@angular/core';
-import {CookieService} from '../../entities/cookie.service';
+import {CanActivateFn, Router} from '@angular/router';
+import {UserService} from '../../entities/user.service';
 
-export const authorizationGuard: CanActivateFn = (route, state) => {
-  const cookieService = inject(CookieService)
-  const router = inject(Router)
+export const authorizationGuard: CanActivateFn = async () => {
+  const userService = inject(UserService);
+  const router = inject(Router);
 
-  return cookieService.getCookies().length != 0 ? true : router.parseUrl('/login');
+  const cachedUser = userService._userDataSubject.value;
+
+  if (cachedUser) {
+    return true;
+  }
+
+  try {
+    await userService.getUserDataPromise();
+    return true;
+  } catch {
+    return router.parseUrl('codevia');
+  }
 };

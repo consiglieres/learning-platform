@@ -4,20 +4,24 @@
       <img src="assets/logo.png" class="logo__img" />
       <h1 class="logo__title">Codevia</h1>
     </div>
+
     <a routerLink="catalog" class="left__link">Каталог</a>
     <a routerLink="about" class="left__link">О нас</a>
   </section>
-  @if (tokenStatus === false) {
-    <section class="right">
-      <button class="right__button-brightness"></button>
-      <button class="right__button-registration" (click)="showModalRegistration()">Регистрация</button>
-      <button class="right__button-authorization" (click)="showModalAuthorization()">Войти</button>
-    </section>
-  }
-  @else{
-    <section class="right">
-      <button class="right__button-brightness"></button>
-      <a routerLink="" class="right__link-profile"></a>
-    </section>
+
+  @if (userData$ | async; as user) {
+    @if (user === 'null') {
+      <section class="right">
+        <button class="right__button-brightness"></button>
+        <button class="right__button-registration" (click)="showModalRegistration()">Регистрация</button>
+        <button class="right__button-authorization" (click)="showModalAuthorization()">Войти</button>
+      </section>
+    } @else {
+      <section class="right">
+        <button class="right__button-brightness"></button>
+        <a routerLink="/profile" class="right__link-profile">
+        </a>
+      </section>
+    }
   }
 </section>

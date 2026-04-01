@@ -1,38 +1,31 @@
-import { Injectable } from '@angular/core';
-import {HttpClient, HttpHeaders} from '@angular/common/http';
+import {inject, Injectable} from '@angular/core';
+import {HttpClient} from '@angular/common/http';
 import {IAuthorization, IRegistration, IUserData} from '../interfaces/user.interface';
-import {BehaviorSubject, Observable, tap} from 'rxjs';
-import { CookieService } from './cookie.service';
+import {BehaviorSubject, firstValueFrom, Observable} from 'rxjs';
 
-@Injectable()
+@Injectable({providedIn: 'root'})
 export class UserService {
   private readonly _urlApi: string = "http://localhost:5172/api/v1/V1Account/"
 
-  private userDataSubject = BehaviorSubject<IUserData>
+  public _userDataSubject = new BehaviorSubject<IUserData | string>('null');
+  public userData$ = this._userDataSubject.asObservable()
 
-  private readonly _httpOptions = {
-    headers: new HttpHeaders({
-      'Content-Type': 'application/json'
-    })
-  };
-
-  constructor(private _http: HttpClient, private _cookieService: CookieService) { }
+  private readonly _http = inject(HttpClient)
 
   public registration (registrationData: IRegistration) : Observable<{ status: string }> {
-    return this._http.post<{ status: string }>(this._urlApi + "register", registrationData, this._httpOptions)
+    return this._http.post<{ status: string }>(this._urlApi + "register", registrationData)
   }
 
   public authorization (authorizationData: IAuthorization): Observable<{ token: string }> {
-    return this._http.post<{  error: string, token: string }>( this._urlApi + 'login', authorizationData, this._httpOptions).pipe(tap(
-      result => {
-      this._cookieService.setCookies(result.token);
-    }))
+    return this._http.post<{  error: string, token: string }>( this._urlApi + 'login', authorizationData)
   }
 
-  public getUserData(){
-    const token: string = this._cookieService.getCookies()
-
-    this._http.get(this._urlApi + "users/").subscribe()
+  public getUserDataPromise(): Promise<IUserData> {
+    return firstValueFrom(
+      this._http.get<IUserData>(this._urlApi + "me")
+    ).then(user => {
+      this._userDataSubject.next(user);
+      return user;
+    });
   }
-
 }
