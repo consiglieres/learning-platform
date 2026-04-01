@@ -3,6 +3,7 @@ import {Router, RouterLink} from '@angular/router';
 import {CourseService} from '../../entities/course.service';
 import {ITopic} from '../../interfaces/courses.interface';
 import {Topic} from '../../features/topic/topic';
+import {FilterService} from '../../entities/filter.service';
 
 @Component({
   selector: 'app-course',
@@ -12,6 +13,7 @@ import {Topic} from '../../features/topic/topic';
   ],
   templateUrl: './course.html',
   styleUrl: './course.scss',
+  providers: [CourseService, FilterService]
 })
 export class Course {
   public contents!: ITopic[];
