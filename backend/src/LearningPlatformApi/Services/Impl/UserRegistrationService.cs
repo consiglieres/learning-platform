@@ -32,10 +32,8 @@ public class UserRegistrationService(
 
         var user = new UserEntity
         {
-            UserName = registerModel.Email,
             Email = registerModel.Email,
-            FirstName = registerModel.FirstName,
-            LastName = registerModel.LastName,
+            UserName = registerModel.Email,
             EmailConfirmed = false,
             IsActive = true,
             CreatedAt = DateTimeOffset.UtcNow,

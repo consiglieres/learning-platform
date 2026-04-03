@@ -6,13 +6,7 @@ public record User(string Id) : AuditableEntity<string>(Id)
 {
     public required string UserName { get; set; }
 
-    public required string NormalizedUserName { get; init; }
-
     public required string Email { get; set; }
-
-    public required string FirstName { get; set; }
-
-    public required string LastName { get; set; }
 
     public required string NormalizedEmail { get; set; }
 

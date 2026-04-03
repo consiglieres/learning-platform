@@ -1,6 +1,5 @@
 using LearningPlatformApi.Mapper;
 using LearningPlatformApi.Services;
-using LearningPlatformApi.V1.Models;
 using LearningPlatformApi.V1.Models.Req;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
@@ -113,8 +112,6 @@ public class V1AccountController : ControllerBase
             {
                 user!.Id,
                 user.Email,
-                user.FirstName,
-                user.LastName,
                 user.EmailConfirmed,
                 Roles = roles
             }
@@ -155,8 +152,6 @@ public class V1AccountController : ControllerBase
         {
             user.Id,
             user.Email,
-            user.FirstName,
-            user.LastName,
             user.EmailConfirmed,
             user.IsActive,
             user.CreatedAt,

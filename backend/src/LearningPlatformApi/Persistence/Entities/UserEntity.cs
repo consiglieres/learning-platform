@@ -6,10 +6,6 @@ public class UserEntity : IdentityUser
 {
     public override required string Email { get; set; }
 
-    public required string FirstName { get; set; }
-
-    public required string LastName { get; set; }
-
     public override required string UserName { get; set; }
 
     public DateTimeOffset CreatedAt { get; set; }

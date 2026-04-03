@@ -62,8 +62,6 @@ public class InitializationService(IServiceScopeFactory scopeFactory,
                     EmailConfirmed = true,
                     CreatedAt = DateTime.UtcNow,
                     UpdatedAt = DateTime.UtcNow,
-                    FirstName = "Root",
-                    LastName = "Admin"
                 };
 
                 var result = await userManager.CreateAsync(adminUser, "Admin123!");

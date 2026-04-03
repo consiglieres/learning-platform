@@ -73,7 +73,7 @@ builder.Services.ConfigureApplicationCookie(options =>
 {
     options.Cookie.SameSite = SameSiteMode.Lax;
     options.Cookie.HttpOnly = true;
-    options.Cookie.SecurePolicy = CookieSecurePolicy.SameAsRequest; 
+    options.Cookie.SecurePolicy = CookieSecurePolicy.SameAsRequest;
     options.Events.OnRedirectToLogin = context =>
     {
         context.Response.StatusCode = 401;
@@ -113,7 +113,7 @@ builder.Services.AddControllers();
 builder.Services.AddOpenApi();
 
 var app = builder.Build();
-app.UseCors("FrontendApp"); 
+app.UseCors("FrontendApp");
 
 if (app.Environment.IsDevelopment())
 {
