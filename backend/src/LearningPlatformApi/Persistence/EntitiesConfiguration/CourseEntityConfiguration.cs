@@ -9,5 +9,8 @@ public class CourseEntityConfiguration : PublicationDbEntityConfiguration<Course
     protected override void OverrideConfigure(EntityTypeBuilder<CourseEntity> modelBuilder)
     {
         modelBuilder.HasKey(x => x.Id);
+        
+        modelBuilder.Property(x => x.PageId)
+            .IsRequired(false);  // Теперь может быть NULL
     }
 }

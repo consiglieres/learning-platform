@@ -1,19 +1,15 @@
 using LearningPlatformApi.Domain.Base.Impl;
-using LearningPlatformApi.Domain.Entities.Page;
 using LearningPlatformApi.Domain.Exceptions;
-using LearningPlatformApi.Domain.ValueObjects;
 using LearningPlatformApi.Domain.ValueObjects.Page;
 
 namespace LearningPlatformApi.Domain.Entities.Courses;
 
 public record Course : PublicationWorkflowEntity<string>
 {
-    public string Title { get; private set; }
-    public string Description { get; private set; }
+    public string Title { get; set; }
+    public string Description { get; set; }
 
-    private readonly List<TypedCategory> categories = new();
-
-    public IReadOnlyCollection<TypedCategory> Categories => categories.AsReadOnly();
+    public List<TypedCategory> Categories { get; set; } = [];
 
     private readonly List<Module> modules = new();
 
@@ -39,10 +35,26 @@ public record Course : PublicationWorkflowEntity<string>
 
     public void AddCategory(TypedCategory category)
     {
-        if (categories.Any(c => c.Type == category.Type && c.Value == category.Value))
+        if (Categories.Any(c => c.Type == category.Type && c.Value == category.Value))
             throw new DomainException("Category already added");
 
-        categories.Add(category);
+        Categories.Add(category);
+    }
+    
+    public void ResetCategories(IReadOnlyCollection<TypedCategory> categoriesList)
+    {
+        Categories.Clear();
+        Categories.AddRange(categoriesList);
+    }
+    
+    public void AddCategories(IReadOnlyCollection<TypedCategory> categoriesList)
+    {
+        if (Categories.Any(categoriesList.Contains))
+        {
+            throw new DomainException("Category already added");
+        }
+
+        Categories.AddRange(categoriesList);
     }
 
     public override bool CanBeSubmitted()

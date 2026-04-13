@@ -14,7 +14,7 @@ public class Category : ValueObject
 
     public string Name { get; }
 
-    private Category(string code, string name)
+    public Category(string code, string name)
     {
         Code = code;
         Name = name;

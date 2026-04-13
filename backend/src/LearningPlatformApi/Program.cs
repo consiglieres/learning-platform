@@ -1,10 +1,14 @@
 using LearningPlatformApi.Authorization.AuthorizationHandlers;
+using LearningPlatformApi.Domain.Entities.Courses;
+using LearningPlatformApi.Domain.Entities.Page;
+using LearningPlatformApi.Domain.Repositories;
 using LearningPlatformApi.Hosting;
 using LearningPlatformApi.Mapper;
 using LearningPlatformApi.Mapper.Impl;
-using LearningPlatformApi.Persistence;
 using LearningPlatformApi.Persistence.Context;
 using LearningPlatformApi.Persistence.Entities;
+using LearningPlatformApi.Persistence.Entities.Page;
+using LearningPlatformApi.Persistence.Repositories;
 using LearningPlatformApi.Persistence.Repositories.Base;
 using LearningPlatformApi.Services;
 using LearningPlatformApi.Services.Impl;
@@ -86,11 +90,15 @@ builder.Services.AddScoped<IEmailService, EmailService>();
 builder.Services.AddScoped<IAuthorizationHandler, ResourceAuthorizationHandler>();
 
 // Mappers
-builder.Services.AddScoped<IUserMapper, UserMapper>();
+builder.Services.AddSingleton<IUserMapper, UserMapper>();
+builder.Services.AddSingleton<IDbEntityMapper<Course, string, CourseEntity, string>, DbMapper>();
+builder.Services.AddSingleton<IDbEntityMapper<Page, string, PageEntity, string>, DbMapper>();
 builder.Services.AddScoped<IUserRegistrationService, UserRegistrationService>();
 builder.Services.AddScoped<IUserAuthenticationService, UserAuthenticationService>();
 builder.Services.AddScoped<IUserProfileService, UserProfileService>();
 builder.Services.AddScoped<IUserEmailService, UserEmailService>();
+builder.Services.AddScoped<ICourseService, CourseService>();
+builder.Services.AddScoped<ICourseRepository, CoursesRepository>();
 
 // Authorization policies
 builder.Services.AddAuthorization(options =>

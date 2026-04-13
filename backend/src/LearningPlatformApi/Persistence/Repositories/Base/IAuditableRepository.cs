@@ -1,4 +1,5 @@
 using LearningPlatformApi.Domain.Base.Impl;
+using LearningPlatformApi.Domain.Entities;
 
 namespace LearningPlatformApi.Persistence.Repositories.Base;
 
@@ -8,9 +9,9 @@ public interface IAuditableRepository<TDomainEntity, TId>
 {
     Task<TDomainEntity> CreateAsync(TDomainEntity entity, CancellationToken cancellationToken = default);
 
-    Task DeleteAsync(TDomainEntity entity, CancellationToken cancellationToken = default);
+    Task DeleteAsync(TDomainEntity entity, User user, CancellationToken cancellationToken = default);
 
-    Task DeleteAsync(TId id, CancellationToken cancellationToken = default);
+    Task DeleteAsync(TId id, User user, CancellationToken cancellationToken = default);
 
     Task<TDomainEntity> UpdateAsync(TDomainEntity entity, CancellationToken cancellationToken = default);
 }

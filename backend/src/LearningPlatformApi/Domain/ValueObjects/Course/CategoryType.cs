@@ -9,7 +9,7 @@ public record CategoryType
     public string Code { get; }
     public string Name { get; }
 
-    private CategoryType(string code, string name)
+    public CategoryType(string code, string name)
     {
         Code = code;
         Name = name;

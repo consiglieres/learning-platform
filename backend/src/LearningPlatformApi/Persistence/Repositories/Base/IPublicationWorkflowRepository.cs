@@ -1,5 +1,4 @@
 using LearningPlatformApi.Domain.Base.Impl;
-using LearningPlatformApi.Domain.Entities;
 
 namespace LearningPlatformApi.Persistence.Repositories.Base;
 

@@ -1,5 +1,5 @@
-using LearningPlatformApi.Domain.ValueObjects.Course;
+using LearningPlatformApi.Domain.Entities.Courses;
 
-namespace LearningPlatformApi.Services.DataObjects.Request;
+namespace LearningPlatformApi.Services.DataObjects.Request.Course;
 
-public sealed record UpdateCourseInfoRequest(string? Title, string? Description, List<CategoryType> Categories);
+public sealed record UpdateCourseInfoRequest(string? Title, string? Description, IReadOnlyCollection<TypedCategory>? Categories);

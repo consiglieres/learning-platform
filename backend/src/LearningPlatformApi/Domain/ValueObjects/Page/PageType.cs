@@ -11,7 +11,7 @@ public record PageType
     public string Code { get; }
     public string Name { get; }
 
-    private PageType(string code, string name)
+    public PageType(string code, string name)
     {
         Code = code;
         Name = name;

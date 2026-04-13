@@ -8,7 +8,7 @@ public record Page(string Id, PageType Type, IReadOnlyCollection<PageContentBloc
 {
     public int Order { get; set; }
 
-    private PageType Type { get; set; } = Type;
+    public PageType Type { get; set; } = Type;
 
     public IReadOnlyCollection<PageContentBlock> ContentBlocks { get; set; } = ContentBlocks;
 

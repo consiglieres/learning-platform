@@ -1,3 +1,4 @@
+using LearningPlatformApi.Domain.Entities;
 using LearningPlatformApi.Domain.Entities.Courses;
 using LearningPlatformApi.Domain.HandleStates;
 using LearningPlatformApi.Services.DataObjects.Request;
@@ -23,43 +24,48 @@ public interface ICourseService
         CreateCourseDraftRequest request,
         CancellationToken cancellationToken = default);
 
-    Task<OneOf<EntityNotExists, Success<Course>>> GetCourseDraftAsync(
+    Task<OneOf<EntityNotExists, Success<Course>>> GetCourseLastAsync(
         string courseId,
         CancellationToken cancellationToken = default);
+    
+    Task<OneOf<EntityNotExists, Success<Course>>> GetCourseVersionAsync(
+        string courseId,
+        int version,
+        CancellationToken cancellationToken = default);
 
-    Task<OneOf<NotFound, OperationNotSucceeded<Error>, Course>> UpdateCourseInfoAsync(
+    Task<OneOf<NotFound, OperationNotSucceeded<Error>, Success<Course>>> UpdateCourseInfoAsync(
         string courseId,
         UpdateCourseInfoRequest request,
         CancellationToken cancellationToken = default);
 
-    Task<OneOf<NotFound, Success<Error>>> DeleteCourseDraftAsync(
-        string courseId,
+    Task<OneOf<NotFound, Success>> DeleteCourseAsync(
+        string courseId, User user,
+        CancellationToken cancellationToken = default);
+    
+    Task<OneOf<NotFound, ValidationFailed, Success>> SubmitForModerationCourseAsync(
+        string courseId, User user, CancellationToken cancellationToken = default);
+
+    Task<OneOf<NotFound, ValidationFailed, Success>> ApprovePublishCourseAsync(
+        string courseId, User user, ModerationCourseComment? comment,
+        CancellationToken cancellationToken = default);
+    
+    Task<OneOf<NotFound, ValidationFailed, Success>> RejectCourseAsync(
+        string courseId, User user, ModerationCourseComment comment,
         CancellationToken cancellationToken = default);
 
-    Task<OneOf<NotFound, ValidationFailed, Success>> PublishCourseAsync(
-        string courseId,
-        bool submitForModeration = true,
-        CancellationToken cancellationToken = default);
+    Task<OneOf<NotFound, ValidationFailed, Success>> UnpublishCourseAsync(
+        string courseId, User user, CancellationToken cancellationToken = default);
 
-    Task<OneOf<NotFound, Success>> UnpublishCourseAsync(
-        string courseId,
-        CancellationToken cancellationToken = default);
+    Task<OneOf<NotFound, ValidationFailed, Success>> ArchiveCourseAsync(
+        string courseId, User user, CancellationToken cancellationToken = default);
 
-    Task<OneOf<NotFound, Success>> ArchiveCourseAsync(
-        string courseId,
-        CancellationToken cancellationToken = default);
-
-    Task<OneOf<NotFound, Success>> RestoreCourseFromArchiveAsync(
-        string courseId,
+    Task<OneOf<NotFound, ValidationFailed, Success>> RestoreCourseFromArchiveAsync(
+        string courseId, User user,
         CancellationToken cancellationToken = default);
 
     Task<PagedResult<CoursePreviewDto>> GetMyCoursesAsync(
         GetMyCoursesRequest request,
         CancellationToken cancellationToken = default);
-
-    /*Task<PagedResult<CoursePreviewDto>> GetPendingModerationCoursesAsync(
-        GetPendingCoursesRequest request,
-        CancellationToken cancellationToken = default);*/
 
     Task<PagedResult<CoursePreviewDto>> SearchCoursesAsync(
         SearchCoursesRequest request,

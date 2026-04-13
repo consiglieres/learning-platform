@@ -1,4 +1,5 @@
 using LearningPlatformApi.Domain.Base.Impl;
+using LearningPlatformApi.Domain.Entities;
 using LearningPlatformApi.Domain.Exceptions;
 using LearningPlatformApi.Domain.ValueObjects;
 using LearningPlatformApi.Mapper;
@@ -30,6 +31,9 @@ public class VersionedRepository<TVersionableEntity, TDomainId, TVersionableDbEn
     public async Task<TVersionableEntity> GetAsync(TDomainId id, EntityVersion version, CancellationToken cancellationToken = default)
     {
         var entities = await context.Set<TVersionableDbEntity>()
+            .Include(x => x.CreatedByUser)
+            .Include(x => x.UpdatedByUser)
+            .Include(x => x.DeletedByUser)
             .FirstOrDefaultAsync(x => x.Id.Equals(id) && x.VersionOrder == version.Order, cancellationToken: cancellationToken);
 
         if (entities == null) throw new DomainException("Entity not found");
@@ -41,6 +45,9 @@ public class VersionedRepository<TVersionableEntity, TDomainId, TVersionableDbEn
     {
         var entities = await context.Set<TVersionableDbEntity>()
             .Where(x => x.Id.Equals(id))
+            .Include(x => x.CreatedByUser)
+            .Include(x => x.UpdatedByUser)
+            .Include(x => x.DeletedByUser)
             .OrderByDescending(x => x.VersionOrder)
             .LastOrDefaultAsync(cancellationToken: cancellationToken);
 
@@ -57,7 +64,7 @@ public class VersionedRepository<TVersionableEntity, TDomainId, TVersionableDbEn
         return mapper.Map(dbEntity);
     }
 
-    public virtual async Task DeleteAsync(TVersionableEntity entity, CancellationToken cancellationToken = default)
+    public async Task DeleteAsync(TVersionableEntity entity,  User user, CancellationToken cancellationToken = default)
     {
         var dbId = mapper.MapId(entity.Id);
         var dbEntity = await context.Set<TVersionableDbEntity>()
@@ -66,18 +73,40 @@ public class VersionedRepository<TVersionableEntity, TDomainId, TVersionableDbEn
         if (dbEntity == null)
             return;
 
-        var dbEntityDeleted = mapper.Map(dbEntity);
-        context.Entry(dbEntity).CurrentValues.SetValues(dbEntityDeleted);
+        dbEntity.MarkAsDeleted(user, DateTimeOffset.UtcNow);
     }
 
-    public Task DeleteAsync(TDomainId id, CancellationToken cancellationToken = default)
+    public async Task DeleteAsync(TDomainId id,  User user, CancellationToken cancellationToken = default)
     {
-        throw new NotImplementedException();
+        var dbId = mapper.MapId(id);
+        var dbEntities = await context.Set<TVersionableDbEntity>()
+            .Where(x => x.Id.Equals(dbId))
+            .ToListAsync(cancellationToken: cancellationToken);
+
+        if (!dbEntities.Any())
+            return;
+
+        foreach(var dbEntity in dbEntities)
+        {
+            dbEntity.MarkAsDeleted(user, DateTimeOffset.UtcNow);
+        }
+
+        context.RemoveRange(dbEntities);
     }
 
-    public Task<TVersionableEntity> UpdateAsync(TVersionableEntity entity, CancellationToken cancellationToken = default)
+    public async Task<TVersionableEntity> UpdateAsync(TVersionableEntity entity, CancellationToken cancellationToken = default)
     {
-        throw new NotImplementedException();
+        var dbId = mapper.MapId(entity.Id);
+        var dbEntity = await context.Set<TVersionableDbEntity>()
+            .FirstOrDefaultAsync(x => x.Id.Equals(dbId) && x.VersionOrder == entity.Version.Order, 
+                cancellationToken: cancellationToken);
+
+        if (dbEntity == null) throw new DomainException("Entity not found");
+        
+        var updated = mapper.Map(dbEntity);
+        context.Entry(dbEntity).CurrentValues.SetValues(updated);
+
+        return mapper.Map(dbEntity);
     }
 
     public virtual async Task<TVersionableEntity> AddNewVersion(TVersionableEntity entity, CancellationToken cancellationToken = default)

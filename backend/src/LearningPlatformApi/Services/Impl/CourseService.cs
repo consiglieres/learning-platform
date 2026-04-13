@@ -1,5 +1,9 @@
+using LearningPlatformApi.Domain.Entities;
 using LearningPlatformApi.Domain.Entities.Courses;
 using LearningPlatformApi.Domain.HandleStates;
+using LearningPlatformApi.Domain.Repositories;
+using LearningPlatformApi.Domain.ValueObjects;
+using LearningPlatformApi.Persistence.Repositories.Base;
 using LearningPlatformApi.Services.DataObjects.Request;
 using LearningPlatformApi.Services.DataObjects.Request.Course;
 using LearningPlatformApi.Services.DataObjects.Response.Course;
@@ -13,48 +17,206 @@ using ValidationFailed = LearningPlatformApi.Domain.HandleStates.ValidationFaile
 
 namespace LearningPlatformApi.Services.Impl;
 
-public class CourseService() : ICourseService
+public class CourseService(
+    ICourseRepository courseRepository, 
+    IUnitOfWork unitOfWork) : ICourseService
 {
-    public Task<OneOf<OperationNotSucceeded<Error>, Success<Course>>> CreateCourseDraftAsync(CreateCourseDraftRequest request, CancellationToken cancellationToken = default)
+    public async Task<OneOf<OperationNotSucceeded<Error>, Success<Course>>> CreateCourseDraftAsync(CreateCourseDraftRequest request, CancellationToken cancellationToken = default)
     {
-        throw new NotImplementedException();
+        var (title, description, categories, user) = request;
+        var course = new Course(title, description,  user);
+        
+        course.AddCategories(categories);
+        await courseRepository.CreateAsync(course, cancellationToken);
+        await unitOfWork.SaveChangesAsync(cancellationToken);
+
+        return new Success<Course>(course);
     }
 
-    public Task<OneOf<EntityNotExists, Success<Course>>> GetCourseDraftAsync(string courseId, CancellationToken cancellationToken = default)
+    public async Task<OneOf<EntityNotExists, Success<Course>>> GetCourseLastAsync(string courseId, CancellationToken cancellationToken = default)
     {
-        throw new NotImplementedException();
+        var draft = await courseRepository.GetLastAsync(courseId, cancellationToken);
+        return new Success<Course>(draft);
     }
-
-    public Task<OneOf<NotFound, OperationNotSucceeded<Error>, Course>> UpdateCourseInfoAsync(string courseId, UpdateCourseInfoRequest request,
+    
+    public async Task<OneOf<EntityNotExists, Success<Course>>> GetCourseVersionAsync(string courseId, int version, 
         CancellationToken cancellationToken = default)
     {
-        throw new NotImplementedException();
+        var draft = await courseRepository.GetAsync(courseId, new EntityVersion(version), cancellationToken);
+        return new Success<Course>(draft);
     }
 
-    public Task<OneOf<NotFound, Success<Error>>> DeleteCourseDraftAsync(string courseId, CancellationToken cancellationToken = default)
-    {
-        throw new NotImplementedException();
-    }
-
-    public Task<OneOf<NotFound, ValidationFailed, Success>> PublishCourseAsync(string courseId, bool submitForModeration = true,
+    public async Task<OneOf<NotFound, OperationNotSucceeded<Error>, Success<Course>>> UpdateCourseInfoAsync(string courseId, UpdateCourseInfoRequest request,
         CancellationToken cancellationToken = default)
     {
-        throw new NotImplementedException();
+        var existingCourse = await courseRepository.GetLastAsync(courseId, cancellationToken);
+        
+        var (title, description, categories) = request;
+        if (title != null)
+        {
+            existingCourse.Title = title;
+        }
+        if (description != null)
+        {
+            existingCourse.Description = description;
+        }
+        if (categories != null && categories.Any())
+        {
+            existingCourse.ResetCategories(categories);
+        }
+        var updated = await courseRepository.UpdateAsync(existingCourse, cancellationToken);
+        await unitOfWork.SaveChangesAsync(cancellationToken);
+        
+        return new Success<Course>(updated);
     }
 
-    public Task<OneOf<NotFound, Success>> UnpublishCourseAsync(string courseId, CancellationToken cancellationToken = default)
+    public async Task<OneOf<NotFound, Success>> DeleteCourseAsync(string courseId, User user, CancellationToken cancellationToken = default)
     {
-        throw new NotImplementedException();
+        await courseRepository.DeleteAsync(courseId, user, cancellationToken);
+        await unitOfWork.SaveChangesAsync(cancellationToken);
+        return new Success();
     }
 
-    public Task<OneOf<NotFound, Success>> ArchiveCourseAsync(string courseId, CancellationToken cancellationToken = default)
+    public async Task<OneOf<NotFound, ValidationFailed, Success>>  ApprovePublishCourseAsync(string courseId, User user,
+        ModerationCourseComment? comment, CancellationToken cancellationToken = default)
     {
-        throw new NotImplementedException();
+        var courseResult = await GetCourseLastAsync(courseId, cancellationToken);
+    
+        if (courseResult.IsT0)
+            return new NotFound();
+    
+        var course = courseResult.AsT1.Value; // Success case
+        try
+        {
+            course.Approve(user, comment?.Comment);
+            await courseRepository.UpdateAsync(course, cancellationToken);
+            await unitOfWork.SaveChangesAsync(cancellationToken);
+        }
+        catch(Exception ex)
+        {
+            return new ValidationFailed(ex.Message);
+        }
+        
+        return new Success();
     }
 
-    public Task<OneOf<NotFound, Success>> RestoreCourseFromArchiveAsync(string courseId, CancellationToken cancellationToken = default)
+    public async Task<OneOf<NotFound, ValidationFailed, Success>> SubmitForModerationCourseAsync(
+        string courseId, User user, CancellationToken cancellationToken = default)
     {
-        throw new NotImplementedException();
+        var courseResult = await GetCourseLastAsync(courseId, cancellationToken);
+    
+        if (courseResult.IsT0)
+            return new NotFound();
+    
+        var course = courseResult.AsT1.Value; // Success case
+        try
+        {
+            course.SubmitForModeration(user);
+            await courseRepository.UpdateAsync(course, cancellationToken);
+            await unitOfWork.SaveChangesAsync(cancellationToken);
+        }
+        catch(Exception ex)
+        {
+            return new ValidationFailed(ex.Message);
+        }
+        
+        return new Success();
+    }
+
+    public async Task<OneOf<NotFound, ValidationFailed, Success>> RejectCourseAsync(
+        string courseId, User user, ModerationCourseComment comment, CancellationToken cancellationToken = default)
+    {
+        var courseResult = await GetCourseLastAsync(courseId, cancellationToken);
+    
+        if (courseResult.IsT0)
+            return new NotFound();
+    
+        var course = courseResult.AsT1.Value; // Success case
+        try
+        {
+            if (comment.Comment == null)
+            {
+                return new ValidationFailed("Should send reject moderation comment");
+            }
+            course.Reject(user, comment.Comment);
+            await courseRepository.UpdateAsync(course, cancellationToken);
+            await unitOfWork.SaveChangesAsync(cancellationToken);
+        }
+        catch(Exception ex)
+        {
+            return new ValidationFailed(ex.Message);
+        }
+        
+        return new Success();
+    }
+
+    public async Task<OneOf<NotFound, ValidationFailed, Success>> UnpublishCourseAsync(string courseId, User user, 
+        CancellationToken cancellationToken = default)
+    {
+        var courseResult = await GetCourseLastAsync(courseId, cancellationToken);
+    
+        if (courseResult.IsT0)
+            return new NotFound();
+    
+        var course = courseResult.AsT1.Value; // Success case
+        try
+        {
+            course.Unpublish(user);
+            await courseRepository.UpdateAsync(course, cancellationToken);
+            await unitOfWork.SaveChangesAsync(cancellationToken);
+        }
+        catch(Exception ex)
+        {
+            return new ValidationFailed(ex.Message);
+        }
+        
+        return new Success();
+    }
+
+    public async Task<OneOf<NotFound, ValidationFailed, Success>> ArchiveCourseAsync(string courseId, User user, 
+        CancellationToken cancellationToken = default)
+    {
+        var courseResult = await GetCourseLastAsync(courseId, cancellationToken);
+    
+        if (courseResult.IsT0)
+            return new NotFound();
+    
+        var course = courseResult.AsT1.Value; // Success case
+        try
+        {
+            course.Archive(user);
+            await courseRepository.UpdateAsync(course, cancellationToken);
+            await unitOfWork.SaveChangesAsync(cancellationToken);
+        }
+        catch(Exception ex)
+        {
+            return new ValidationFailed(ex.Message);
+        }
+        
+        return new Success();
+    }
+
+    public async Task<OneOf<NotFound, ValidationFailed, Success>> RestoreCourseFromArchiveAsync(string courseId, User user,
+        CancellationToken cancellationToken = default)
+    {
+        var courseResult = await GetCourseLastAsync(courseId, cancellationToken);
+    
+        if (courseResult.IsT0)
+            return new NotFound();
+    
+        var course = courseResult.AsT1.Value; // Success case
+        try
+        {
+            course.RestoreFromArchive(user);
+            await courseRepository.UpdateAsync(course, cancellationToken);
+            await unitOfWork.SaveChangesAsync(cancellationToken);
+        }
+        catch(Exception ex)
+        {
+            return new ValidationFailed(ex.Message);
+        }
+        
+        return new Success();
     }
 
     public Task<PagedResult<CoursePreviewDto>> GetMyCoursesAsync(GetMyCoursesRequest request, CancellationToken cancellationToken = default)
