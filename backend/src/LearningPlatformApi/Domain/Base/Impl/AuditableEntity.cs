@@ -6,13 +6,13 @@ namespace LearningPlatformApi.Domain.Base.Impl;
 public abstract record AuditableEntity<TKey>(TKey Id)
     : DomainEntity<TKey>(Id), IAuditable, ICreatable, IUpdatable, ISoftDeletable
 {
-    public DateTimeOffset CreatedAt { get; private set; }
-    public User CreatedBy { get; private set; } = null!;
-    public DateTimeOffset? UpdatedAt { get; private set; }
-    public User? UpdatedBy { get; private set; }
+    public DateTimeOffset CreatedAt { get; set ; }
+    public User CreatedBy { get; set; } = null!;
+    public DateTimeOffset? UpdatedAt { get; set; }
+    public User? UpdatedBy { get; set; }
 
-    public DateTimeOffset? DeletedAt { get; private set; }
-    public User? DeletedBy { get; private set; }
+    public DateTimeOffset? DeletedAt { get; set; }
+    public User? DeletedBy { get; set; }
 
     public void MarkAsCreated(User createdBy, DateTimeOffset createdAt)
     {

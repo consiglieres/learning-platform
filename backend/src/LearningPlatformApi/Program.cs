@@ -1,13 +1,10 @@
 using LearningPlatformApi.Authorization.AuthorizationHandlers;
-using LearningPlatformApi.Domain.Entities.Courses;
-using LearningPlatformApi.Domain.Entities.Page;
 using LearningPlatformApi.Domain.Repositories;
 using LearningPlatformApi.Hosting;
 using LearningPlatformApi.Mapper;
 using LearningPlatformApi.Mapper.Impl;
 using LearningPlatformApi.Persistence.Context;
 using LearningPlatformApi.Persistence.Entities;
-using LearningPlatformApi.Persistence.Entities.Page;
 using LearningPlatformApi.Persistence.Repositories;
 using LearningPlatformApi.Persistence.Repositories.Base;
 using LearningPlatformApi.Services;
@@ -91,8 +88,6 @@ builder.Services.AddScoped<IAuthorizationHandler, ResourceAuthorizationHandler>(
 
 // Mappers
 builder.Services.AddSingleton<IUserMapper, UserMapper>();
-builder.Services.AddSingleton<IDbEntityMapper<Course, string, CourseEntity, string>, DbMapper>();
-builder.Services.AddSingleton<IDbEntityMapper<Page, string, PageEntity, string>, DbMapper>();
 builder.Services.AddScoped<IUserRegistrationService, UserRegistrationService>();
 builder.Services.AddScoped<IUserAuthenticationService, UserAuthenticationService>();
 builder.Services.AddScoped<IUserProfileService, UserProfileService>();

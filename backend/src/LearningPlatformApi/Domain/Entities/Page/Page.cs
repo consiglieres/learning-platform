@@ -3,15 +3,23 @@ using LearningPlatformApi.Domain.ValueObjects.Page;
 
 namespace LearningPlatformApi.Domain.Entities.Page;
 
-public record Page(string Id, PageType Type, IReadOnlyCollection<PageContentBlock> ContentBlocks)
+public record Page(string Id)
     : VersionableEntity<string>(Id)
 {
+
     public int Order { get; set; }
 
-    public PageType Type { get; set; } = Type;
+    public PageType Type { get; set; }
 
-    public IReadOnlyCollection<PageContentBlock> ContentBlocks { get; set; } = ContentBlocks;
+    public IReadOnlyCollection<PageContentBlock> ContentBlocks { get; set; }
 
     public static Page EmptyPage(PageType pageType)
-        => new(Guid.NewGuid().ToString(), pageType, []);
+    {
+        return new Page(Guid.NewGuid().ToString())
+        {
+            Order = int.MaxValue,
+            Type = pageType,
+            ContentBlocks = []
+        };
+    }
 }

@@ -25,4 +25,8 @@
       <Folder Include="Authorization\Services\" />
     </ItemGroup>
 
+    <ItemGroup>
+        <InternalsVisibleTo Include="LearningPlatformApi.Tests"/>
+    </ItemGroup>
+
 </Project>

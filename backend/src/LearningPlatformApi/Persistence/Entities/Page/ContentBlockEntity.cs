@@ -3,7 +3,7 @@ using LearningPlatformApi.Persistence.Entities.Base;
 
 namespace LearningPlatformApi.Persistence.Entities.Page;
 
-public class ContentBlockEntity(string id) : VersionableDbEntity<string>(id)
+public class ContentBlockEntity(int id) : AuditableDbEntity<int>(id)
 {
     public string PageId { get; set; }
 

@@ -5,7 +5,7 @@ using Microsoft.EntityFrameworkCore.Metadata.Builders;
 
 namespace LearningPlatformApi.Persistence.EntitiesConfiguration;
 
-public sealed class ContentBlockEntityConfiguration : VersionableDbEntityConfiguration<ContentBlockEntity, string>
+public sealed class ContentBlockEntityConfiguration : AuditableDbEntityConfiguration<ContentBlockEntity, int>
 {
     protected override void OverrideConfigure(EntityTypeBuilder<ContentBlockEntity> modelBuilder)
     {
