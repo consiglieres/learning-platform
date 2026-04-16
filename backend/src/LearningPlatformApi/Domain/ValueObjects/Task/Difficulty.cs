@@ -2,22 +2,13 @@ using LearningPlatformApi.Domain.Exceptions;
 
 namespace LearningPlatformApi.Domain.ValueObjects.Task;
 
-public record Difficulty
+public record Difficulty(string Name, int BasePoints)
 {
     public static readonly Difficulty Easy = new("Easy", 10);
 
     public static readonly Difficulty Medium = new("Medium", 20);
 
     public static readonly Difficulty Hard = new("Hard", 30);
-
-    public string Name { get; }
-    public int BasePoints { get; }
-
-    private Difficulty(string name, int basePoints)
-    {
-        Name = name;
-        BasePoints = basePoints;
-    }
 
     public static Difficulty FromString(string name) => name switch
     {

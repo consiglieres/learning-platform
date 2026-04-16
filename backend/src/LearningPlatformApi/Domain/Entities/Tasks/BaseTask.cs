@@ -1,7 +1,7 @@
 using LearningPlatformApi.Domain.Base.Impl;
 using LearningPlatformApi.Domain.Entities.Courses;
-using LearningPlatformApi.Domain.Entities.Page;
 using LearningPlatformApi.Domain.ValueObjects.Task;
+
 
 namespace LearningPlatformApi.Domain.Entities.Tasks;
 
@@ -17,6 +17,8 @@ public abstract record BaseTask : VersionableEntity<string>
 
     public Page.Page PageContent { get; private set; }
 
+    protected BaseTask(string id) : base(id) {}
+ 
     protected BaseTask(string id, string name, int order, Difficulty difficulty, Lesson lesson, Page.Page pageContent)
         : base(id)
     {

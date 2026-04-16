@@ -1,5 +1,4 @@
 using LearningPlatformApi.Domain.Entities.Courses;
-using LearningPlatformApi.Domain.Entities.Page;
 using LearningPlatformApi.Domain.ValueObjects.Task;
 
 namespace LearningPlatformApi.Domain.Entities.Tasks;
@@ -8,7 +7,6 @@ public record CodingTask : BaseTask
 {
     public string InitialCode { get; private set; }
     public string TestCode { get; private set; }
-
     public CodingTask(string name, int order, Difficulty difficulty, Lesson lesson, Page.Page page,
         string initialCode, string testCode)
         : base(Guid.NewGuid().ToString(), name, order, difficulty, lesson, page)

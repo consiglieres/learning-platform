@@ -4,15 +4,19 @@ namespace LearningPlatformApi.Persistence.Entities.Base;
 
 public abstract class PublicationDbEntity<TId>(TId id) : VersionableDbEntity<TId>(id)
 {
-    public string? ModerationComment { get; private set; }
+    public string? ModerationComment { get; set; }
 
-    public DateTimeOffset? SubmittedForModerationAt { get; private set; }
+    public DateTimeOffset? SubmittedForModerationAt { get; set; }
 
-    public string? SubmittedBy { get; private set; }
+    public string? SubmittedBy { get; set; }
+    
+    public UserEntity? SubmittedByUser { get; set; }
 
-    public DateTimeOffset? PublishedAt { get; private set; }
+    public DateTimeOffset? PublishedAt { get; set; }
 
-    public string? PublishedBy { get; private set; }
+    public string? PublishedBy { get; set; }
+    
+    public UserEntity? PublishedByUser { get; set; }
 
-    public PublicationWorkflowStatus Status { get; private set; }
+    public PublicationWorkflowStatus Status { get; set; }
 }

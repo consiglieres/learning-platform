@@ -6,20 +6,20 @@ namespace LearningPlatformApi.Domain.Base.Impl;
 
 public abstract record PublicationWorkflowEntity<TKey> : VersionableEntity<TKey>, IPublicationWorkflow
 {
-    public string? ModerationComment { get; private set; }
+    public string? ModerationComment { get; set; }
 
-    public DateTimeOffset? SubmittedForModerationAt { get; private set; }
+    public DateTimeOffset? SubmittedForModerationAt { get; set; }
 
-    public User? SubmittedBy { get; private set; }
+    public User? SubmittedBy { get; set; }
 
-    public DateTimeOffset? PublishedAt { get; private set; }
+    public DateTimeOffset? PublishedAt { get; set; }
 
-    public User? PublishedBy { get; private set; }
+    public User? PublishedBy { get; set; }
 
     public PublicationWorkflowStatus Status
     {
         get;
-        private set
+        set
         {
             field = value;
             OnStatusChanged();

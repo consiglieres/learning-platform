@@ -1,5 +1,4 @@
 using LearningPlatformApi.Persistence.Entities.Base;
-using LearningPlatformApi.Persistence.Entities.Page;
 
 namespace LearningPlatformApi.Persistence.Entities;
 

@@ -12,20 +12,20 @@ public record TestTask : BaseTask
 
     public IReadOnlyCollection<string> Options => options.AsReadOnly();
 
-    private readonly IReadOnlyCollection<string> correctAnswer;
+    public IReadOnlyCollection<string> Answer { get; set; }
 
-    public TestTask(string name, int order, Difficulty difficulty, Lesson lesson, Page.Page page,
+    public TestTask(string name, int order, Difficulty difficulty, Lesson lesson, Page.Page? page,
         string question, IEnumerable<string> options, IEnumerable<string> correctAnswer)
         : base(Guid.NewGuid().ToString(), name, order, difficulty, lesson, page)
     {
         Question = question;
         this.options.AddRange(options);
-        this.correctAnswer = correctAnswer.ToList();
+        Answer = correctAnswer.ToList();
         MarkAsCreated(lesson.Module.CreatedBy, DateTimeOffset.UtcNow);
     }
 
     public override bool CheckAnswer(object answer)
     {
-        return answer.Equals(correctAnswer);
+        return answer.Equals(Answer);
     }
 }

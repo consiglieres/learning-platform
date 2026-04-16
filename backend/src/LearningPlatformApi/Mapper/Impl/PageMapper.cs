@@ -5,7 +5,7 @@ using LearningPlatformApi.Persistence.Entities.Page;
 using Riok.Mapperly.Abstractions;
 
 [Mapper]
-internal partial class PageMapper
+internal partial class PageMapper : IDbEntityMapper<Page, string, PageEntity, string>
 {
     private readonly IUserMapper? userMapper;
 
@@ -91,6 +91,11 @@ internal partial class PageMapper
         };
 
         return entity;
+    }
+
+    public string MapId(string id)
+    {
+        return id;
     }
 
     #endregion

@@ -10,13 +10,11 @@ public record Course : PublicationWorkflowEntity<string>
     public string Description { get; set; }
 
     public List<TypedCategory> Categories { get; set; } = [];
+    
+    public List<Module> Modules { get; set; }
 
-    private readonly List<Module> modules = new();
-
-    public IReadOnlyCollection<Module> Modules => modules.AsReadOnly();
-
-    public Page.Page IntroductionPage { get; }
-
+    public Page.Page IntroductionPage { get; set; }
+    
     public Course(string title, string description, User creator) : base(Guid.NewGuid().ToString())
     {
         Title = title;
@@ -27,10 +25,10 @@ public record Course : PublicationWorkflowEntity<string>
 
     public void AddModule(Module module)
     {
-        if (modules.Any(m => m.ModuleOrder == module.ModuleOrder))
+        if (Modules.Any(m => m.ModuleOrder == module.ModuleOrder))
             throw new DomainException($"Module with order {module.ModuleOrder} already exists");
 
-        modules.Add(module);
+        Modules.Add(module);
     }
 
     public void AddCategory(TypedCategory category)

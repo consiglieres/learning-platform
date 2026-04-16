@@ -12,9 +12,7 @@ public class ModuleEntity(string id) : VersionableDbEntity<string>(id)
     public PageEntity IntroductionPage { get; set; }
 
     public string PageId { get; set; }
-
-    public CourseEntity Course { get; set; }
-
+    
     public string CourseId { get; set; }
 
     public IReadOnlyCollection<LessonEntity> Lessons { get; set; }
