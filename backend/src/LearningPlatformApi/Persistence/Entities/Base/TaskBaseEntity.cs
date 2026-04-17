@@ -18,7 +18,7 @@ public abstract class TaskBaseEntity(string id) : VersionableDbEntity<string>(id
 
     public LessonEntity Lesson { get; set; }
 
-    public string? PageId { get; set; }
+    public string PageId { get; set; }
 
-    public PageEntity? Page { get; set; }
+    public PageEntity Page { get; set; }
 }

@@ -19,7 +19,7 @@ internal partial class CodingTaskMapper(IDbEntityMapper<Page, string, PageEntity
         return new CodingTask(entity.Name, entity.Order, 
             new Difficulty(entity.DifficultyCategory, entity.DifficultyPoints), 
             entity.LessonId, 
-            entity.Page == null ? Page.EmptyPage(PageType.Task) : pageMapper.Map(entity.Page),
+            pageMapper.Map(entity.Page),
             entity.InitialCode, entity.TestCode, userMapper.MapToDomain(entity.CreatedByUser))
         {
             Id = entity.Id,

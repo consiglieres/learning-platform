@@ -9,13 +9,7 @@ public sealed class CategoriesEntityConfiguration : IEntityTypeConfiguration<Cat
     public void Configure(EntityTypeBuilder<CategoryEntity> builder)
     {
         builder.ToTable("Categories");
-        builder.HasKey(k => new { k.TypeCode, k.ValueCode });
-
-        builder.Property(x => x.TypeCode)
-            .IsRequired();
-
-        builder.Property(x => x.ValueCode)
-            .IsRequired();
+        builder.HasKey(k => new { k.TypeName, k.ValueName });
 
         builder.Property(x => x.TypeName)
             .IsRequired();

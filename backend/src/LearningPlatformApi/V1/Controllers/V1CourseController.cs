@@ -1,5 +1,4 @@
 using LearningPlatformApi.Domain.Entities.Courses;
-using LearningPlatformApi.Domain.ValueObjects.Course;
 using LearningPlatformApi.Mapper;
 using LearningPlatformApi.Services;
 using LearningPlatformApi.Services.DataObjects.Request.Course;
@@ -393,56 +392,10 @@ public class V1CoursesController(
             success => Ok(new { message = "Course restored from archive successfully" })
         );
     }
-
-    #region Private Methods
-
-    private IReadOnlyCollection<TypedCategory> MapToTypedCategories(IEnumerable<string>? categoryCodes)
+    
+    private IReadOnlyCollection<TypedCategory> MapToTypedCategories(List<V1CourseCategory> requestCategories)
     {
-        var categories = new List<TypedCategory>();
-        
-        if (categoryCodes == null)
-            return categories;
-        
-        foreach (var code in categoryCodes)
-        {
-            var category = GetCategoryByCode(code);
-            if (category != null)
-            {
-                // Определяем тип категории по её коду
-                var categoryType = GetCategoryType(category);
-                categories.Add(new TypedCategory(categoryType, category));
-            }
-        }
-        
-        return categories;
+        return requestCategories.Select(x 
+            => new TypedCategory(x.TypeName, x.ValueName)).ToList();
     }
-
-    private Category? GetCategoryByCode(string code)
-    {
-        return code switch
-        {
-            "programming" => Category.Programming,
-            "data-science" => Category.DataScience,
-            "python" => Category.Python,
-            "javascript" => Category.JavaScript,
-            "beginner" => Category.BeginnerEasy,
-            _ => null
-        };
-    }
-
-    private CategoryType GetCategoryType(Category category)
-    {
-        if (category == Category.Programming || category == Category.DataScience)
-            return CategoryType.Direction;
-        
-        if (category == Category.Python || category == Category.JavaScript)
-            return CategoryType.Technology;
-        
-        if (category == Category.BeginnerEasy)
-            return CategoryType.Difficulty;
-        
-        return CategoryType.Direction;
-    }
-
-    #endregion
 }

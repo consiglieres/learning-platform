@@ -199,7 +199,7 @@ public class PageMapperTests
     public void Map_WhenContentBlockEntityIsValid_ShouldMapToPageContentBlockCorrectly()
     {
         // Arrange
-        var entity = new ContentBlockEntity(123)
+        var entity = new ContentBlockEntity("123")
         {
             PageId = "page-1",
             Order = 1,
@@ -218,7 +218,7 @@ public class PageMapperTests
 
         // Assert
         result.Should().NotBeNull();
-        result.Id.Should().Be(123);
+        result.Id.Should().Be("123");
         result.PageId.Should().Be("page-1");
         result.Order.Should().Be(1);
         result.Data.Should().Be("<p>Hello</p>");
@@ -230,7 +230,7 @@ public class PageMapperTests
     {
         // Arrange
         var contentBlock = new PageContentBlock(
-            123,
+            "123",
             "page-1",
             1,
             ContentBlockType.CreateMarkup,
@@ -245,7 +245,7 @@ public class PageMapperTests
 
         // Assert
         result.Should().NotBeNull();
-        result.Id.Should().Be(123);
+        result.Id.Should().Be("123");
         result.PageId.Should().Be("page-1");
         result.Order.Should().Be(1);
         result.Data.Should().Be("<p>Hello</p>");
@@ -256,7 +256,7 @@ public class PageMapperTests
     public void Map_WhenContentBlockEntityHasImageType_ShouldMapToImageContentBlockType()
     {
         // Arrange
-        var entity = new ContentBlockEntity(456)
+        var entity = new ContentBlockEntity("456")
         {
             Type = ContentBlockType.CreateImage,
             Data = "https://example.com/image.png",
@@ -279,7 +279,7 @@ public class PageMapperTests
     public void Map_WhenContentBlockEntityHasVideoType_ShouldMapToVideoContentBlockType()
     {
         // Arrange
-        var entity = new ContentBlockEntity(789)
+        var entity = new ContentBlockEntity("789")
         {
             Type = ContentBlockType.CreateUrl,
             Data = "https://youtube.com/watch?v=123",
@@ -302,7 +302,7 @@ public class PageMapperTests
     public void Map_WhenContentBlockEntityHasCodeType_ShouldMapToCodeContentBlockType()
     {
         // Arrange
-        var entity = new ContentBlockEntity(101)
+        var entity = new ContentBlockEntity("101")
         {
             Type = ContentBlockType.CreateCode,
             Data = "print('Hello')",
@@ -405,7 +405,7 @@ public class PageMapperTests
             Type = PageType.Theory,
             ContentBlocks = new List<PageContentBlock>
             {
-                new(1, "page-123", 1, ContentBlockType.CreateMarkup, "<p>Test</p>")
+                new("1", "page-123", 1, ContentBlockType.CreateMarkup, "<p>Test</p>")
                 {
                     CreatedBy = UserObjectMother.Create("user1")
                 }
@@ -442,7 +442,7 @@ public class PageMapperTests
             TypeName = "Теория",
             ContentBlocks = new List<ContentBlockEntity>
             {
-                new(1)
+                new("1")
                 {
                     PageId = "page-123",
                     Order = 1,
@@ -474,15 +474,15 @@ public class PageMapperTests
             Type = PageType.Theory,
             ContentBlocks = new List<PageContentBlock>
             {
-                new(1, "page-1", 1, ContentBlockType.CreateMarkup, "First")
+                new("1", "page-1", 1, ContentBlockType.CreateMarkup, "First")
                 {
                     CreatedBy = UserObjectMother.Create("user1")
                 },
-                new(2, "page-1", 2, ContentBlockType.CreateImage, "Second")
+                new("2", "page-1", 2, ContentBlockType.CreateImage, "Second")
                 {
                     CreatedBy = UserObjectMother.Create("user1")
                 },
-                new(3, "page-1", 3, ContentBlockType.CreateCode, "Third")
+                new("3", "page-1", 3, ContentBlockType.CreateCode, "Third")
                 {
                     CreatedBy = UserObjectMother.Create("user1")
                 },
@@ -508,7 +508,7 @@ public class PageMapperTests
     public void Map_WhenContentBlockHasCreatedBy_ShouldMapCreatedByUser()
     {
         // Arrange
-        var contentBlock = new PageContentBlock(1, "page-1", 1, ContentBlockType.CreateMarkup, "data")
+        var contentBlock = new PageContentBlock("1", "page-1", 1, ContentBlockType.CreateMarkup, "data")
         {
             CreatedBy = UserObjectMother.Create()
         };

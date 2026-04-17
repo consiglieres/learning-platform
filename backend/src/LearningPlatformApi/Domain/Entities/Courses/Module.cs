@@ -22,7 +22,7 @@ public record Module : VersionableEntity<string>
         ModuleOrder = moduleOrder;
         CourseId = courseId;
         Lessons = lessons.ToList();
-        IntroductionPage = Page.Page.EmptyPage(PageType.Introduction);
+        IntroductionPage = Page.Page.EmptyPage(PageType.Introduction, creator);
         MarkAsCreated(creator, DateTimeOffset.UtcNow);
     }
 

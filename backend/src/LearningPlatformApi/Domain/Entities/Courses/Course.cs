@@ -19,7 +19,7 @@ public record Course : PublicationWorkflowEntity<string>
     {
         Title = title;
         Description = description;
-        IntroductionPage = Page.Page.EmptyPage(PageType.Introduction);
+        IntroductionPage = Page.Page.EmptyPage(PageType.Introduction, creator);
         MarkAsCreated(creator, DateTimeOffset.UtcNow);
     }
 
