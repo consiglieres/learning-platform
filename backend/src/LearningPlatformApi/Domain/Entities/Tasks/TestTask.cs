@@ -1,5 +1,3 @@
-using LearningPlatformApi.Domain.Entities.Courses;
-using LearningPlatformApi.Domain.Entities.Page;
 using LearningPlatformApi.Domain.ValueObjects.Task;
 
 namespace LearningPlatformApi.Domain.Entities.Tasks;
@@ -14,14 +12,14 @@ public record TestTask : BaseTask
 
     public IReadOnlyCollection<string> Answer { get; set; }
 
-    public TestTask(string name, int order, Difficulty difficulty, Lesson lesson, Page.Page? page,
-        string question, IEnumerable<string> options, IEnumerable<string> correctAnswer)
-        : base(Guid.NewGuid().ToString(), name, order, difficulty, lesson, page)
+    public TestTask(string name, int order, Difficulty difficulty, string lessonId, Page.Page page,
+        string question, IEnumerable<string> options, IEnumerable<string> correctAnswer, User createdBy)
+        : base(Guid.NewGuid().ToString(), name, order, difficulty, lessonId, page)
     {
         Question = question;
         this.options.AddRange(options);
         Answer = correctAnswer.ToList();
-        MarkAsCreated(lesson.Module.CreatedBy, DateTimeOffset.UtcNow);
+        MarkAsCreated(createdBy, DateTimeOffset.UtcNow);
     }
 
     public override bool CheckAnswer(object answer)

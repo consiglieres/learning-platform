@@ -10,14 +10,14 @@ using Riok.Mapperly.Abstractions;
 namespace LearningPlatformApi.Mapper.Impl;
 
 [Mapper]
-internal partial class TestTaskMapper(IDbEntityMapper<Lesson, string, LessonEntity, string> lessonMapper,
-    IDbEntityMapper<Page, string, PageEntity, string> pageMapper,
+internal partial class TestTaskMapper(IDbEntityMapper<Page, string, PageEntity, string> pageMapper,
     IUserMapper userMapper) : IDbEntityMapper<TestTask, string, TestTaskEntity, string>
 {
     public TestTask Map(TestTaskEntity entity)
     {
         return new TestTask(entity.Name, entity.Order, new Difficulty(entity.DifficultyCategory, entity.DifficultyPoints),
-            lessonMapper.Map(entity.Lesson), entity.Page == null ? null : pageMapper.Map(entity.Page), entity.Question, entity.Options, entity.CorrectAnswer)
+            entity.LessonId, entity.Page == null ? null : pageMapper.Map(entity.Page), entity.Question, entity.Options, 
+            entity.CorrectAnswer, userMapper.MapToDomain(entity.CreatedByUser))
         {
             Id = entity.Id,
             AllVersions = [],
@@ -42,8 +42,7 @@ internal partial class TestTaskMapper(IDbEntityMapper<Lesson, string, LessonEnti
             Order = entity.Order,
             DifficultyCategory = entity.Difficulty.Name,
             DifficultyPoints = entity.Difficulty.BasePoints,
-            LessonId = entity.Lesson.Id,
-            Lesson = lessonMapper.Map(entity.Lesson),
+            LessonId = entity.LessonId,
             PageId = entity.PageContent.Id,
             Page = pageMapper.Map(entity.PageContent),
             VersionOrder = entity.Version.Order,

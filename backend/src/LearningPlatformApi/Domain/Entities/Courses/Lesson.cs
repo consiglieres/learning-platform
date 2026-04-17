@@ -15,21 +15,18 @@ public record Lesson : VersionableEntity<string>
     public Page.Page PageContent { get; private set; }
 
     public string ModuleId { get; private set; }
-
-    public Module Module { get; private set; } = null!;
     
     public List<BaseTask> Tasks { get; set; }
     
-    public Lesson(string name, int lessonOrder, int passThreshold, Page.Page page, Module module, User creator)
+    public Lesson(string name, int lessonOrder, int passThreshold, Page.Page page, string moduleId, User creator)
         : base(Guid.NewGuid().ToString())
     {
         Name = name;
         LessonOrder = lessonOrder;
         PassThreshold = passThreshold;
         PageContent = page;
-        Module = module;
         Tasks = [];
-        ModuleId = module.Id;
+        ModuleId = moduleId;
         MarkAsCreated(creator, DateTimeOffset.UtcNow);
     }
 

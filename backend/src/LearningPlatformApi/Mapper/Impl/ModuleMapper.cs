@@ -1,6 +1,5 @@
 using LearningPlatformApi.Domain.Entities.Courses;
 using LearningPlatformApi.Domain.Entities.Page;
-using LearningPlatformApi.Domain.Entities.Tasks;
 using LearningPlatformApi.Domain.ValueObjects;
 using LearningPlatformApi.Persistence.Entities;
 using LearningPlatformApi.Persistence.Entities.Page;
@@ -11,9 +10,6 @@ namespace LearningPlatformApi.Mapper.Impl;
 [Mapper]
 internal partial class ModuleMapper(
     IDbEntityMapper<Page, string, PageEntity, string> pageMapper,
-    IDbEntityMapper<Module, string, ModuleEntity, string> moduleMapper,
-    IDbEntityMapper<CodingTask, string, CodingTaskEntity, string> codingTaskMapper,
-    IDbEntityMapper<TestTask, string, TestTaskEntity, string> testTaskMapper,
     IDbEntityMapper<Lesson, string, LessonEntity, string> lessonMapper,
     IUserMapper userMapper)
     : IDbEntityMapper<Module, string, ModuleEntity, string>

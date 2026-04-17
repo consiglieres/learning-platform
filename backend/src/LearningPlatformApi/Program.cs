@@ -1,10 +1,14 @@
 using LearningPlatformApi.Authorization.AuthorizationHandlers;
+using LearningPlatformApi.Domain.Entities.Courses;
+using LearningPlatformApi.Domain.Entities.Page;
+using LearningPlatformApi.Domain.Entities.Tasks;
 using LearningPlatformApi.Domain.Repositories;
 using LearningPlatformApi.Hosting;
 using LearningPlatformApi.Mapper;
 using LearningPlatformApi.Mapper.Impl;
 using LearningPlatformApi.Persistence.Context;
 using LearningPlatformApi.Persistence.Entities;
+using LearningPlatformApi.Persistence.Entities.Page;
 using LearningPlatformApi.Persistence.Repositories;
 using LearningPlatformApi.Persistence.Repositories.Base;
 using LearningPlatformApi.Services;
@@ -88,11 +92,21 @@ builder.Services.AddScoped<IAuthorizationHandler, ResourceAuthorizationHandler>(
 
 // Mappers
 builder.Services.AddSingleton<IUserMapper, UserMapper>();
+builder.Services.AddSingleton<IDbEntityMapper<CodingTask, string, CodingTaskEntity, string>, LearningPlatformApi.Mapper.Impl.CodingTaskMapper>();
+builder.Services.AddSingleton<IDbEntityMapper<Course, string, CourseEntity, string>, CourseMapper>();
+builder.Services.AddSingleton<IDbEntityMapper<Lesson, string, LessonEntity, string>, LessonMapper>();
+builder.Services.AddSingleton<IDbEntityMapper<Module, string, ModuleEntity, string>, ModuleMapper>();
+builder.Services.AddSingleton<IDbEntityMapper<Page, string, PageEntity, string>, PageMapper>();
+builder.Services.AddSingleton<IDbEntityMapper<TestTask, string, TestTaskEntity, string>, TestTaskMapper>();
+
+// Services
 builder.Services.AddScoped<IUserRegistrationService, UserRegistrationService>();
 builder.Services.AddScoped<IUserAuthenticationService, UserAuthenticationService>();
 builder.Services.AddScoped<IUserProfileService, UserProfileService>();
 builder.Services.AddScoped<IUserEmailService, UserEmailService>();
 builder.Services.AddScoped<ICourseService, CourseService>();
+
+// Repositories
 builder.Services.AddScoped<ICourseRepository, CoursesRepository>();
 
 // Authorization policies

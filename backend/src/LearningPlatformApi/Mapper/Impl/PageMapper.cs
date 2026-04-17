@@ -37,11 +37,9 @@ internal partial class PageMapper : IDbEntityMapper<Page, string, PageEntity, st
     {
         if (entity == null) return null!;
 
-        var page = new Page(entity.Id)
+        var page = new Page(entity.Id, entity.Order, MapToPageType(entity.TypeCode, entity.TypeName))
         {
-            Order = entity.Order,
-            Type = MapToPageType(entity.TypeCode, entity.TypeName),
-            ContentBlocks = entity.ContentBlocks?.Select(Map).ToList() ?? new List<PageContentBlock>(),
+            ContentBlocks = entity.ContentBlocks.Select(Map).ToList(),
             CreatedAt = entity.CreatedAt,
             UpdatedAt = entity.UpdatedAt,
             DeletedAt = entity.DeletedAt

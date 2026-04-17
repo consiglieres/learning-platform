@@ -173,10 +173,8 @@ public class PageMapperTests
     public void Map_WhenPageIsValid_ShouldMapToPageEntityCorrectly()
     {
         // Arrange
-        var page = new Page("page-123")
+        var page = new Page("page-123", 1, PageType.Theory)
         {
-            Order = 1,
-            Type = PageType.Theory,
             ContentBlocks = new List<PageContentBlock>(),
             CreatedBy = UserObjectMother.Create()
         };
@@ -360,9 +358,8 @@ public class PageMapperTests
     public void Map_WhenPageHasEmptyContentBlocks_ShouldMapToEmptyCollection()
     {
         // Arrange
-        var page = new Page("page-1")
+        var page = new Page("page-1", 1, PageType.Theory)
         {
-            Type = PageType.Theory,
             ContentBlocks = new List<PageContentBlock>(),
             CreatedBy = UserObjectMother.Create()
         };
@@ -402,7 +399,7 @@ public class PageMapperTests
     public void Map_ShouldBeReversible_PageToEntityToPage()
     {
         // Arrange
-        var originalPage = new Page("page-123")
+        var originalPage = new Page("121", 2, PageType.Theory)
         {
             Order = 2,
             Type = PageType.Theory,
@@ -472,7 +469,7 @@ public class PageMapperTests
     public void Map_WhenPageHasMultipleContentBlocks_ShouldPreserveOrder()
     {
         // Arrange
-        var page = new Page("page-1")
+        var page = new Page("page-1", 1, PageType.Theory)
         {
             Type = PageType.Theory,
             ContentBlocks = new List<PageContentBlock>

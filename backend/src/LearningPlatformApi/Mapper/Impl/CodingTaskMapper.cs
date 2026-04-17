@@ -1,4 +1,3 @@
-using LearningPlatformApi.Domain.Entities.Courses;
 using LearningPlatformApi.Domain.Entities.Page;
 using LearningPlatformApi.Domain.Entities.Tasks;
 using LearningPlatformApi.Domain.ValueObjects;
@@ -11,8 +10,7 @@ using Riok.Mapperly.Abstractions;
 namespace LearningPlatformApi.Mapper.Impl;
 
 [Mapper]
-internal partial class CodingTaskMapper(IDbEntityMapper<Lesson, string, LessonEntity, string> lessonMapper,
-    IDbEntityMapper<Page, string, PageEntity, string> pageMapper,
+internal partial class CodingTaskMapper(IDbEntityMapper<Page, string, PageEntity, string> pageMapper,
     IUserMapper userMapper)
     : IDbEntityMapper<CodingTask, string, CodingTaskEntity, string>
 {
@@ -20,9 +18,9 @@ internal partial class CodingTaskMapper(IDbEntityMapper<Lesson, string, LessonEn
     {
         return new CodingTask(entity.Name, entity.Order, 
             new Difficulty(entity.DifficultyCategory, entity.DifficultyPoints), 
-            lessonMapper.Map(entity.Lesson), 
+            entity.LessonId, 
             entity.Page == null ? Page.EmptyPage(PageType.Task) : pageMapper.Map(entity.Page),
-            entity.InitialCode, entity.TestCode)
+            entity.InitialCode, entity.TestCode, userMapper.MapToDomain(entity.CreatedByUser))
         {
             Id = entity.Id,
             AllVersions = [],
@@ -46,8 +44,7 @@ internal partial class CodingTaskMapper(IDbEntityMapper<Lesson, string, LessonEn
             Order = entity.Order,
             DifficultyCategory = entity.Difficulty.Name,
             DifficultyPoints = entity.Difficulty.BasePoints,
-            LessonId = entity.Lesson.Id,
-            Lesson = lessonMapper.Map(entity.Lesson),
+            LessonId = entity.LessonId,
             PageId = entity.PageContent.Id,
             Page = pageMapper.Map(entity.PageContent),
             VersionOrder = entity.Version.Order,

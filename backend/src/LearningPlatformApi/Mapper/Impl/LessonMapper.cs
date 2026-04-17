@@ -12,7 +12,6 @@ namespace LearningPlatformApi.Mapper.Impl;
 [Mapper]
 internal partial class LessonMapper(
     IDbEntityMapper<Page, string, PageEntity, string> pageMapper,
-    IDbEntityMapper<Module, string, ModuleEntity, string> moduleMapper,
     IDbEntityMapper<CodingTask, string, CodingTaskEntity, string> codingTaskMapper,
     IDbEntityMapper<TestTask, string, TestTaskEntity, string> testTaskMapper,
     IUserMapper userMapper) : IDbEntityMapper<Lesson, string, LessonEntity, string>
@@ -20,7 +19,7 @@ internal partial class LessonMapper(
     public Lesson Map(LessonEntity entity)
     {
         return new Lesson(entity.Name, entity.LessonOrder, entity.PassThreshold,
-            pageMapper.Map(entity.PageEntity), moduleMapper.Map(entity.Module),
+            pageMapper.Map(entity.PageEntity), entity.ModuleId,
             userMapper.MapToDomain(entity.CreatedByUser))
         {
             Tasks = entity.Tasks.Select<TaskBaseEntity, BaseTask>(x =>
@@ -57,7 +56,6 @@ internal partial class LessonMapper(
             LessonOrder = entity.LessonOrder,
             PassThreshold = entity.PassThreshold,
             ModuleId = entity.ModuleId,
-            Module = moduleMapper.Map(entity.Module),
             PageEntity = pageMapper.Map(entity.PageContent),
             PageId = entity.PageContent.Id,
             Tasks = entity.Tasks.Select<BaseTask, TaskBaseEntity>(x =>
