@@ -23,6 +23,9 @@ public class CoursesRepository(
             .Include(x => x.UpdatedByUser)
             .Include(x => x.DeletedByUser)
             .Include(x => x.Categories)
+            .Include(x => x.IntroductionPage)
+            .ThenInclude(x => x.ContentBlocks)
+            .Include(x => x.Modules)
             .FirstOrDefaultAsync(x => x.Id.Equals(id) && x.VersionOrder == version.Order, cancellationToken: cancellationToken);
 
         if (entities == null) throw new DomainException("Entity not found");

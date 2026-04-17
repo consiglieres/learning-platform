@@ -86,8 +86,6 @@ public class VersionedRepository<TVersionableEntity, TDomainId, TVersionableDbEn
         {
             dbEntity.MarkAsDeleted(user, DateTimeOffset.UtcNow);
         }
-
-        context.RemoveRange(dbEntities);
     }
 
     public async Task<TVersionableEntity> UpdateAsync(TVersionableEntity entity, CancellationToken cancellationToken = default)
@@ -99,9 +97,8 @@ public class VersionedRepository<TVersionableEntity, TDomainId, TVersionableDbEn
 
         if (dbEntity == null) throw new DomainException("Entity not found");
         
-        var updated = mapper.Map(dbEntity);
+        var updated = mapper.Map(entity);
         context.Entry(dbEntity).CurrentValues.SetValues(updated);
-
         return mapper.Map(dbEntity);
     }
 

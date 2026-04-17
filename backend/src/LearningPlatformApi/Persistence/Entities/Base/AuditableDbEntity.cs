@@ -26,21 +26,21 @@ public abstract class AuditableDbEntity<TId>(TId id) : DbEntity<TId>(id), ICreat
     public void MarkAsCreated(User cratedBy, DateTimeOffset createdAt)
     {
         CreatedAt = createdAt;
-        CreatedBy = cratedBy.UserName;
+        CreatedBy = cratedBy.Id;
         UpdatedAt = createdAt;
-        UpdatedBy = cratedBy.UserName;
+        UpdatedBy = cratedBy.Id;
     }
 
     public void MarkAsUpdated(User updatedBy, DateTimeOffset updatedAt)
     {
         UpdatedAt = updatedAt;
-        UpdatedBy = updatedBy.UserName;
+        UpdatedBy = updatedBy.Id;
     }
 
     public void MarkAsDeleted(User deletedBy, DateTimeOffset deletedAt)
     {
         DeletedAt = deletedAt;
-        DeletedBy = deletedBy.UserName;
+        DeletedBy = deletedBy.Id;
     }
 
     public void Restore()

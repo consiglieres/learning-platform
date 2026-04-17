@@ -3,6 +3,7 @@ using LearningPlatformApi.Mapper;
 using LearningPlatformApi.Services;
 using LearningPlatformApi.Services.DataObjects.Request.Course;
 using LearningPlatformApi.V1.Models.Req;
+using LearningPlatformApi.V1.Models.Req.Courses;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
