@@ -1,9 +1,9 @@
 using LearningPlatformApi.Domain.Entities.Courses;
 using LearningPlatformApi.Services.DataObjects.Request;
 using LearningPlatformApi.Services.DataObjects.Request.Task;
-using OneOf;
 using LearningPlatformApi.Services.DataObjects.Response.Shared;
 using LearningPlatformApi.Services.DataObjects.Response.Task;
+using OneOf;
 
 namespace LearningPlatformApi.Services;
 

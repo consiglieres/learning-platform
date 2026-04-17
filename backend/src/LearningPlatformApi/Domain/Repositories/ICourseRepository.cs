@@ -5,5 +5,4 @@ namespace LearningPlatformApi.Domain.Repositories;
 
 public interface ICourseRepository : IPublicationWorkflowRepository<Course, string>
 {
-    
 }

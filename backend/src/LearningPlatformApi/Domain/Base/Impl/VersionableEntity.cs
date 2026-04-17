@@ -13,12 +13,12 @@ public abstract record VersionableEntity<TKey> : AuditableEntity<TKey>, IVersion
     {
         this.Version = Version;
     }
-    
+
     public EntityVersion Version { get; init; }
 
     public void Deconstruct(out TKey id, out EntityVersion version)
     {
-        id = this.Id;
-        version = this.Version;
+        id = Id;
+        version = Version;
     }
 }

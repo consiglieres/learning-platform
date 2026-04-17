@@ -24,15 +24,9 @@ internal partial class LessonMapper(
         {
             Tasks = entity.Tasks.Select<TaskBaseEntity, BaseTask>(x =>
             {
-                if (x is CodingTaskEntity codingTaskEntity)
-                {
-                    return codingTaskMapper.Map(codingTaskEntity);
-                }
+                if (x is CodingTaskEntity codingTaskEntity) return codingTaskMapper.Map(codingTaskEntity);
 
-                if (x is TestTaskEntity testTaskEntity)
-                {
-                    return testTaskMapper.Map(testTaskEntity);
-                }
+                if (x is TestTaskEntity testTaskEntity) return testTaskMapper.Map(testTaskEntity);
 
                 throw new ArgumentOutOfRangeException();
             }).ToList(),
@@ -43,7 +37,7 @@ internal partial class LessonMapper(
             UpdatedAt = entity.UpdatedAt,
             UpdatedBy = entity.UpdatedByUser == null ? null : userMapper.MapToDomain(entity.UpdatedByUser),
             DeletedAt = entity.DeletedAt,
-            DeletedBy = entity.DeletedByUser == null ? null : userMapper.MapToDomain(entity.DeletedByUser),
+            DeletedBy = entity.DeletedByUser == null ? null : userMapper.MapToDomain(entity.DeletedByUser)
         };
     }
 
@@ -59,15 +53,9 @@ internal partial class LessonMapper(
             PageId = entity.PageContent.Id,
             Tasks = entity.Tasks.Select<BaseTask, TaskBaseEntity>(x =>
             {
-                if (x is CodingTask codingTaskEntity)
-                {
-                    return codingTaskMapper.Map(codingTaskEntity);
-                }
+                if (x is CodingTask codingTaskEntity) return codingTaskMapper.Map(codingTaskEntity);
 
-                if (x is TestTask testTaskEntity)
-                {
-                    return testTaskMapper.Map(testTaskEntity);
-                }
+                if (x is TestTask testTaskEntity) return testTaskMapper.Map(testTaskEntity);
 
                 throw new ArgumentOutOfRangeException();
             }).ToList(),
@@ -85,5 +73,8 @@ internal partial class LessonMapper(
         };
     }
 
-    public string MapId(string id) => id;
+    public string MapId(string id)
+    {
+        return id;
+    }
 }

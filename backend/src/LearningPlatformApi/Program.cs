@@ -41,29 +41,29 @@ builder.Services.AddDbContext<ApplicationContext>(options =>
 
 // Identity - ПОЛНАЯ настройка
 builder.Services.AddIdentity<UserEntity, IdentityRole>(options =>
-{
-    options.Password.RequireDigit = true;
-    options.Password.RequiredLength = 6;
-    options.Password.RequireNonAlphanumeric = false;
-    options.Password.RequireUppercase = true;
-    options.Password.RequireLowercase = true;
+    {
+        options.Password.RequireDigit = true;
+        options.Password.RequiredLength = 6;
+        options.Password.RequireNonAlphanumeric = false;
+        options.Password.RequireUppercase = true;
+        options.Password.RequireLowercase = true;
 
-    // Настройки блокировки
-    options.Lockout.DefaultLockoutTimeSpan = TimeSpan.FromMinutes(5);
-    options.Lockout.MaxFailedAccessAttempts = 5;
-    options.Lockout.AllowedForNewUsers = true;
+        // Настройки блокировки
+        options.Lockout.DefaultLockoutTimeSpan = TimeSpan.FromMinutes(5);
+        options.Lockout.MaxFailedAccessAttempts = 5;
+        options.Lockout.AllowedForNewUsers = true;
 
-    // Настройки пользователя
-    options.User.RequireUniqueEmail = true;
+        // Настройки пользователя
+        options.User.RequireUniqueEmail = true;
 
-    // Настройки входа
-    options.SignIn.RequireConfirmedEmail = true;
-    options.SignIn.RequireConfirmedPhoneNumber = false;
-})
-.AddEntityFrameworkStores<ApplicationContext>()
-.AddDefaultTokenProviders()
-.AddSignInManager()
-.AddUserManager<UserManager<UserEntity>>();
+        // Настройки входа
+        options.SignIn.RequireConfirmedEmail = true;
+        options.SignIn.RequireConfirmedPhoneNumber = false;
+    })
+    .AddEntityFrameworkStores<ApplicationContext>()
+    .AddDefaultTokenProviders()
+    .AddSignInManager()
+    .AddUserManager<UserManager<UserEntity>>();
 
 builder.Services.AddScoped<IUnitOfWork, UnitOfWork>();
 
@@ -72,9 +72,9 @@ builder.Services.AddCors(options =>
     options.AddPolicy("FrontendApp", policy =>
     {
         policy.WithOrigins("http://localhost:3000", "https://yourfrontend.com")
-              .AllowCredentials()
-              .AllowAnyHeader()
-              .AllowAnyMethod();
+            .AllowCredentials()
+            .AllowAnyHeader()
+            .AllowAnyMethod();
     });
 });
 
@@ -96,7 +96,7 @@ builder.Services.AddScoped<IAuthorizationHandler, ResourceAuthorizationHandler>(
 
 // Mappers
 builder.Services.AddSingleton<IUserMapper, UserMapper>();
-builder.Services.AddSingleton<IDbEntityMapper<CodingTask, string, CodingTaskEntity, string>, LearningPlatformApi.Mapper.Impl.CodingTaskMapper>();
+builder.Services.AddSingleton<IDbEntityMapper<CodingTask, string, CodingTaskEntity, string>, CodingTaskMapper>();
 builder.Services.AddSingleton<IDbEntityMapper<Course, string, CourseEntity, string>, CourseMapper>();
 builder.Services.AddSingleton<IDbEntityMapper<Lesson, string, LessonEntity, string>, LessonMapper>();
 builder.Services.AddSingleton<IDbEntityMapper<Module, string, ModuleEntity, string>, ModuleMapper>();

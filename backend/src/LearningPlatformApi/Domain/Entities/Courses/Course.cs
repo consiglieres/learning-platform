@@ -6,6 +6,14 @@ namespace LearningPlatformApi.Domain.Entities.Courses;
 
 public record Course : PublicationWorkflowEntity<string>
 {
+    public Course(string title, string description, User creator) : base(Guid.NewGuid().ToString())
+    {
+        Title = title;
+        Description = description;
+        IntroductionPage = Page.Page.EmptyPage(PageType.Introduction, creator);
+        MarkAsCreated(creator, DateTimeOffset.UtcNow);
+    }
+
     public string Title { get; set; }
     public string Description { get; set; }
 
@@ -14,14 +22,6 @@ public record Course : PublicationWorkflowEntity<string>
     public List<Module> Modules { get; set; } = [];
 
     public Page.Page IntroductionPage { get; set; }
-    
-    public Course(string title, string description, User creator) : base(Guid.NewGuid().ToString())
-    {
-        Title = title;
-        Description = description;
-        IntroductionPage = Page.Page.EmptyPage(PageType.Introduction, creator);
-        MarkAsCreated(creator, DateTimeOffset.UtcNow);
-    }
 
     public void AddModule(Module module)
     {
@@ -38,19 +38,16 @@ public record Course : PublicationWorkflowEntity<string>
 
         Categories.Add(category);
     }
-    
+
     public void ResetCategories(IReadOnlyCollection<TypedCategory> categoriesList)
     {
         Categories.Clear();
         Categories.AddRange(categoriesList);
     }
-    
+
     public void AddCategories(IReadOnlyCollection<TypedCategory> categoriesList)
     {
-        if (Categories.Any(categoriesList.Contains))
-        {
-            throw new DomainException("Category already added");
-        }
+        if (Categories.Any(categoriesList.Contains)) throw new DomainException("Category already added");
 
         Categories.AddRange(categoriesList);
     }

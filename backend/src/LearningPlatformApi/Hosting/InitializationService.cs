@@ -4,8 +4,10 @@ using Microsoft.AspNetCore.Identity;
 
 namespace LearningPlatformApi.Hosting;
 
-public class InitializationService(IServiceScopeFactory scopeFactory,
-    IHostEnvironment hostEnvironment, ILogger<InitializationService> logger)
+public class InitializationService(
+    IServiceScopeFactory scopeFactory,
+    IHostEnvironment hostEnvironment,
+    ILogger<InitializationService> logger)
     : BackgroundService
 {
     protected override async Task ExecuteAsync(CancellationToken stoppingToken)
@@ -28,10 +30,8 @@ public class InitializationService(IServiceScopeFactory scopeFactory,
         }
 
         if (!hostEnvironment.IsDevelopment())
-        {
             logger.LogInformation("Host environment is '{HostEnvironment}', skipping initialization...",
                 hostEnvironment.EnvironmentName);
-        }
 
         var roleManager = scope.ServiceProvider.GetRequiredService<RoleManager<IdentityRole>>();
         var userManager = scope.ServiceProvider.GetRequiredService<UserManager<UserEntity>>();
@@ -40,12 +40,8 @@ public class InitializationService(IServiceScopeFactory scopeFactory,
 
         logger.LogInformation("Creating base roles [{Roles}]", string.Join(", ", roles));
         foreach (var role in roles)
-        {
             if (!await roleManager.RoleExistsAsync(role))
-            {
                 await roleManager.CreateAsync(new IdentityRole(role));
-            }
-        }
 
         logger.LogInformation("Creating administrator...");
         if (hostEnvironment.IsDevelopment())
@@ -61,14 +57,11 @@ public class InitializationService(IServiceScopeFactory scopeFactory,
                     Email = adminEmail,
                     EmailConfirmed = true,
                     CreatedAt = DateTime.UtcNow,
-                    UpdatedAt = DateTime.UtcNow,
+                    UpdatedAt = DateTime.UtcNow
                 };
 
                 var result = await userManager.CreateAsync(adminUser, "Admin123!");
-                if (result.Succeeded)
-                {
-                    await userManager.AddToRoleAsync(adminUser, "Admin");
-                }
+                if (result.Succeeded) await userManager.AddToRoleAsync(adminUser, "Admin");
             }
         }
 

@@ -41,9 +41,6 @@ public class ResourceAuthorizationHandler : AuthorizationHandler<ResourceOwnerRe
             return;
         }
 
-        if (context.User.IsInRole("Admin"))
-        {
-            context.Succeed(requirement);
-        }
+        if (context.User.IsInRole("Admin")) context.Succeed(requirement);
     }
 }

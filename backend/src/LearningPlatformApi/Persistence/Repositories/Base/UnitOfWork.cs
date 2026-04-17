@@ -9,15 +9,15 @@ public sealed class UnitOfWork : IUnitOfWork
     private IDbContextTransaction? currentTransaction;
     private bool disposed;
 
-    public bool HasActiveTransaction => currentTransaction != null;
-
     public UnitOfWork(ApplicationContext context)
     {
         this.context = context ?? throw new ArgumentNullException(nameof(context));
     }
 
+    public bool HasActiveTransaction => currentTransaction != null;
+
     /// <summary>
-    /// Сохраняет изменения в базе данных
+    ///     Сохраняет изменения в базе данных
     /// </summary>
     public async Task<int> SaveChangesAsync(CancellationToken cancellationToken = default)
     {
@@ -25,27 +25,21 @@ public sealed class UnitOfWork : IUnitOfWork
     }
 
     /// <summary>
-    /// Начинает новую транзакцию
+    ///     Начинает новую транзакцию
     /// </summary>
     public async Task BeginTransactionAsync(CancellationToken cancellationToken = default)
     {
-        if (currentTransaction != null)
-        {
-            throw new InvalidOperationException("A transaction is already in progress");
-        }
+        if (currentTransaction != null) throw new InvalidOperationException("A transaction is already in progress");
 
         currentTransaction = await context.Database.BeginTransactionAsync(cancellationToken);
     }
 
     /// <summary>
-    /// Фиксирует текущую транзакцию
+    ///     Фиксирует текущую транзакцию
     /// </summary>
     public async Task CommitTransactionAsync(CancellationToken cancellationToken = default)
     {
-        if (currentTransaction == null)
-        {
-            throw new InvalidOperationException("No transaction in progress");
-        }
+        if (currentTransaction == null) throw new InvalidOperationException("No transaction in progress");
 
         try
         {
@@ -65,14 +59,11 @@ public sealed class UnitOfWork : IUnitOfWork
     }
 
     /// <summary>
-    /// Откатывает текущую транзакцию
+    ///     Откатывает текущую транзакцию
     /// </summary>
     public async Task RollbackTransactionAsync(CancellationToken cancellationToken = default)
     {
-        if (currentTransaction == null)
-        {
-            throw new InvalidOperationException("No transaction in progress");
-        }
+        if (currentTransaction == null) throw new InvalidOperationException("No transaction in progress");
 
         try
         {
@@ -86,17 +77,15 @@ public sealed class UnitOfWork : IUnitOfWork
     }
 
     /// <summary>
-    /// Выполняет действие в рамках транзакции с автоматическим управлением
+    ///     Выполняет действие в рамках транзакции с автоматическим управлением
     /// </summary>
     public async Task<T> ExecuteInTransactionAsync<T>(
         Func<Task<T>> action,
         CancellationToken cancellationToken = default)
     {
         if (HasActiveTransaction)
-        {
             // Если транзакция уже активна, просто выполняем действие
             return await action();
-        }
 
         await BeginTransactionAsync(cancellationToken);
 
@@ -126,6 +115,7 @@ public sealed class UnitOfWork : IUnitOfWork
             currentTransaction?.Dispose();
             context.Dispose();
         }
+
         disposed = true;
     }
 }

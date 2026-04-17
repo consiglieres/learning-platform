@@ -2,8 +2,7 @@ using LearningPlatformApi.Domain.Entities.Courses;
 using LearningPlatformApi.Mapper;
 using LearningPlatformApi.Services;
 using LearningPlatformApi.Services.DataObjects.Request.Course;
-using LearningPlatformApi.V1.Models.Req;
-using LearningPlatformApi.V1.Models.Req.Courses;
+using LearningPlatformApi.V1.Models.Courses.Req;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
@@ -18,7 +17,7 @@ public class V1CoursesController(
     : ControllerBase
 {
     /// <summary>
-    /// Создание черновика курса
+    ///     Создание черновика курса
     /// </summary>
     [HttpPost("draft")]
     [Authorize(Roles = "Teacher,Admin")]
@@ -29,18 +28,16 @@ public class V1CoursesController(
 
         var dbUser = await profileService.GetCurrentUserAsync(User);
         if (dbUser == null)
-        {
             return NotFound(new ProblemDetails
             {
                 Title = "User Not Found",
                 Status = StatusCodes.Status404NotFound
             });
-        }
         var user = userMapper.MapToDomain(dbUser);
-        
+
         // Преобразуем категории из запроса в TypedCategory
         var categories = MapToTypedCategories(request.Categories);
-        
+
         var createRequest = new CreateCourseDraftRequest(
             request.Title,
             request.Description,
@@ -65,7 +62,7 @@ public class V1CoursesController(
     }
 
     /// <summary>
-    /// Получение последней версии курса
+    ///     Получение последней версии курса
     /// </summary>
     [HttpGet("{courseId}/last")]
     public async Task<IActionResult> GetCourseLastAsync(string courseId)
@@ -84,7 +81,7 @@ public class V1CoursesController(
     }
 
     /// <summary>
-    /// Получение конкретной версии курса
+    ///     Получение конкретной версии курса
     /// </summary>
     [HttpGet("{courseId}/version/{version}")]
     public async Task<IActionResult> GetCourseVersionAsync(string courseId, int version)
@@ -103,11 +100,12 @@ public class V1CoursesController(
     }
 
     /// <summary>
-    /// Обновление информации о курсе
+    ///     Обновление информации о курсе
     /// </summary>
     [HttpPut("{courseId}")]
     [Authorize(Roles = "Teacher,Admin")]
-    public async Task<IActionResult> UpdateCourseInfoAsync(string courseId, [FromBody] V1UpdateCourseInfoRequest request)
+    public async Task<IActionResult> UpdateCourseInfoAsync(string courseId,
+        [FromBody] V1UpdateCourseInfoRequest request)
     {
         if (!ModelState.IsValid)
             return BadRequest(ModelState);
@@ -141,7 +139,7 @@ public class V1CoursesController(
     }
 
     /// <summary>
-    /// Удаление курса (черновика)
+    ///     Удаление курса (черновика)
     /// </summary>
     [HttpDelete("{courseId}")]
     [Authorize(Roles = "Teacher,Admin")]
@@ -149,13 +147,11 @@ public class V1CoursesController(
     {
         var entityUser = await profileService.GetCurrentUserAsync(User);
         if (entityUser == null)
-        {
             return NotFound(new ProblemDetails
             {
                 Title = "User Not Found",
                 Status = StatusCodes.Status404NotFound
             });
-        }
         var user = userMapper.MapToDomain(entityUser);
         var result = await courseService.DeleteCourseAsync(courseId, user, cancellationToken);
 
@@ -171,7 +167,7 @@ public class V1CoursesController(
     }
 
     /// <summary>
-    /// Отправка курса на модерацию
+    ///     Отправка курса на модерацию
     /// </summary>
     [HttpPost("{courseId}/submit")]
     [Authorize(Roles = "Teacher,Admin")]
@@ -179,13 +175,11 @@ public class V1CoursesController(
     {
         var entityUser = await profileService.GetCurrentUserAsync(User);
         if (entityUser == null)
-        {
             return NotFound(new ProblemDetails
             {
                 Title = "User Not Found",
                 Status = StatusCodes.Status404NotFound
             });
-        }
         var user = userMapper.MapToDomain(entityUser);
         var result = await courseService.SubmitForModerationCourseAsync(courseId, user);
 
@@ -207,26 +201,25 @@ public class V1CoursesController(
     }
 
     /// <summary>
-    /// Одобрение курса модератором (публикация)
+    ///     Одобрение курса модератором (публикация)
     /// </summary>
     [HttpPost("{courseId}/approve")]
     [Authorize(Roles = "Admin,Moderator")]
-    public async Task<IActionResult> ApproveCourseAsync(string courseId, [FromBody] V1ModerationCommentRequest? request = null)
+    public async Task<IActionResult> ApproveCourseAsync(string courseId,
+        [FromBody] V1ModerationCommentRequest? request = null)
     {
         var entityUser = await profileService.GetCurrentUserAsync(User);
         if (entityUser == null)
-        {
             return NotFound(new ProblemDetails
             {
                 Title = "User Not Found",
                 Status = StatusCodes.Status404NotFound
             });
-        }
         var user = userMapper.MapToDomain(entityUser);
-        var comment = request != null 
-            ? new ModerationCourseComment(request.Comment) 
+        var comment = request != null
+            ? new ModerationCourseComment(request.Comment)
             : null;
-            
+
         var result = await courseService.ApprovePublishCourseAsync(courseId, user, comment);
 
         return result.Match<IActionResult>(
@@ -247,7 +240,7 @@ public class V1CoursesController(
     }
 
     /// <summary>
-    /// Отклонение курса модератором
+    ///     Отклонение курса модератором
     /// </summary>
     [HttpPost("{courseId}/reject")]
     [Authorize(Roles = "Admin,Moderator")]
@@ -258,13 +251,11 @@ public class V1CoursesController(
 
         var entityUser = await profileService.GetCurrentUserAsync(User);
         if (entityUser == null)
-        {
             return NotFound(new ProblemDetails
             {
                 Title = "User Not Found",
                 Status = StatusCodes.Status404NotFound
             });
-        }
         var user = userMapper.MapToDomain(entityUser);
         var comment = new ModerationCourseComment(request.Comment);
         var result = await courseService.RejectCourseAsync(courseId, user, comment);
@@ -287,7 +278,7 @@ public class V1CoursesController(
     }
 
     /// <summary>
-    /// Снятие курса с публикации (возврат в черновик)
+    ///     Снятие курса с публикации (возврат в черновик)
     /// </summary>
     [HttpPost("{courseId}/unpublish")]
     [Authorize(Roles = "Teacher,Admin")]
@@ -295,13 +286,11 @@ public class V1CoursesController(
     {
         var entityUser = await profileService.GetCurrentUserAsync(User);
         if (entityUser == null)
-        {
             return NotFound(new ProblemDetails
             {
                 Title = "User Not Found",
                 Status = StatusCodes.Status404NotFound
             });
-        }
         var user = userMapper.MapToDomain(entityUser);
         var result = await courseService.UnpublishCourseAsync(courseId, user);
 
@@ -323,7 +312,7 @@ public class V1CoursesController(
     }
 
     /// <summary>
-    /// Архивирование курса
+    ///     Архивирование курса
     /// </summary>
     [HttpPost("{courseId}/archive")]
     [Authorize(Roles = "Teacher,Admin")]
@@ -331,13 +320,11 @@ public class V1CoursesController(
     {
         var entityUser = await profileService.GetCurrentUserAsync(User);
         if (entityUser == null)
-        {
             return NotFound(new ProblemDetails
             {
                 Title = "User Not Found",
                 Status = StatusCodes.Status404NotFound
             });
-        }
         var user = userMapper.MapToDomain(entityUser);
         var result = await courseService.ArchiveCourseAsync(courseId, user);
 
@@ -359,7 +346,7 @@ public class V1CoursesController(
     }
 
     /// <summary>
-    /// Восстановление курса из архива
+    ///     Восстановление курса из архива
     /// </summary>
     [HttpPost("{courseId}/restore")]
     [Authorize(Roles = "Teacher,Admin")]
@@ -367,13 +354,11 @@ public class V1CoursesController(
     {
         var entityUser = await profileService.GetCurrentUserAsync(User);
         if (entityUser == null)
-        {
             return NotFound(new ProblemDetails
             {
                 Title = "User Not Found",
                 Status = StatusCodes.Status404NotFound
             });
-        }
         var user = userMapper.MapToDomain(entityUser);
         var result = await courseService.RestoreCourseFromArchiveAsync(courseId, user);
 
@@ -393,10 +378,10 @@ public class V1CoursesController(
             success => Ok(new { message = "Course restored from archive successfully" })
         );
     }
-    
+
     private IReadOnlyCollection<TypedCategory> MapToTypedCategories(List<V1CourseCategory> requestCategories)
     {
-        return requestCategories.Select(x 
+        return requestCategories.Select(x
             => new TypedCategory(x.TypeName, x.ValueName)).ToList();
     }
 }

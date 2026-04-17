@@ -63,7 +63,8 @@ public abstract class DbRepository<TDomainEntity, TDomainId, TDbEntity, TDbId>
         context.Set<TDbEntity>().Remove(dbEntity);
     }
 
-    public virtual async Task<TDomainEntity> UpdateAsync(TDomainEntity entity, CancellationToken cancellationToken = default)
+    public virtual async Task<TDomainEntity> UpdateAsync(TDomainEntity entity,
+        CancellationToken cancellationToken = default)
     {
         var dbId = mapper.MapId(entity.Id);
         var dbEntity = await context.Set<TDbEntity>()

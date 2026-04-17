@@ -6,18 +6,6 @@ namespace LearningPlatformApi.Domain.Entities.Courses;
 
 public record Lesson : VersionableEntity<string>
 {
-    public string Name { get; private set; }
-
-    public int LessonOrder { get; private set; }
-
-    public int PassThreshold { get; private set; }
-
-    public Page.Page PageContent { get; private set; }
-
-    public string ModuleId { get; private set; }
-    
-    public List<BaseTask> Tasks { get; set; }
-    
     public Lesson(string name, int lessonOrder, int passThreshold, Page.Page page, string moduleId, User creator)
         : base(Guid.NewGuid().ToString())
     {
@@ -29,6 +17,18 @@ public record Lesson : VersionableEntity<string>
         ModuleId = moduleId;
         MarkAsCreated(creator, DateTimeOffset.UtcNow);
     }
+
+    public string Name { get; private set; }
+
+    public int LessonOrder { get; private set; }
+
+    public int PassThreshold { get; private set; }
+
+    public Page.Page PageContent { get; private set; }
+
+    public string ModuleId { get; private set; }
+
+    public List<BaseTask> Tasks { get; set; }
 
     public void AddTask(BaseTask task)
     {

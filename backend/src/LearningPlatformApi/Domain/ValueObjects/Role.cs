@@ -8,15 +8,15 @@ public class Role : ValueObject
     public static readonly Role Teacher = new("teacher", "Преподаватель");
     public static readonly Role Student = new("student", "Студент");
 
-    public string Code { get; }
-
-    public string Name { get; }
-
     private Role(string code, string name)
     {
         Code = code;
         Name = name;
     }
+
+    public string Code { get; }
+
+    public string Name { get; }
 
     protected override IEnumerable<object> GetEqualityComponents()
     {

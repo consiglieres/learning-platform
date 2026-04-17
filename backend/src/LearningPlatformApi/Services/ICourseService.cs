@@ -3,12 +3,8 @@ using LearningPlatformApi.Domain.Entities.Courses;
 using LearningPlatformApi.Domain.HandleStates;
 using LearningPlatformApi.Services.DataObjects.Request;
 using LearningPlatformApi.Services.DataObjects.Request.Course;
-using LearningPlatformApi.Services.DataObjects.Request.Task;
-using LearningPlatformApi.Services.DataObjects.Response;
 using LearningPlatformApi.Services.DataObjects.Response.Course;
-using LearningPlatformApi.Services.DataObjects.Response.Lesson;
 using LearningPlatformApi.Services.DataObjects.Response.Shared;
-using LearningPlatformApi.Services.DataObjects.Response.Task;
 using OneOf;
 using OneOf.Types;
 using Error = LearningPlatformApi.Domain.HandleStates.Error;
@@ -27,7 +23,7 @@ public interface ICourseService
     Task<OneOf<EntityNotExists, Success<Course>>> GetCourseLastAsync(
         string courseId,
         CancellationToken cancellationToken = default);
-    
+
     Task<OneOf<EntityNotExists, Success<Course>>> GetCourseVersionAsync(
         string courseId,
         int version,
@@ -41,14 +37,14 @@ public interface ICourseService
     Task<OneOf<NotFound, Success>> DeleteCourseAsync(
         string courseId, User user,
         CancellationToken cancellationToken = default);
-    
+
     Task<OneOf<NotFound, ValidationFailed, Success>> SubmitForModerationCourseAsync(
         string courseId, User user, CancellationToken cancellationToken = default);
 
     Task<OneOf<NotFound, ValidationFailed, Success>> ApprovePublishCourseAsync(
         string courseId, User user, ModerationCourseComment? comment,
         CancellationToken cancellationToken = default);
-    
+
     Task<OneOf<NotFound, ValidationFailed, Success>> RejectCourseAsync(
         string courseId, User user, ModerationCourseComment comment,
         CancellationToken cancellationToken = default);

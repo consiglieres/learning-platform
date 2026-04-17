@@ -1,4 +1,3 @@
-
 using LearningPlatformApi.Domain.ValueObjects.Page;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
@@ -25,9 +24,7 @@ internal sealed class ContentBlockTypeConverter : ValueConverter<ContentBlockTyp
 
         if (parts.Length != 2 || !Enum.TryParse<ContentCategory>(parts[0], out var category)
                               || !Enum.TryParse<ContentType>(parts[1], out var contentType))
-        {
             throw new ArgumentException($"Invalid ContentBlockType format: {value}");
-        }
 
         return new ContentBlockType(category, contentType);
     }

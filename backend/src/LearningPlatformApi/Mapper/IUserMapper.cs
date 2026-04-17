@@ -1,7 +1,7 @@
 using LearningPlatformApi.Domain.Entities;
 using LearningPlatformApi.Domain.ValueObjects;
 using LearningPlatformApi.Persistence.Entities;
-using LearningPlatformApi.V1.Models.Req;
+using LearningPlatformApi.V1.Models.Account.Req;
 
 namespace LearningPlatformApi.Mapper;
 

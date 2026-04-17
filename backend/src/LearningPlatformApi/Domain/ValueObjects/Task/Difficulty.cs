@@ -10,25 +10,34 @@ public record Difficulty(string Name, int BasePoints)
 
     public static readonly Difficulty Hard = new("Hard", 30);
 
-    public static Difficulty FromString(string name) => name switch
+    public static Difficulty FromString(string name)
     {
-        "Easy" => Easy,
-        "Medium" => Medium,
-        "Hard" => Hard,
-        _ => throw new DomainException($"Unknown difficulty: {name}")
-    };
+        return name switch
+        {
+            "Easy" => Easy,
+            "Medium" => Medium,
+            "Hard" => Hard,
+            _ => throw new DomainException($"Unknown difficulty: {name}")
+        };
+    }
 
-    public Difficulty NextHigher() => this switch
+    public Difficulty NextHigher()
     {
-        _ when this == Easy => Medium,
-        _ when this == Medium => Hard,
-        _ => Hard
-    };
+        return this switch
+        {
+            _ when this == Easy => Medium,
+            _ when this == Medium => Hard,
+            _ => Hard
+        };
+    }
 
-    public Difficulty NextLower() => this switch
+    public Difficulty NextLower()
     {
-        _ when this == Hard => Medium,
-        _ when this == Medium => Easy,
-        _ => Easy
-    };
+        return this switch
+        {
+            _ when this == Hard => Medium,
+            _ when this == Medium => Easy,
+            _ => Easy
+        };
+    }
 }

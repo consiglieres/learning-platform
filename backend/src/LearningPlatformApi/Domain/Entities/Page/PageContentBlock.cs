@@ -3,7 +3,8 @@ using LearningPlatformApi.Domain.ValueObjects.Page;
 
 namespace LearningPlatformApi.Domain.Entities.Page;
 
-public record PageContentBlock(string Id, string PageId, int Order, ContentBlockType Type, string Data) : AuditableEntity<string>(Id)
+public record PageContentBlock(string Id, string PageId, int Order, ContentBlockType Type, string Data)
+    : AuditableEntity<string>(Id)
 {
     public string PageId { get; } = PageId;
 

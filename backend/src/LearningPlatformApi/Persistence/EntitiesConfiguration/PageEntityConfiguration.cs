@@ -18,6 +18,5 @@ public class PageEntityConfiguration : VersionableDbEntityConfiguration<PageEnti
             .IsRequired();
         modelBuilder.Property(x => x.TypeName)
             .IsRequired();
-
     }
 }

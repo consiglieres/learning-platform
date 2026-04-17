@@ -1,5 +1,4 @@
 using LearningPlatformApi.Persistence.Entities;
-using LearningPlatformApi.Persistence.Entities.Base;
 using LearningPlatformApi.Persistence.EntitiesConfiguration.Base;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;

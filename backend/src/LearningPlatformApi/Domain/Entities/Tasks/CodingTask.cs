@@ -4,8 +4,6 @@ namespace LearningPlatformApi.Domain.Entities.Tasks;
 
 public record CodingTask : BaseTask
 {
-    public string InitialCode { get; private set; }
-    public string TestCode { get; private set; }
     public CodingTask(string name, int order, Difficulty difficulty, string lessonId, Page.Page page,
         string initialCode, string testCode, User createdBy)
         : base(Guid.NewGuid().ToString(), name, order, difficulty, lessonId, page)
@@ -14,6 +12,9 @@ public record CodingTask : BaseTask
         TestCode = testCode;
         MarkAsCreated(createdBy, DateTimeOffset.UtcNow);
     }
+
+    public string InitialCode { get; private set; }
+    public string TestCode { get; private set; }
 
     public override bool CheckAnswer(object answer)
     {

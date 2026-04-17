@@ -14,6 +14,21 @@ internal partial class PageMapper : IDbEntityMapper<Page, string, PageEntity, st
         this.userMapper = userMapper;
     }
 
+    #region Type Mapping Methods
+
+    private PageType MapToPageType(string typeCode, string typeName)
+    {
+        return typeCode switch
+        {
+            "intro" => PageType.Introduction,
+            "theory" => PageType.Theory,
+            "task" => PageType.Task,
+            _ => new PageType(typeCode, typeName)
+        };
+    }
+
+    #endregion
+
     #region ContentBlock Mapping
 
     [MapperIgnoreTarget(nameof(ContentBlockEntity.CreatedByUser))]
@@ -48,20 +63,13 @@ internal partial class PageMapper : IDbEntityMapper<Page, string, PageEntity, st
         // Маппинг пользователей аудита
         if (userMapper != null)
         {
-            if (entity.CreatedByUser != null)
-            {
-                page.CreatedBy = userMapper.MapToDomain(entity.CreatedByUser);
-            }
+            if (entity.CreatedByUser != null) page.CreatedBy = userMapper.MapToDomain(entity.CreatedByUser);
 
             if (entity.UpdatedByUser != null && entity.UpdatedAt.HasValue)
-            {
                 page.UpdatedBy = userMapper.MapToDomain(entity.UpdatedByUser);
-            }
 
             if (entity.DeletedByUser != null && entity.DeletedAt.HasValue)
-            {
                 page.DeletedBy = userMapper.MapToDomain(entity.DeletedByUser);
-            }
         }
 
         return page;
@@ -82,7 +90,7 @@ internal partial class PageMapper : IDbEntityMapper<Page, string, PageEntity, st
             UpdatedAt = page.UpdatedAt,
             UpdatedBy = page.UpdatedBy?.Id,
             DeletedAt = page.DeletedAt,
-            DeletedBy = page.DeletedBy?.Id,
+            DeletedBy = page.DeletedBy?.Id
         };
 
         return entity;
@@ -91,21 +99,6 @@ internal partial class PageMapper : IDbEntityMapper<Page, string, PageEntity, st
     public string MapId(string id)
     {
         return id;
-    }
-
-    #endregion
-
-    #region Type Mapping Methods
-
-    private PageType MapToPageType(string typeCode, string typeName)
-    {
-        return typeCode switch
-        {
-            "intro" => PageType.Introduction,
-            "theory" => PageType.Theory,
-            "task" => PageType.Task,
-            _ => new PageType(typeCode, typeName)
-        };
     }
 
     #endregion

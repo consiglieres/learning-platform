@@ -1,7 +1,6 @@
 using LearningPlatformApi.Domain.Entities.Page;
 using LearningPlatformApi.Domain.Entities.Tasks;
 using LearningPlatformApi.Domain.ValueObjects;
-using LearningPlatformApi.Domain.ValueObjects.Page;
 using LearningPlatformApi.Domain.ValueObjects.Task;
 using LearningPlatformApi.Persistence.Entities;
 using LearningPlatformApi.Persistence.Entities.Page;
@@ -10,15 +9,16 @@ using Riok.Mapperly.Abstractions;
 namespace LearningPlatformApi.Mapper.Impl;
 
 [Mapper]
-internal partial class CodingTaskMapper(IDbEntityMapper<Page, string, PageEntity, string> pageMapper,
+internal partial class CodingTaskMapper(
+    IDbEntityMapper<Page, string, PageEntity, string> pageMapper,
     IUserMapper userMapper)
     : IDbEntityMapper<CodingTask, string, CodingTaskEntity, string>
 {
     public CodingTask Map(CodingTaskEntity entity)
     {
-        return new CodingTask(entity.Name, entity.Order, 
-            new Difficulty(entity.DifficultyCategory, entity.DifficultyPoints), 
-            entity.LessonId, 
+        return new CodingTask(entity.Name, entity.Order,
+            new Difficulty(entity.DifficultyCategory, entity.DifficultyPoints),
+            entity.LessonId,
             pageMapper.Map(entity.Page),
             entity.InitialCode, entity.TestCode, userMapper.MapToDomain(entity.CreatedByUser))
         {
@@ -29,7 +29,7 @@ internal partial class CodingTaskMapper(IDbEntityMapper<Page, string, PageEntity
             UpdatedAt = entity.UpdatedAt,
             UpdatedBy = entity.UpdatedByUser == null ? null : userMapper.MapToDomain(entity.UpdatedByUser),
             DeletedAt = entity.DeletedAt,
-            DeletedBy = entity.DeletedByUser == null ? null : userMapper.MapToDomain(entity.DeletedByUser),
+            DeletedBy = entity.DeletedByUser == null ? null : userMapper.MapToDomain(entity.DeletedByUser)
         };
     }
 
@@ -60,5 +60,8 @@ internal partial class CodingTaskMapper(IDbEntityMapper<Page, string, PageEntity
         };
     }
 
-    public string MapId(string id) => id;
+    public string MapId(string id)
+    {
+        return id;
+    }
 }

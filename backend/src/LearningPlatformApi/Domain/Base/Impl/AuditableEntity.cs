@@ -6,7 +6,7 @@ namespace LearningPlatformApi.Domain.Base.Impl;
 public abstract record AuditableEntity<TKey>(TKey Id)
     : DomainEntity<TKey>(Id), IAuditable, ICreatable, IUpdatable, ISoftDeletable
 {
-    public DateTimeOffset CreatedAt { get; set ; }
+    public DateTimeOffset CreatedAt { get; set; }
     public User CreatedBy { get; set; } = null!;
     public DateTimeOffset? UpdatedAt { get; set; }
     public User? UpdatedBy { get; set; }
@@ -21,15 +21,6 @@ public abstract record AuditableEntity<TKey>(TKey Id)
 
         CreatedBy = createdBy ?? throw new ArgumentNullException(nameof(createdBy));
         CreatedAt = createdAt;
-    }
-
-    public void MarkAsUpdated(User updatedBy, DateTimeOffset updatedAt)
-    {
-        if (IsDeleted())
-            throw new DomainException("Cannot update a deleted entity");
-
-        UpdatedBy = updatedBy ?? throw new ArgumentNullException(nameof(updatedBy));
-        UpdatedAt = updatedAt;
     }
 
     public void MarkAsDeleted(User deletedBy, DateTimeOffset deletedAt)
@@ -53,5 +44,14 @@ public abstract record AuditableEntity<TKey>(TKey Id)
     public bool IsDeleted()
     {
         return DeletedAt != null || DeletedBy != null;
+    }
+
+    public void MarkAsUpdated(User updatedBy, DateTimeOffset updatedAt)
+    {
+        if (IsDeleted())
+            throw new DomainException("Cannot update a deleted entity");
+
+        UpdatedBy = updatedBy ?? throw new ArgumentNullException(nameof(updatedBy));
+        UpdatedAt = updatedAt;
     }
 }

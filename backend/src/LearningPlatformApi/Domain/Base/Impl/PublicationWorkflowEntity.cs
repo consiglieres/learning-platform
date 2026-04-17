@@ -6,6 +6,11 @@ namespace LearningPlatformApi.Domain.Base.Impl;
 
 public abstract record PublicationWorkflowEntity<TKey> : VersionableEntity<TKey>, IPublicationWorkflow
 {
+    protected PublicationWorkflowEntity(TKey id) : base(id)
+    {
+        Status = PublicationWorkflowStatus.Draft;
+    }
+
     public string? ModerationComment { get; set; }
 
     public DateTimeOffset? SubmittedForModerationAt { get; set; }
@@ -24,11 +29,6 @@ public abstract record PublicationWorkflowEntity<TKey> : VersionableEntity<TKey>
             field = value;
             OnStatusChanged();
         }
-    }
-
-    protected PublicationWorkflowEntity(TKey id) : base(id)
-    {
-        Status = PublicationWorkflowStatus.Draft;
     }
 
     public virtual void SubmitForModeration(User author)
@@ -101,12 +101,12 @@ public abstract record PublicationWorkflowEntity<TKey> : VersionableEntity<TKey>
     }
 
     /// <summary>
-    /// Проверка, можно ли отправлять на модерацию
+    ///     Проверка, можно ли отправлять на модерацию
     /// </summary>
     public abstract bool CanBeSubmitted();
 
     /// <summary>
-    /// Виртуальный метод, вызываемый при изменении статуса
+    ///     Виртуальный метод, вызываемый при изменении статуса
     /// </summary>
     protected virtual void OnStatusChanged()
     {

@@ -1,6 +1,6 @@
 using LearningPlatformApi.Mapper;
 using LearningPlatformApi.Services;
-using LearningPlatformApi.V1.Models.Req;
+using LearningPlatformApi.V1.Models.Account.Req;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
@@ -10,10 +10,10 @@ namespace LearningPlatformApi.V1.Controllers;
 [ApiController]
 public class V1AccountController : ControllerBase
 {
-    private readonly IUserRegistrationService registrationService;
     private readonly IUserAuthenticationService authenticationService;
-    private readonly IUserProfileService profileService;
     private readonly IUserEmailService emailService;
+    private readonly IUserProfileService profileService;
+    private readonly IUserRegistrationService registrationService;
     private readonly IUserMapper userMapper;
 
     public V1AccountController(
@@ -95,7 +95,8 @@ public class V1AccountController : ControllerBase
             async _ => await LoginSuccessResponse(loginDto.Email),
             authError => Task.FromResult<IActionResult>(Unauthorized(new { error = authError.Message })),
             lockedError => Task.FromResult<IActionResult>(Unauthorized(new { error = lockedError.Message })),
-            emailNotConfirmed => Task.FromResult<IActionResult>(Unauthorized(new { error = emailNotConfirmed.Message })),
+            emailNotConfirmed =>
+                Task.FromResult<IActionResult>(Unauthorized(new { error = emailNotConfirmed.Message })),
             deactivatedError => Task.FromResult<IActionResult>(Unauthorized(new { error = deactivatedError.Message }))
         );
     }

@@ -26,13 +26,14 @@ public class VersionedRepository<TVersionableEntity, TDomainId, TVersionableDbEn
         this.mapper = mapper;
     }
 
-    public async Task<TVersionableEntity> GetAsync(TDomainId id, EntityVersion version, CancellationToken cancellationToken = default)
+    public async Task<TVersionableEntity> GetAsync(TDomainId id, EntityVersion version,
+        CancellationToken cancellationToken = default)
     {
         var entities = await context.Set<TVersionableDbEntity>()
             .Include(x => x.CreatedByUser)
             .Include(x => x.UpdatedByUser)
             .Include(x => x.DeletedByUser)
-            .FirstOrDefaultAsync(x => x.Id.Equals(id) && x.VersionOrder == version.Order, cancellationToken: cancellationToken);
+            .FirstOrDefaultAsync(x => x.Id.Equals(id) && x.VersionOrder == version.Order, cancellationToken);
 
         if (entities == null) throw new DomainException("Entity not found");
 
@@ -47,7 +48,7 @@ public class VersionedRepository<TVersionableEntity, TDomainId, TVersionableDbEn
             .Include(x => x.UpdatedByUser)
             .Include(x => x.DeletedByUser)
             .OrderByDescending(x => x.VersionOrder)
-            .LastOrDefaultAsync(cancellationToken: cancellationToken);
+            .LastOrDefaultAsync(cancellationToken);
 
         if (entities == null) throw new DomainException("Entity not found");
 
@@ -60,7 +61,7 @@ public class VersionedRepository<TVersionableEntity, TDomainId, TVersionableDbEn
         await context.Set<TVersionableDbEntity>().AddAsync(dbEntity, cancellationToken);
     }
 
-    public async Task DeleteAsync(TVersionableEntity entity,  User user, CancellationToken cancellationToken = default)
+    public async Task DeleteAsync(TVersionableEntity entity, User user, CancellationToken cancellationToken = default)
     {
         var dbId = mapper.MapId(entity.Id);
         var dbEntity = await context.Set<TVersionableDbEntity>()
@@ -72,31 +73,29 @@ public class VersionedRepository<TVersionableEntity, TDomainId, TVersionableDbEn
         dbEntity.MarkAsDeleted(user, DateTimeOffset.UtcNow);
     }
 
-    public async Task DeleteAsync(TDomainId id,  User user, CancellationToken cancellationToken = default)
+    public async Task DeleteAsync(TDomainId id, User user, CancellationToken cancellationToken = default)
     {
         var dbId = mapper.MapId(id);
         var dbEntities = await context.Set<TVersionableDbEntity>()
             .Where(x => x.Id.Equals(dbId))
-            .ToListAsync(cancellationToken: cancellationToken);
+            .ToListAsync(cancellationToken);
 
         if (!dbEntities.Any())
             return;
 
-        foreach(var dbEntity in dbEntities)
-        {
-            dbEntity.MarkAsDeleted(user, DateTimeOffset.UtcNow);
-        }
+        foreach (var dbEntity in dbEntities) dbEntity.MarkAsDeleted(user, DateTimeOffset.UtcNow);
     }
 
-    public async Task<TVersionableEntity> UpdateAsync(TVersionableEntity entity, CancellationToken cancellationToken = default)
+    public async Task<TVersionableEntity> UpdateAsync(TVersionableEntity entity,
+        CancellationToken cancellationToken = default)
     {
         var dbId = mapper.MapId(entity.Id);
         var dbEntity = await context.Set<TVersionableDbEntity>()
-            .FirstOrDefaultAsync(x => x.Id.Equals(dbId) && x.VersionOrder == entity.Version.Order, 
-                cancellationToken: cancellationToken);
+            .FirstOrDefaultAsync(x => x.Id.Equals(dbId) && x.VersionOrder == entity.Version.Order,
+                cancellationToken);
 
         if (dbEntity == null) throw new DomainException("Entity not found");
-        
+
         var updated = mapper.Map(entity);
         context.Entry(dbEntity).CurrentValues.SetValues(updated);
         return mapper.Map(dbEntity);
@@ -107,11 +106,9 @@ public class VersionedRepository<TVersionableEntity, TDomainId, TVersionableDbEn
         var lastEntity = await context.Set<TVersionableDbEntity>()
             .Where(x => x.Id.Equals(mapper.MapId(entity.Id)))
             .OrderByDescending(x => x.VersionOrder)
-            .LastOrDefaultAsync(cancellationToken: cancellationToken);
+            .LastOrDefaultAsync(cancellationToken);
 
         if (lastEntity != null && lastEntity.VersionOrder >= entity.Version.Order)
-        {
             throw new DomainException("Entity is already created");
-        }
     }
 }

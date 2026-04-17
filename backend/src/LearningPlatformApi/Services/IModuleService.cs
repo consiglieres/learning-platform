@@ -1,7 +1,7 @@
-using OneOf;
 using LearningPlatformApi.Domain.Entities.Courses;
 using LearningPlatformApi.Services.DataObjects.Request;
 using LearningPlatformApi.Services.DataObjects.Response.Shared;
+using OneOf;
 
 namespace LearningPlatformApi.Services;
 
@@ -27,5 +27,4 @@ public interface IModuleService
         string courseId,
         ReorderModulesRequest request,
         CancellationToken cancellationToken = default);
-
 }

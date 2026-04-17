@@ -2,7 +2,7 @@ using AwesomeAssertions;
 using LearningPlatformApi.Domain.Entities;
 using LearningPlatformApi.Mapper.Impl;
 using LearningPlatformApi.Persistence.Entities;
-using LearningPlatformApi.V1.Models.Req;
+using LearningPlatformApi.V1.Models.Account.Req;
 
 namespace LearningPlatformApi.Tests.Mappers;
 

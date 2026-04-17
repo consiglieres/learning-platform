@@ -16,7 +16,8 @@ public class CoursesRepository(
     ILogger<CoursesRepository> logger)
     : PublicationWorkflowRepository<Course, string, CourseEntity, string>(context, mapper, logger), ICourseRepository
 {
-    public new async Task<Course> GetAsync(string id, EntityVersion version, CancellationToken cancellationToken = default)
+    public new async Task<Course> GetAsync(string id, EntityVersion version,
+        CancellationToken cancellationToken = default)
     {
         var entities = await context.Set<CourseEntity>()
             .Include(x => x.CreatedByUser)
@@ -26,7 +27,7 @@ public class CoursesRepository(
             .Include(x => x.IntroductionPage)
             .ThenInclude(x => x.ContentBlocks)
             .Include(x => x.Modules)
-            .FirstOrDefaultAsync(x => x.Id.Equals(id) && x.VersionOrder == version.Order, cancellationToken: cancellationToken);
+            .FirstOrDefaultAsync(x => x.Id.Equals(id) && x.VersionOrder == version.Order, cancellationToken);
 
         if (entities == null) throw new DomainException("Entity not found");
 
@@ -45,7 +46,7 @@ public class CoursesRepository(
             .ThenInclude(x => x.ContentBlocks)
             .Include(x => x.Modules)
             .OrderByDescending(x => x.VersionOrder)
-            .LastOrDefaultAsync(cancellationToken: cancellationToken);
+            .LastOrDefaultAsync(cancellationToken);
 
         if (entities == null) throw new DomainException("Entity not found");
 

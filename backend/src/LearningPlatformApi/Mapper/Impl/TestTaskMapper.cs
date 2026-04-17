@@ -1,4 +1,3 @@
-using LearningPlatformApi.Domain.Entities.Courses;
 using LearningPlatformApi.Domain.Entities.Page;
 using LearningPlatformApi.Domain.Entities.Tasks;
 using LearningPlatformApi.Domain.ValueObjects;
@@ -10,13 +9,15 @@ using Riok.Mapperly.Abstractions;
 namespace LearningPlatformApi.Mapper.Impl;
 
 [Mapper]
-internal partial class TestTaskMapper(IDbEntityMapper<Page, string, PageEntity, string> pageMapper,
+internal partial class TestTaskMapper(
+    IDbEntityMapper<Page, string, PageEntity, string> pageMapper,
     IUserMapper userMapper) : IDbEntityMapper<TestTask, string, TestTaskEntity, string>
 {
     public TestTask Map(TestTaskEntity entity)
     {
-        return new TestTask(entity.Name, entity.Order, new Difficulty(entity.DifficultyCategory, entity.DifficultyPoints),
-            entity.LessonId, entity.Page == null ? null : pageMapper.Map(entity.Page), entity.Question, entity.Options, 
+        return new TestTask(entity.Name, entity.Order,
+            new Difficulty(entity.DifficultyCategory, entity.DifficultyPoints),
+            entity.LessonId, entity.Page == null ? null : pageMapper.Map(entity.Page), entity.Question, entity.Options,
             entity.CorrectAnswer, userMapper.MapToDomain(entity.CreatedByUser))
         {
             Id = entity.Id,
@@ -26,7 +27,7 @@ internal partial class TestTaskMapper(IDbEntityMapper<Page, string, PageEntity, 
             UpdatedAt = entity.UpdatedAt,
             UpdatedBy = entity.UpdatedByUser == null ? null : userMapper.MapToDomain(entity.UpdatedByUser),
             DeletedAt = entity.DeletedAt,
-            DeletedBy = entity.DeletedByUser == null ? null : userMapper.MapToDomain(entity.DeletedByUser),
+            DeletedBy = entity.DeletedByUser == null ? null : userMapper.MapToDomain(entity.DeletedByUser)
         };
     }
 
@@ -57,6 +58,9 @@ internal partial class TestTaskMapper(IDbEntityMapper<Page, string, PageEntity, 
             DeletedByUser = entity.DeletedBy == null ? null : userMapper.MapToEntity(entity.DeletedBy)
         };
     }
-    
-    public string MapId(string id) => id;
+
+    public string MapId(string id)
+    {
+        return id;
+    }
 }

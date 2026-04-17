@@ -17,7 +17,7 @@ internal partial class ModuleMapper(
     public Module Map(ModuleEntity entity)
     {
         return new Module(entity.Name, entity.ModuleOrder, entity.CourseId,
-            userMapper.MapToDomain(entity.CreatedByUser), 
+            userMapper.MapToDomain(entity.CreatedByUser),
             entity.Lessons.Select(lessonMapper.Map).ToList())
         {
             IntroductionPage = pageMapper.Map(entity.IntroductionPage),
@@ -28,7 +28,7 @@ internal partial class ModuleMapper(
             UpdatedAt = entity.UpdatedAt,
             UpdatedBy = entity.UpdatedByUser == null ? null : userMapper.MapToDomain(entity.UpdatedByUser),
             DeletedAt = entity.DeletedAt,
-            DeletedBy = entity.DeletedByUser == null ? null : userMapper.MapToDomain(entity.DeletedByUser),
+            DeletedBy = entity.DeletedByUser == null ? null : userMapper.MapToDomain(entity.DeletedByUser)
         };
     }
 
@@ -56,5 +56,8 @@ internal partial class ModuleMapper(
         };
     }
 
-    public string MapId(string id) => id;
+    public string MapId(string id)
+    {
+        return id;
+    }
 }

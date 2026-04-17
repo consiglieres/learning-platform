@@ -1,4 +1,4 @@
-namespace LearningPlatformApi.V1.Models.Req.Courses;
+namespace LearningPlatformApi.V1.Models.Courses.Req;
 
 public class V1CreateCourseDraftRequest
 {

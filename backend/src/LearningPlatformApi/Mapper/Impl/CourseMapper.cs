@@ -35,7 +35,7 @@ internal partial class CourseMapper(
             UpdatedAt = entity.UpdatedAt,
             UpdatedBy = entity.UpdatedByUser == null ? null : userMapper.MapToDomain(entity.UpdatedByUser),
             DeletedAt = entity.DeletedAt,
-            DeletedBy = entity.DeletedByUser == null ? null : userMapper.MapToDomain(entity.DeletedByUser),
+            DeletedBy = entity.DeletedByUser == null ? null : userMapper.MapToDomain(entity.DeletedByUser)
         };
     }
 
@@ -65,9 +65,12 @@ internal partial class CourseMapper(
             UpdatedAt = entity.UpdatedAt,
             UpdatedBy = entity.UpdatedBy?.Id,
             DeletedAt = entity.DeletedAt,
-            DeletedBy = entity.DeletedBy?.Id,
+            DeletedBy = entity.DeletedBy?.Id
         };
     }
 
-    public string MapId(string id) => id;
+    public string MapId(string id)
+    {
+        return id;
+    }
 }
