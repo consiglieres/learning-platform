@@ -13,21 +13,21 @@ public abstract class AuditableDbEntityConfiguration<TEntity, TKey> : IEntityTyp
         builder.HasOne(e => e.CreatedByUser)
             .WithMany()
             .HasForeignKey(e => e.CreatedBy)
-            .HasPrincipalKey(u => u.UserName)
+            .HasPrincipalKey(u => u.Id)
             .OnDelete(DeleteBehavior.Restrict);
 
         // Настройка связи с UpdatedByUser
         builder.HasOne(e => e.UpdatedByUser)
             .WithMany()
             .HasForeignKey(e => e.UpdatedBy)
-            .HasPrincipalKey(u => u.UserName)
+            .HasPrincipalKey(u => u.Id)
             .OnDelete(DeleteBehavior.Restrict);
 
         // Настройка связи с DeletedByUser
         builder.HasOne(e => e.DeletedByUser)
             .WithMany()
             .HasForeignKey(e => e.DeletedBy)
-            .HasPrincipalKey(u => u.UserName)
+            .HasPrincipalKey(u => u.Id)
             .OnDelete(DeleteBehavior.Restrict);
 
         OverrideConfigure(builder);
