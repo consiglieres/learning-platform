@@ -11,5 +11,5 @@ public interface IVersionedRepository<TVersionableEntity, TId> : IAuditableRepos
 
     Task<TVersionableEntity> GetLastAsync(TId id, CancellationToken cancellationToken = default);
     
-    Task<TVersionableEntity> AddNewVersion(TVersionableEntity entity, CancellationToken cancellationToken = default);
+    Task AddNewVersion(TVersionableEntity entity, CancellationToken cancellationToken = default);
 }

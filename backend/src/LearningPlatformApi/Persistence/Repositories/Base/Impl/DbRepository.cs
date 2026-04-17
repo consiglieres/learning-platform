@@ -15,7 +15,6 @@ public abstract class DbRepository<TDomainEntity, TDomainId, TDbEntity, TDbId>
 {
     private readonly DbContext context;
     private readonly IDbEntityMapper<TDomainEntity, TDomainId, TDbEntity, TDbId> mapper;
-    private readonly ILogger<DbRepository<TDomainEntity, TDomainId, TDbEntity, TDbId>> logger;
 
     protected DbRepository(DbContext context,
         IDbEntityMapper<TDomainEntity, TDomainId, TDbEntity, TDbId> mapper,
@@ -23,7 +22,6 @@ public abstract class DbRepository<TDomainEntity, TDomainId, TDbEntity, TDbId>
     {
         this.context = context;
         this.mapper = mapper;
-        this.logger = logger;
     }
 
     public virtual async Task<TDomainEntity?> GetByIdAsync(TDomainId id, CancellationToken cancellationToken = default)
@@ -35,12 +33,10 @@ public abstract class DbRepository<TDomainEntity, TDomainId, TDbEntity, TDbId>
         return dbEntity != null ? mapper.Map(dbEntity) : null;
     }
 
-    public virtual async Task<TDomainEntity> CreateAsync(TDomainEntity entity, CancellationToken cancellationToken = default)
+    public virtual async Task CreateAsync(TDomainEntity entity, CancellationToken cancellationToken = default)
     {
         var dbEntity = mapper.Map(entity);
         await context.Set<TDbEntity>().AddAsync(dbEntity, cancellationToken);
-
-        return mapper.Map(dbEntity);
     }
 
     public virtual async Task DeleteAsync(TDomainEntity entity, CancellationToken cancellationToken = default)

@@ -33,7 +33,11 @@ builder.Services.AddOptions<EmailSettings>()
 
 // Persistence
 builder.Services.AddDbContext<ApplicationContext>(options =>
-    options.UseNpgsql(configuration.GetConnectionString("ApplicationContext")));
+{
+    options.UseNpgsql(configuration.GetConnectionString("ApplicationContext"));
+    options.EnableDetailedErrors();
+    options.EnableSensitiveDataLogging();
+});
 
 // Identity - ПОЛНАЯ настройка
 builder.Services.AddIdentity<UserEntity, IdentityRole>(options =>

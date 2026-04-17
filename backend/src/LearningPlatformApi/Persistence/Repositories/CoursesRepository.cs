@@ -38,6 +38,9 @@ public class CoursesRepository(
             .Include(x => x.UpdatedByUser)
             .Include(x => x.DeletedByUser)
             .Include(x => x.Categories)
+            .Include(x => x.IntroductionPage)
+            .ThenInclude(x => x.ContentBlocks)
+            .Include(x => x.Modules)
             .OrderByDescending(x => x.VersionOrder)
             .LastOrDefaultAsync(cancellationToken: cancellationToken);
 

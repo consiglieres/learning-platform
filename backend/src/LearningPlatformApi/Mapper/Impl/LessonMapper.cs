@@ -37,7 +37,6 @@ internal partial class LessonMapper(
                 throw new ArgumentOutOfRangeException();
             }).ToList(),
             Id = entity.Id,
-            AllVersions = [],
             Version = new EntityVersion(entity.VersionOrder, entity.Tag),
             CreatedAt = entity.CreatedAt,
             CreatedBy = userMapper.MapToDomain(entity.CreatedByUser),

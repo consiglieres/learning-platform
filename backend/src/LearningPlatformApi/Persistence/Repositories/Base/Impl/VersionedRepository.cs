@@ -17,7 +17,6 @@ public class VersionedRepository<TVersionableEntity, TDomainId, TVersionableDbEn
 {
     private readonly DbContext context;
     private readonly IDbEntityMapper<TVersionableEntity, TDomainId, TVersionableDbEntity, TDbId> mapper;
-    private readonly ILogger<VersionedRepository<TVersionableEntity, TDomainId, TVersionableDbEntity, TDbId>> logger;
 
     protected VersionedRepository(DbContext context,
         IDbEntityMapper<TVersionableEntity, TDomainId, TVersionableDbEntity, TDbId> mapper,
@@ -25,7 +24,6 @@ public class VersionedRepository<TVersionableEntity, TDomainId, TVersionableDbEn
     {
         this.context = context;
         this.mapper = mapper;
-        this.logger = logger;
     }
 
     public async Task<TVersionableEntity> GetAsync(TDomainId id, EntityVersion version, CancellationToken cancellationToken = default)
@@ -56,12 +54,10 @@ public class VersionedRepository<TVersionableEntity, TDomainId, TVersionableDbEn
         return mapper.Map(entities);
     }
 
-    public virtual async Task<TVersionableEntity> CreateAsync(TVersionableEntity entity, CancellationToken cancellationToken = default)
+    public virtual async Task CreateAsync(TVersionableEntity entity, CancellationToken cancellationToken = default)
     {
         var dbEntity = mapper.Map(entity);
         await context.Set<TVersionableDbEntity>().AddAsync(dbEntity, cancellationToken);
-
-        return mapper.Map(dbEntity);
     }
 
     public async Task DeleteAsync(TVersionableEntity entity,  User user, CancellationToken cancellationToken = default)
@@ -109,7 +105,7 @@ public class VersionedRepository<TVersionableEntity, TDomainId, TVersionableDbEn
         return mapper.Map(dbEntity);
     }
 
-    public virtual async Task<TVersionableEntity> AddNewVersion(TVersionableEntity entity, CancellationToken cancellationToken = default)
+    public virtual async Task AddNewVersion(TVersionableEntity entity, CancellationToken cancellationToken = default)
     {
         var lastEntity = await context.Set<TVersionableDbEntity>()
             .Where(x => x.Id.Equals(mapper.MapId(entity.Id)))
@@ -120,8 +116,5 @@ public class VersionedRepository<TVersionableEntity, TDomainId, TVersionableDbEn
         {
             throw new DomainException("Entity is already created");
         }
-
-        var created = await CreateAsync(entity, cancellationToken);
-        return created;
     }
 }

@@ -20,7 +20,6 @@ internal partial class TestTaskMapper(IDbEntityMapper<Page, string, PageEntity, 
             entity.CorrectAnswer, userMapper.MapToDomain(entity.CreatedByUser))
         {
             Id = entity.Id,
-            AllVersions = [],
             Version = new EntityVersion(entity.VersionOrder, entity.Tag),
             CreatedAt = entity.CreatedAt,
             CreatedBy = userMapper.MapToDomain(entity.CreatedByUser),

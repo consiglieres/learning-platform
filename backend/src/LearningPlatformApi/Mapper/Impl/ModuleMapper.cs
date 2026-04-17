@@ -22,7 +22,6 @@ internal partial class ModuleMapper(
         {
             IntroductionPage = pageMapper.Map(entity.IntroductionPage),
             Id = entity.Id,
-            AllVersions = [],
             Version = new EntityVersion(entity.VersionOrder, entity.Tag),
             CreatedAt = entity.CreatedAt,
             CreatedBy = userMapper.MapToDomain(entity.CreatedByUser),

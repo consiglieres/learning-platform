@@ -23,7 +23,6 @@ internal partial class CodingTaskMapper(IDbEntityMapper<Page, string, PageEntity
             entity.InitialCode, entity.TestCode, userMapper.MapToDomain(entity.CreatedByUser))
         {
             Id = entity.Id,
-            AllVersions = [],
             Version = new EntityVersion(entity.VersionOrder, entity.Tag),
             CreatedAt = entity.CreatedAt,
             CreatedBy = userMapper.MapToDomain(entity.CreatedByUser),

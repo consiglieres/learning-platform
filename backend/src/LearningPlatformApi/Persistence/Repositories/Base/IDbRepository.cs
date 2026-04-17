@@ -8,7 +8,7 @@ public interface IDbRepository<TDomainEntity, TId>
 {
     Task<TDomainEntity?> GetByIdAsync(TId id, CancellationToken cancellationToken = default);
 
-    Task<TDomainEntity> CreateAsync(TDomainEntity entity, CancellationToken cancellationToken = default);
+    Task CreateAsync(TDomainEntity entity, CancellationToken cancellationToken = default);
 
     Task DeleteAsync(TDomainEntity entity, CancellationToken cancellationToken = default);
 

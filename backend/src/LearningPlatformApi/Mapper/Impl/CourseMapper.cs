@@ -29,7 +29,6 @@ internal partial class CourseMapper(
             PublishedBy = entity.PublishedByUser == null ? null : userMapper.MapToDomain(entity.PublishedByUser),
             Status = entity.Status,
             Id = entity.Id,
-            AllVersions = [],
             Version = new EntityVersion(entity.VersionOrder, entity.Tag),
             CreatedAt = entity.CreatedAt,
             CreatedBy = userMapper.MapToDomain(entity.CreatedByUser),
@@ -57,21 +56,16 @@ internal partial class CourseMapper(
             ModerationComment = entity.ModerationComment,
             SubmittedForModerationAt = entity.SubmittedForModerationAt,
             SubmittedBy = entity.SubmittedBy?.Id,
-            SubmittedByUser = entity.SubmittedBy == null ? null : userMapper.MapToEntity(entity.SubmittedBy),
             PublishedAt = entity.PublishedAt,
             PublishedBy = entity.PublishedBy?.Id,
-            PublishedByUser = entity.PublishedBy == null ? null : userMapper.MapToEntity(entity.PublishedBy),
             VersionOrder = entity.Version.Order,
             Tag = entity.Version.Tag,
             CreatedAt = entity.CreatedAt,
             CreatedBy = entity.CreatedBy.Id,
-            CreatedByUser = userMapper.MapToEntity(entity.CreatedBy),
             UpdatedAt = entity.UpdatedAt,
             UpdatedBy = entity.UpdatedBy?.Id,
-            UpdatedByUser = entity.UpdatedBy == null ? null : userMapper.MapToEntity(entity.UpdatedBy),
             DeletedAt = entity.DeletedAt,
             DeletedBy = entity.DeletedBy?.Id,
-            DeletedByUser = entity.DeletedBy == null ? null : userMapper.MapToEntity(entity.DeletedBy)
         };
     }
 

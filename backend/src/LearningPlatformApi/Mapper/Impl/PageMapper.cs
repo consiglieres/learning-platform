@@ -16,11 +16,11 @@ internal partial class PageMapper : IDbEntityMapper<Page, string, PageEntity, st
 
     #region ContentBlock Mapping
 
-    [MapProperty(nameof(PageContentBlock.CreatedBy), nameof(ContentBlockEntity.CreatedByUser))]
+    [MapperIgnoreTarget(nameof(ContentBlockEntity.CreatedByUser))]
+    [MapperIgnoreTarget(nameof(ContentBlockEntity.UpdatedByUser))]
+    [MapperIgnoreTarget(nameof(ContentBlockEntity.DeletedByUser))]
     [MapProperty(nameof(PageContentBlock.CreatedBy.Id), nameof(ContentBlockEntity.CreatedBy))]
-    [MapProperty(nameof(PageContentBlock.UpdatedBy), nameof(ContentBlockEntity.UpdatedByUser))]
     [MapProperty(nameof(PageContentBlock.UpdatedBy.Id), nameof(ContentBlockEntity.UpdatedBy))]
-    [MapProperty(nameof(PageContentBlock.DeletedBy), nameof(ContentBlockEntity.DeletedByUser))]
     [MapProperty(nameof(PageContentBlock.DeletedBy.Id), nameof(ContentBlockEntity.DeletedBy))]
     public partial ContentBlockEntity Map(PageContentBlock contentBlock);
 
@@ -79,13 +79,10 @@ internal partial class PageMapper : IDbEntityMapper<Page, string, PageEntity, st
             ContentBlocks = page.ContentBlocks?.Select(Map).ToList() ?? new List<ContentBlockEntity>(),
             CreatedAt = page.CreatedAt,
             CreatedBy = page.CreatedBy.Id,
-            CreatedByUser = userMapper.MapToEntity(page.CreatedBy),
             UpdatedAt = page.UpdatedAt,
             UpdatedBy = page.UpdatedBy?.Id,
-            UpdatedByUser = page.UpdatedBy == null ? null : userMapper.MapToEntity(page.UpdatedBy),
             DeletedAt = page.DeletedAt,
             DeletedBy = page.DeletedBy?.Id,
-            DeletedByUser = page.DeletedBy == null ? null : userMapper.MapToEntity(page.DeletedBy),
         };
 
         return entity;
