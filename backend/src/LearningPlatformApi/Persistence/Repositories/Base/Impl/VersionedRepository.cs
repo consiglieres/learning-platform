@@ -16,17 +16,17 @@ public class VersionedRepository<TVersionableEntity, TDomainId, TVersionableDbEn
     where TDbId : IEquatable<TDbId>
 {
     private readonly DbContext context;
-    private readonly IDbEntityMapper<TVersionableEntity, TDomainId, TVersionableDbEntity, TDbId> mapper;
+    private readonly IDbEntityMapper<TVersionableEntity, TDomainId, TVersionableDbEntity, TDbId> pageMapper;
 
     protected VersionedRepository(DbContext context,
-        IDbEntityMapper<TVersionableEntity, TDomainId, TVersionableDbEntity, TDbId> mapper,
+        IDbEntityMapper<TVersionableEntity, TDomainId, TVersionableDbEntity, TDbId> pageMapper,
         ILogger<VersionedRepository<TVersionableEntity, TDomainId, TVersionableDbEntity, TDbId>> logger)
     {
         this.context = context;
-        this.mapper = mapper;
+        this.pageMapper = pageMapper;
     }
 
-    public async Task<TVersionableEntity> GetAsync(TDomainId id, EntityVersion version,
+    public virtual async Task<TVersionableEntity> GetAsync(TDomainId id, EntityVersion version,
         CancellationToken cancellationToken = default)
     {
         var entities = await context.Set<TVersionableDbEntity>()
@@ -37,10 +37,25 @@ public class VersionedRepository<TVersionableEntity, TDomainId, TVersionableDbEn
 
         if (entities == null) throw new DomainException("Entity not found");
 
-        return mapper.Map(entities);
+        return pageMapper.Map(entities);
     }
 
-    public async Task<TVersionableEntity> GetLastAsync(TDomainId id, CancellationToken cancellationToken = default)
+    public virtual async Task<IReadOnlyCollection<TVersionableEntity>> GetAllVersionsAsync(TDomainId id, 
+        CancellationToken cancellationToken = default)
+    {
+        var entities = await context.Set<TVersionableDbEntity>()
+            .Include(x => x.CreatedByUser)
+            .Include(x => x.UpdatedByUser)
+            .Include(x => x.DeletedByUser)
+            .Where(x => x.Id.Equals(id))
+            .ToListAsync(cancellationToken);
+
+        if (entities == null) throw new DomainException("Entity not found");
+
+        return entities.Select(pageMapper.Map).ToList();
+    }
+
+    public virtual async Task<TVersionableEntity> GetLastAsync(TDomainId id, CancellationToken cancellationToken = default)
     {
         var entities = await context.Set<TVersionableDbEntity>()
             .Where(x => x.Id.Equals(id))
@@ -52,18 +67,18 @@ public class VersionedRepository<TVersionableEntity, TDomainId, TVersionableDbEn
 
         if (entities == null) throw new DomainException("Entity not found");
 
-        return mapper.Map(entities);
+        return pageMapper.Map(entities);
     }
 
     public virtual async Task CreateAsync(TVersionableEntity entity, CancellationToken cancellationToken = default)
     {
-        var dbEntity = mapper.Map(entity);
+        var dbEntity = pageMapper.Map(entity);
         await context.Set<TVersionableDbEntity>().AddAsync(dbEntity, cancellationToken);
     }
 
-    public async Task DeleteAsync(TVersionableEntity entity, User user, CancellationToken cancellationToken = default)
+    public virtual async Task DeleteAsync(TVersionableEntity entity, User user, CancellationToken cancellationToken = default)
     {
-        var dbId = mapper.MapId(entity.Id);
+        var dbId = pageMapper.MapId(entity.Id);
         var dbEntity = await context.Set<TVersionableDbEntity>()
             .FirstOrDefaultAsync(x => x.Id.Equals(dbId) && x.VersionOrder == entity.Version.Order, cancellationToken);
 
@@ -73,9 +88,9 @@ public class VersionedRepository<TVersionableEntity, TDomainId, TVersionableDbEn
         dbEntity.MarkAsDeleted(user, DateTimeOffset.UtcNow);
     }
 
-    public async Task DeleteAsync(TDomainId id, User user, CancellationToken cancellationToken = default)
+    public virtual async Task DeleteAsync(TDomainId id, User user, CancellationToken cancellationToken = default)
     {
-        var dbId = mapper.MapId(id);
+        var dbId = pageMapper.MapId(id);
         var dbEntities = await context.Set<TVersionableDbEntity>()
             .Where(x => x.Id.Equals(dbId))
             .ToListAsync(cancellationToken);
@@ -89,22 +104,22 @@ public class VersionedRepository<TVersionableEntity, TDomainId, TVersionableDbEn
     public virtual async Task<TVersionableEntity> UpdateAsync(TVersionableEntity entity,
         CancellationToken cancellationToken = default)
     {
-        var dbId = mapper.MapId(entity.Id);
+        var dbId = pageMapper.MapId(entity.Id);
         var dbEntity = await context.Set<TVersionableDbEntity>()
             .FirstOrDefaultAsync(x => x.Id.Equals(dbId) && x.VersionOrder == entity.Version.Order,
                 cancellationToken);
 
         if (dbEntity == null) throw new DomainException("Entity not found");
 
-        var updated = mapper.Map(entity);
+        var updated = pageMapper.Map(entity);
         context.Entry(dbEntity).CurrentValues.SetValues(updated);
-        return mapper.Map(dbEntity);
+        return pageMapper.Map(dbEntity);
     }
 
     public virtual async Task AddNewVersion(TVersionableEntity entity, CancellationToken cancellationToken = default)
     {
         var lastEntity = await context.Set<TVersionableDbEntity>()
-            .Where(x => x.Id.Equals(mapper.MapId(entity.Id)))
+            .Where(x => x.Id.Equals(pageMapper.MapId(entity.Id)))
             .OrderByDescending(x => x.VersionOrder)
             .LastOrDefaultAsync(cancellationToken);
 

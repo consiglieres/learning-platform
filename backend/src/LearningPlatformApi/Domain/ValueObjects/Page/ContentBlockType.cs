@@ -1,3 +1,6 @@
+using System.Text.Json.Serialization;
+using LearningPlatformApi.Persistence.Entities.ValueConverters;
+
 namespace LearningPlatformApi.Domain.ValueObjects.Page;
 
 public record ContentBlockType(ContentCategory Category, ContentType ContentType)

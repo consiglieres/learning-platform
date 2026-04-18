@@ -1,5 +1,6 @@
 using LearningPlatformApi.Domain.Entities;
 using LearningPlatformApi.Domain.Entities.Courses;
+using LearningPlatformApi.Domain.Entities.Page;
 using LearningPlatformApi.Domain.Entities.Tasks;
 using LearningPlatformApi.Domain.ValueObjects;
 using LearningPlatformApi.V1.Models.Base;
@@ -7,6 +8,8 @@ using LearningPlatformApi.V1.Models.Courses.Req;
 using LearningPlatformApi.V1.Models.Courses.Res;
 using LearningPlatformApi.V1.Models.Lessons;
 using LearningPlatformApi.V1.Models.Module;
+using LearningPlatformApi.V1.Models.Page;
+using LearningPlatformApi.V1.Models.Page.Res;
 using LearningPlatformApi.V1.Models.Tasks;
 using LearningPlatformApi.V2.Account.Res;
 using Riok.Mapperly.Abstractions;
@@ -41,4 +44,8 @@ internal partial class V1ResDtoMapper : IV1ResDtoMapper
     public partial V1CodingTaskResDto Map(CodingTask task);
 
     public partial VersionDto Map(EntityVersion version);
+    
+    public partial V1PageResDto Map(Page page);
+    
+    public partial V1PageContentBlock Map(PageContentBlock page);
 }

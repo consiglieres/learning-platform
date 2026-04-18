@@ -14,9 +14,9 @@ public abstract class PublicationWorkflowRepository<TPublicationEntity, TPublica
     where TDbId : IEquatable<TDbId>
 {
     protected PublicationWorkflowRepository(DbContext context,
-        IDbEntityMapper<TPublicationEntity, TPublicationId, TDbEntity, TDbId> mapper,
+        IDbEntityMapper<TPublicationEntity, TPublicationId, TDbEntity, TDbId> pageMapper,
         ILogger<PublicationWorkflowRepository<TPublicationEntity, TPublicationId, TDbEntity, TDbId>> logger)
-        : base(context, mapper, logger)
+        : base(context, pageMapper, logger)
     {
     }
 }

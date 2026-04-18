@@ -6,11 +6,11 @@ namespace LearningPlatformApi.Domain.Entities.Page;
 public record PageContentBlock(string Id, string PageId, int Order, ContentBlockType Type, string Data)
     : AuditableEntity<string>(Id)
 {
-    public string PageId { get; } = PageId;
+    public string PageId { get; set; } = PageId;
 
-    public int Order { get; } = Order;
+    public int Order { get; set; } = Order;
 
-    public string Data { get; } = Data;
+    public string Data { get; set; } = Data;
 
-    public ContentBlockType Type { get; } = Type;
+    public ContentBlockType Type { get; set; } = Type;
 }

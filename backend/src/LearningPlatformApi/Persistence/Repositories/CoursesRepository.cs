@@ -12,9 +12,9 @@ namespace LearningPlatformApi.Persistence.Repositories;
 
 public class CoursesRepository(
     ApplicationContext context,
-    IDbEntityMapper<Course, string, CourseEntity, string> mapper,
+    IDbEntityMapper<Course, string, CourseEntity, string> pageMapper,
     ILogger<CoursesRepository> logger)
-    : PublicationWorkflowRepository<Course, string, CourseEntity, string>(context, mapper, logger), ICourseRepository
+    : PublicationWorkflowRepository<Course, string, CourseEntity, string>(context, pageMapper, logger), ICourseRepository
 {
     public new async Task<Course> GetAsync(string id, EntityVersion version,
         CancellationToken cancellationToken = default)
@@ -31,7 +31,7 @@ public class CoursesRepository(
 
         if (entities == null) throw new DomainException("Entity not found");
 
-        return mapper.Map(entities);
+        return pageMapper.Map(entities);
     }
 
     public new async Task<Course> GetLastAsync(string id, CancellationToken cancellationToken = default)
@@ -50,12 +50,12 @@ public class CoursesRepository(
 
         if (entities == null) throw new DomainException("Entity not found");
 
-        return mapper.Map(entities);
+        return pageMapper.Map(entities);
     }
 
     public override async Task CreateAsync(Course course, CancellationToken cancellationToken = default)
     {
-        var courseEntity = mapper.Map(course);
+        var courseEntity = pageMapper.Map(course);
 
         if (courseEntity.Categories.Any())
         {
@@ -87,7 +87,7 @@ public class CoursesRepository(
 
         if (dbEntity == null) throw new DomainException("Entity not found");
 
-        var updated = mapper.Map(entity);
+        var updated = pageMapper.Map(entity);
         context.Entry(dbEntity).CurrentValues.SetValues(updated);
         
         await UpdateCategoriesAsync(dbEntity, entity.Categories, cancellationToken);

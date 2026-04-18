@@ -5,7 +5,8 @@ using LearningPlatformApi.Persistence.Entities.Page;
 using Riok.Mapperly.Abstractions;
 
 [Mapper]
-internal partial class PageMapper : IDbEntityMapper<Page, string, PageEntity, string>
+internal partial class PageMapper : IDbEntityMapper<Page, string, PageEntity, string>, 
+    IDbEntityMapper<PageContentBlock, string, ContentBlockEntity, string>
 {
     private readonly IUserMapper? userMapper;
 

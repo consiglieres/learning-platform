@@ -10,5 +10,5 @@ public class PageEntity(string id) : VersionableDbEntity<string>(id)
 
     public string TypeName { get; set; }
 
-    public IReadOnlyCollection<ContentBlockEntity> ContentBlocks { get; set; }
+    public IList<ContentBlockEntity> ContentBlocks { get; set; }
 }
