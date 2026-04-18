@@ -76,4 +76,64 @@ public class CoursesRepository(
 
         await context.Courses.AddAsync(courseEntity, cancellationToken);
     }
+    
+    public override async Task<Course> UpdateAsync(Course entity, CancellationToken cancellationToken = default)
+    {
+        var dbId = entity.Id;
+        var dbEntity = await context.Set<CourseEntity>()
+            .Include(x => x.Categories)
+            .FirstOrDefaultAsync(x => x.Id.Equals(dbId) && x.VersionOrder == entity.Version.Order,
+                cancellationToken);
+
+        if (dbEntity == null) throw new DomainException("Entity not found");
+
+        var updated = mapper.Map(entity);
+        context.Entry(dbEntity).CurrentValues.SetValues(updated);
+        
+        await UpdateCategoriesAsync(dbEntity, entity.Categories, cancellationToken);
+        
+        await context.SaveChangesAsync(cancellationToken);
+        
+        return await GetAsync(entity.Id, entity.Version, cancellationToken);
+    }
+
+    private async Task UpdateCategoriesAsync(CourseEntity dbEntity, IReadOnlyCollection<TypedCategory> newCategories, 
+        CancellationToken cancellationToken)
+    {
+        if (!newCategories.Any())
+        {
+            dbEntity.Categories.Clear();
+            return;
+        }
+        
+        var allExistingCategories = await context.Categories.ToListAsync(cancellationToken);
+        
+        var newCategoryEntities = newCategories.Select(c => new CategoryEntity
+        {
+            TypeName = c.Type,
+            ValueName = c.Value,
+        }).ToList();
+        
+        var toAdd = new List<CategoryEntity>();
+        foreach (var newCat in newCategoryEntities)
+        {
+            var existing = allExistingCategories
+                .FirstOrDefault(c => c.TypeName == newCat.TypeName && c.ValueName == newCat.ValueName);
+            
+            if (existing != null)
+            {
+                toAdd.Add(existing);
+            }
+            else
+            {
+                toAdd.Add(newCat);
+            }
+        }
+        
+        dbEntity.Categories.Clear();
+        foreach (var category in toAdd)
+        {
+            dbEntity.Categories.Add(category);
+        }
+    }
 }

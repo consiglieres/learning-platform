@@ -86,7 +86,7 @@ public class VersionedRepository<TVersionableEntity, TDomainId, TVersionableDbEn
         foreach (var dbEntity in dbEntities) dbEntity.MarkAsDeleted(user, DateTimeOffset.UtcNow);
     }
 
-    public async Task<TVersionableEntity> UpdateAsync(TVersionableEntity entity,
+    public virtual async Task<TVersionableEntity> UpdateAsync(TVersionableEntity entity,
         CancellationToken cancellationToken = default)
     {
         var dbId = mapper.MapId(entity.Id);

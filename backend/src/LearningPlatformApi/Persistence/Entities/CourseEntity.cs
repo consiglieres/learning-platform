@@ -9,7 +9,7 @@ public class CourseEntity(string id) : PublicationDbEntity<string>(id)
 
     public string Description { get; set; }
 
-    public IReadOnlyCollection<CategoryEntity> Categories { get; set; }
+    public IList<CategoryEntity> Categories { get; set; }
 
     public IReadOnlyCollection<ModuleEntity> Modules { get; set; }
 
