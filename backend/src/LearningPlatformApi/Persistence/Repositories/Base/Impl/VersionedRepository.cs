@@ -40,7 +40,7 @@ public class VersionedRepository<TVersionableEntity, TDomainId, TVersionableDbEn
         return pageMapper.Map(entities);
     }
 
-    public virtual async Task<IReadOnlyCollection<TVersionableEntity>> GetAllVersionsAsync(TDomainId id, 
+    public virtual async Task<IReadOnlyCollection<TVersionableEntity>> GetAllVersionsAsync(TDomainId id,
         CancellationToken cancellationToken = default)
     {
         var entities = await context.Set<TVersionableDbEntity>()
@@ -55,7 +55,8 @@ public class VersionedRepository<TVersionableEntity, TDomainId, TVersionableDbEn
         return entities.Select(pageMapper.Map).ToList();
     }
 
-    public virtual async Task<TVersionableEntity> GetLastAsync(TDomainId id, CancellationToken cancellationToken = default)
+    public virtual async Task<TVersionableEntity> GetLastAsync(TDomainId id,
+        CancellationToken cancellationToken = default)
     {
         var entities = await context.Set<TVersionableDbEntity>()
             .Where(x => x.Id.Equals(id))
@@ -76,7 +77,8 @@ public class VersionedRepository<TVersionableEntity, TDomainId, TVersionableDbEn
         await context.Set<TVersionableDbEntity>().AddAsync(dbEntity, cancellationToken);
     }
 
-    public virtual async Task DeleteAsync(TVersionableEntity entity, User user, CancellationToken cancellationToken = default)
+    public virtual async Task DeleteAsync(TVersionableEntity entity, User user,
+        CancellationToken cancellationToken = default)
     {
         var dbId = pageMapper.MapId(entity.Id);
         var dbEntity = await context.Set<TVersionableDbEntity>()

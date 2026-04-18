@@ -14,7 +14,8 @@ public class CoursesRepository(
     ApplicationContext context,
     IDbEntityMapper<Course, string, CourseEntity, string> pageMapper,
     ILogger<CoursesRepository> logger)
-    : PublicationWorkflowRepository<Course, string, CourseEntity, string>(context, pageMapper, logger), ICourseRepository
+    : PublicationWorkflowRepository<Course, string, CourseEntity, string>(context, pageMapper, logger),
+        ICourseRepository
 {
     public new async Task<Course> GetAsync(string id, EntityVersion version,
         CancellationToken cancellationToken = default)
@@ -76,7 +77,7 @@ public class CoursesRepository(
 
         await context.Courses.AddAsync(courseEntity, cancellationToken);
     }
-    
+
     public override async Task<Course> UpdateAsync(Course entity, CancellationToken cancellationToken = default)
     {
         var dbId = entity.Id;
@@ -89,15 +90,15 @@ public class CoursesRepository(
 
         var updated = pageMapper.Map(entity);
         context.Entry(dbEntity).CurrentValues.SetValues(updated);
-        
+
         await UpdateCategoriesAsync(dbEntity, entity.Categories, cancellationToken);
-        
+
         await context.SaveChangesAsync(cancellationToken);
-        
+
         return await GetAsync(entity.Id, entity.Version, cancellationToken);
     }
 
-    private async Task UpdateCategoriesAsync(CourseEntity dbEntity, IReadOnlyCollection<TypedCategory> newCategories, 
+    private async Task UpdateCategoriesAsync(CourseEntity dbEntity, IReadOnlyCollection<TypedCategory> newCategories,
         CancellationToken cancellationToken)
     {
         if (!newCategories.Any())
@@ -105,35 +106,28 @@ public class CoursesRepository(
             dbEntity.Categories.Clear();
             return;
         }
-        
+
         var allExistingCategories = await context.Categories.ToListAsync(cancellationToken);
-        
+
         var newCategoryEntities = newCategories.Select(c => new CategoryEntity
         {
             TypeName = c.Type,
-            ValueName = c.Value,
+            ValueName = c.Value
         }).ToList();
-        
+
         var toAdd = new List<CategoryEntity>();
         foreach (var newCat in newCategoryEntities)
         {
             var existing = allExistingCategories
                 .FirstOrDefault(c => c.TypeName == newCat.TypeName && c.ValueName == newCat.ValueName);
-            
+
             if (existing != null)
-            {
                 toAdd.Add(existing);
-            }
             else
-            {
                 toAdd.Add(newCat);
-            }
         }
-        
+
         dbEntity.Categories.Clear();
-        foreach (var category in toAdd)
-        {
-            dbEntity.Categories.Add(category);
-        }
+        foreach (var category in toAdd) dbEntity.Categories.Add(category);
     }
 }

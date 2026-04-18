@@ -8,8 +8,9 @@ public interface IVersionedRepository<TVersionableEntity, TId> : IAuditableRepos
     where TId : IEquatable<TId>
 {
     Task<TVersionableEntity> GetAsync(TId id, EntityVersion version, CancellationToken cancellationToken = default);
-    
-    Task<IReadOnlyCollection<TVersionableEntity>> GetAllVersionsAsync(TId id, CancellationToken cancellationToken = default);
+
+    Task<IReadOnlyCollection<TVersionableEntity>> GetAllVersionsAsync(TId id,
+        CancellationToken cancellationToken = default);
 
     Task<TVersionableEntity> GetLastAsync(TId id, CancellationToken cancellationToken = default);
 

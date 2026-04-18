@@ -37,10 +37,11 @@ public abstract class AuditableDbEntity<TId>(TId id) : DbEntity<TId>(id), ICreat
         DeletedBy = deletedBy.Id;
     }
 
-    public void Restore()
+    public void Restore(User deletedBy, DateTimeOffset deletedAt)
     {
         DeletedAt = null;
         DeletedBy = null;
+        MarkAsUpdated(deletedBy, deletedAt);
     }
 
     public bool IsDeleted()

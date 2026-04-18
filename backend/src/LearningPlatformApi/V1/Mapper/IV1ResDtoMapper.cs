@@ -7,7 +7,6 @@ using LearningPlatformApi.V1.Models.Courses.Res;
 using LearningPlatformApi.V1.Models.Lessons;
 using LearningPlatformApi.V1.Models.Module;
 using LearningPlatformApi.V1.Models.Page;
-using LearningPlatformApi.V1.Models.Page.Res;
 using LearningPlatformApi.V1.Models.Tasks;
 using LearningPlatformApi.V2.Account.Res;
 
@@ -32,8 +31,8 @@ public interface IV1ResDtoMapper
     V1TestTaskResDto Map(TestTask task);
 
     V1CodingTaskResDto Map(CodingTask task);
-    
+
     public V1PageResDto Map(Page page);
-    
+
     public V1PageContentBlock Map(PageContentBlock page);
 }

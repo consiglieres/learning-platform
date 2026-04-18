@@ -15,7 +15,7 @@ public sealed class PageRepository(
     IDbEntityMapper<Page, string, PageEntity, string> pageMapper,
     IDbEntityMapper<PageContentBlock, string, ContentBlockEntity, string> contentBlockMapper,
     ILogger<PageRepository> logger)
-    : VersionedRepository<Page, string, PageEntity, string>(context, pageMapper, logger), IPageRepository 
+    : VersionedRepository<Page, string, PageEntity, string>(context, pageMapper, logger), IPageRepository
 {
     public override async Task<Page> GetAsync(string id, EntityVersion version,
         CancellationToken cancellationToken = default)
@@ -47,8 +47,8 @@ public sealed class PageRepository(
 
         return pageMapper.Map(entities);
     }
-    
-    public override async Task<IReadOnlyCollection<Page>> GetAllVersionsAsync(string id, 
+
+    public override async Task<IReadOnlyCollection<Page>> GetAllVersionsAsync(string id,
         CancellationToken cancellationToken = default)
     {
         var entities = await context.Set<PageEntity>()
@@ -63,7 +63,7 @@ public sealed class PageRepository(
 
         return entities.Select(pageMapper.Map).ToList();
     }
-    
+
     public override async Task<Page> UpdateAsync(Page entity,
         CancellationToken cancellationToken = default)
     {
@@ -77,21 +77,21 @@ public sealed class PageRepository(
 
         var updated = pageMapper.Map(entity);
         context.Entry(dbEntity).CurrentValues.SetValues(updated);
-    
+
         foreach (var existingBlock in dbEntity.ContentBlocks.ToList())
         {
             dbEntity.ContentBlocks.Remove(existingBlock);
             context.Entry(existingBlock).State = EntityState.Deleted;
         }
-    
+
         foreach (var newBlock in entity.ContentBlocks)
         {
             var dbBlock = contentBlockMapper.Map(newBlock);
             dbEntity.ContentBlocks.Add(dbBlock);
         }
-    
+
         await context.SaveChangesAsync(cancellationToken);
-    
+
         return pageMapper.Map(dbEntity);
     }
 }
