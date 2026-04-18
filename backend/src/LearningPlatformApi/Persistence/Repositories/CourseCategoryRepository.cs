@@ -9,14 +9,14 @@ namespace LearningPlatformApi.Persistence.Repositories;
 
 public class CourseCategoryRepository(
     ApplicationContext context,
-    ICourseCategoryMapper  courseCategoryMapper,
+    ICourseCategoryMapper courseCategoryMapper,
     ILogger<CoursesRepository> logger) : ICourseCategoriesRepository
 {
     public async Task<IReadOnlyList<TypedCategory>> GetAllCategoriesAsync(CancellationToken cancellationToken = default)
     {
         var categoryEntities = await context.Set<CategoryEntity>()
             .ToListAsync(cancellationToken);
-        
+
         return categoryEntities.Select(courseCategoryMapper.Map).ToList();
     }
 }

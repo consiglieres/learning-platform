@@ -6,6 +6,6 @@ namespace LearningPlatformApi.Mapper;
 public interface ICourseCategoryMapper
 {
     TypedCategory Map(CategoryEntity categoryEntity);
-    
+
     CategoryEntity Map(TypedCategory categoryEntity);
 }

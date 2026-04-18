@@ -12,6 +12,6 @@ public interface IUserMapper
     UserEntity MapToEntity(User user);
 
     RegisterUser MapToDomain(V1RegisterUserDto user);
-    
+
     RegisterUser MapToDomain(V2RegisterUserDto user);
 }

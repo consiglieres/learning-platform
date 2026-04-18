@@ -8,11 +8,11 @@ namespace LearningPlatformApi.V1.Models.Courses.Res;
 public class V1Course : PublicationWorkflowResDto
 {
     public required string Title { get; set; }
-    
+
     public required string Description { get; set; }
 
     public List<V1CourseCategory> Categories { get; set; } = [];
-    
+
     public List<V1ModuleResDto> Modules { get; set; } = [];
 
     public required V1PageResDto IntroductionPage { get; set; }

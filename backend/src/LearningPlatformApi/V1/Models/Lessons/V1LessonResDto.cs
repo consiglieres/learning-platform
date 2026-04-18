@@ -8,7 +8,7 @@ public class V1LessonResDto : VersionableResDto
 {
     public required string Name { get; set; }
 
-    public  int LessonOrder { get; set; }
+    public int LessonOrder { get; set; }
 
     public int PassThreshold { get; set; }
 

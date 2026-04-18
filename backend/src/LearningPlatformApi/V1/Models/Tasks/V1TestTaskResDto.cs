@@ -7,15 +7,15 @@ namespace LearningPlatformApi.V1.Models.Tasks;
 public class V1TestTaskResDto : VersionableResDto
 {
     public required string Name { get; set; }
-    
+
     public int Order { get; set; }
-    
+
     public required Difficulty Difficulty { get; set; }
 
     public required string LessonId { get; set; }
 
     public required V1PageResDto PageContent { get; set; }
-    
+
     public required string Question { get; set; }
 
     public required List<string> Options { get; set; }

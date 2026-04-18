@@ -43,10 +43,11 @@ public class CourseService(
         return new Success<Course>(draft);
     }
 
-    public async Task<OneOf<EntityNotExists, Success<IReadOnlyCollection<TypedCategory>>>> GetCourseCategoriesAsync(CancellationToken cancellationToken = default)
+    public async Task<OneOf<EntityNotExists, Success<IReadOnlyCollection<TypedCategory>>>> GetCourseCategoriesAsync(
+        CancellationToken cancellationToken = default)
     {
         var categories = await courseCategoriesRepository.GetAllCategoriesAsync(cancellationToken);
-        
+
         return new Success<IReadOnlyCollection<TypedCategory>>(categories);
     }
 

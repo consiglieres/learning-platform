@@ -78,7 +78,7 @@ public class V1CoursesController(
             success => Ok(resDtoMapper.Map(success.Value))
         );
     }
-    
+
     /// <summary>
     ///     Получение категорий
     /// </summary>

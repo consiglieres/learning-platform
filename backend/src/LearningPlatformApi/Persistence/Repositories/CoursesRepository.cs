@@ -52,28 +52,28 @@ public class CoursesRepository(
 
         return mapper.Map(entities);
     }
-    
+
     public override async Task CreateAsync(Course course, CancellationToken cancellationToken = default)
     {
         var courseEntity = mapper.Map(course);
-    
+
         if (courseEntity.Categories.Any())
         {
             var allExisting = await context.Categories.ToListAsync(cancellationToken);
-        
+
             var categoriesToAdd = new List<CategoryEntity>();
-        
+
             foreach (var category in courseEntity.Categories)
             {
                 var existing = allExisting
                     .FirstOrDefault(c => c.TypeName == category.TypeName && c.ValueName == category.ValueName);
-            
+
                 categoriesToAdd.Add(existing ?? category);
             }
-        
+
             courseEntity.Categories = categoriesToAdd;
         }
-    
+
         await context.Courses.AddAsync(courseEntity, cancellationToken);
     }
 }
