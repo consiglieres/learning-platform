@@ -30,8 +30,9 @@ public class CourseService(
         course.AddCategories(categories);
         await courseRepository.CreateAsync(course, cancellationToken);
         await unitOfWork.SaveChangesAsync(cancellationToken);
+        var created = await courseRepository.GetLastAsync(course.Id, cancellationToken);
 
-        return new Success<Course>(course);
+        return new Success<Course>(created);
     }
 
     public async Task<OneOf<EntityNotExists, Success<Course>>> GetCourseLastAsync(string courseId,

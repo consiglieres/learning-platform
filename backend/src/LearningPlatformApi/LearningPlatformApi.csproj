@@ -24,7 +24,6 @@
     <ItemGroup>
         <Folder Include="Authorization\Services\"/>
         <Folder Include="V1\Models\Account\"/>
-        <Folder Include="V1\Models\Courses\Res\"/>
     </ItemGroup>
 
     <ItemGroup>

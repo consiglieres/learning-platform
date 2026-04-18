@@ -14,6 +14,7 @@ using LearningPlatformApi.Persistence.Repositories.Base;
 using LearningPlatformApi.Services;
 using LearningPlatformApi.Services.Impl;
 using LearningPlatformApi.Settings;
+using LearningPlatformApi.V1.Mapper;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
@@ -102,6 +103,7 @@ builder.Services.AddSingleton<IDbEntityMapper<Lesson, string, LessonEntity, stri
 builder.Services.AddSingleton<IDbEntityMapper<Module, string, ModuleEntity, string>, ModuleMapper>();
 builder.Services.AddSingleton<IDbEntityMapper<Page, string, PageEntity, string>, PageMapper>();
 builder.Services.AddSingleton<IDbEntityMapper<TestTask, string, TestTaskEntity, string>, TestTaskMapper>();
+builder.Services.AddSingleton<IV1ResDtoMapper, V1ResDtoMapper>();
 
 // Services
 builder.Services.AddScoped<IUserRegistrationService, UserRegistrationService>();

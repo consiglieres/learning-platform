@@ -2,7 +2,9 @@ using LearningPlatformApi.Domain.Entities.Courses;
 using LearningPlatformApi.Mapper;
 using LearningPlatformApi.Services;
 using LearningPlatformApi.Services.DataObjects.Request.Course;
+using LearningPlatformApi.V1.Mapper;
 using LearningPlatformApi.V1.Models.Courses.Req;
+using LearningPlatformApi.V1.Models.Courses.Res;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
@@ -13,7 +15,8 @@ namespace LearningPlatformApi.V1.Controllers;
 public class V1CoursesController(
     ICourseService courseService,
     IUserMapper userMapper,
-    IUserProfileService profileService)
+    IUserProfileService profileService,
+    IV1ResDtoMapper resDtoMapper)
     : ControllerBase
 {
     /// <summary>
@@ -21,7 +24,7 @@ public class V1CoursesController(
     /// </summary>
     [HttpPost("draft")]
     [Authorize(Roles = "Teacher,Admin")]
-    public async Task<IActionResult> CreateCourseDraftAsync([FromBody] V1CreateCourseDraftRequest request)
+    public async Task<ActionResult<V1Course>> CreateCourseDraftAsync([FromBody] V1CreateCourseDraftRequest request)
     {
         if (!ModelState.IsValid)
             return BadRequest(ModelState);
@@ -46,18 +49,14 @@ public class V1CoursesController(
 
         var result = await courseService.CreateCourseDraftAsync(createRequest);
 
-        return result.Match<IActionResult>(
+        return result.Match<ActionResult<V1Course>>(
             error => BadRequest(new ProblemDetails
             {
                 Title = "Course Creation Failed",
                 Detail = $"{error.OperationInfo.Code}:{error.OperationInfo.Description}",
                 Status = StatusCodes.Status400BadRequest
             }),
-            success => Ok(new
-            {
-                courseId = success.Value.Id,
-                message = "Course draft created successfully"
-            })
+            success => Ok(resDtoMapper.Map(success.Value))
         );
     }
 
@@ -65,18 +64,18 @@ public class V1CoursesController(
     ///     Получение последней версии курса
     /// </summary>
     [HttpGet("{courseId}/last")]
-    public async Task<IActionResult> GetCourseLastAsync(string courseId)
+    public async Task<ActionResult<V1Course>> GetCourseLastAsync(string courseId)
     {
         var result = await courseService.GetCourseLastAsync(courseId);
 
-        return result.Match<IActionResult>(
+        return result.Match<ActionResult<V1Course>>(
             notExists => NotFound(new ProblemDetails
             {
                 Title = "Course Not Found",
                 Detail = $"Course with id {notExists.EntityId} not found",
                 Status = StatusCodes.Status404NotFound
             }),
-            success => Ok(success.Value)
+            success => Ok(resDtoMapper.Map(success.Value))
         );
     }
 
@@ -95,7 +94,7 @@ public class V1CoursesController(
                 Detail = $"Course with id {notExists.EntityId} not found",
                 Status = StatusCodes.Status404NotFound
             }),
-            success => Ok(success.Value)
+            success => Ok(resDtoMapper.Map(success.Value))
         );
     }
 
@@ -382,6 +381,6 @@ public class V1CoursesController(
     private IReadOnlyCollection<TypedCategory> MapToTypedCategories(List<V1CourseCategory> requestCategories)
     {
         return requestCategories.Select(x
-            => new TypedCategory(x.TypeName, x.ValueName)).ToList();
+            => new TypedCategory(x.Type, x.Value)).ToList();
     }
 }
