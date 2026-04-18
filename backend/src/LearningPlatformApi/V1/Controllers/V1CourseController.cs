@@ -78,6 +78,26 @@ public class V1CoursesController(
             success => Ok(resDtoMapper.Map(success.Value))
         );
     }
+    
+    /// <summary>
+    ///     Получение категорий
+    /// </summary>
+    [HttpGet("categories")]
+    public async Task<ActionResult<IReadOnlyCollection<V1CourseCategory>>> GetCourseCategoriesAsync(
+        CancellationToken cancellationToken = default)
+    {
+        var result = await courseService.GetCourseCategoriesAsync(cancellationToken);
+
+        return result.Match<ActionResult<IReadOnlyCollection<V1CourseCategory>>>(
+            notExists => NotFound(new ProblemDetails
+            {
+                Title = "Categories Not Found",
+                Detail = "Categories not found",
+                Status = StatusCodes.Status404NotFound
+            }),
+            success => Ok(success.Value.Select(resDtoMapper.Map))
+        );
+    }
 
     /// <summary>
     ///     Получение конкретной версии курса

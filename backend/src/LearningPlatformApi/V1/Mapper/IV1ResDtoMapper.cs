@@ -2,6 +2,7 @@ using LearningPlatformApi.Domain.Entities;
 using LearningPlatformApi.Domain.Entities.Courses;
 using LearningPlatformApi.Domain.Entities.Tasks;
 using LearningPlatformApi.V1.Models.Account.Res;
+using LearningPlatformApi.V1.Models.Courses.Req;
 using LearningPlatformApi.V1.Models.Courses.Res;
 using LearningPlatformApi.V1.Models.Lessons;
 using LearningPlatformApi.V1.Models.Module;
@@ -12,6 +13,8 @@ namespace LearningPlatformApi.V1.Mapper;
 
 public interface IV1ResDtoMapper
 {
+    public V1CourseCategory Map(TypedCategory category);
+    
     V1UserResDto Map(User user);
     
     V1Course Map(Course course);

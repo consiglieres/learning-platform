@@ -19,6 +19,7 @@ namespace LearningPlatformApi.Services.Impl;
 
 public class CourseService(
     ICourseRepository courseRepository,
+    ICourseCategoriesRepository courseCategoriesRepository,
     IUnitOfWork unitOfWork) : ICourseService
 {
     public async Task<OneOf<OperationNotSucceeded<Error>, Success<Course>>> CreateCourseDraftAsync(
@@ -40,6 +41,13 @@ public class CourseService(
     {
         var draft = await courseRepository.GetLastAsync(courseId, cancellationToken);
         return new Success<Course>(draft);
+    }
+
+    public async Task<OneOf<EntityNotExists, Success<IReadOnlyCollection<TypedCategory>>>> GetCourseCategoriesAsync(CancellationToken cancellationToken = default)
+    {
+        var categories = await courseCategoriesRepository.GetAllCategoriesAsync(cancellationToken);
+        
+        return new Success<IReadOnlyCollection<TypedCategory>>(categories);
     }
 
     public async Task<OneOf<EntityNotExists, Success<Course>>> GetCourseVersionAsync(string courseId, int version,

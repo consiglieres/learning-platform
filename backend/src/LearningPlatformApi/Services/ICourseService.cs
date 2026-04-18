@@ -23,6 +23,9 @@ public interface ICourseService
     Task<OneOf<EntityNotExists, Success<Course>>> GetCourseLastAsync(
         string courseId,
         CancellationToken cancellationToken = default);
+    
+    Task<OneOf<EntityNotExists, Success<IReadOnlyCollection<TypedCategory>>>> GetCourseCategoriesAsync(
+        CancellationToken cancellationToken = default);
 
     Task<OneOf<EntityNotExists, Success<Course>>> GetCourseVersionAsync(
         string courseId,
