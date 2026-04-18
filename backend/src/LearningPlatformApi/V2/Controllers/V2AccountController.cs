@@ -1,37 +1,42 @@
 using LearningPlatformApi.Mapper;
 using LearningPlatformApi.Services;
+using LearningPlatformApi.V1.Mapper;
 using LearningPlatformApi.V2.Account.Req;
+using LearningPlatformApi.V2.Account.Res;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
-namespace LearningPlatformApi.V1.Controllers;
+namespace LearningPlatformApi.V2.Controllers;
 
-[Route("api/v1/[controller]")]
+[Route("api/v2/accounts")]
 [ApiController]
-public class V1AccountController : ControllerBase
+public class V2AccountController : ControllerBase
 {
     private readonly IUserAuthenticationService authenticationService;
     private readonly IUserEmailService emailService;
     private readonly IUserProfileService profileService;
     private readonly IUserRegistrationService registrationService;
     private readonly IUserMapper userMapper;
+    private readonly IV1ResDtoMapper v1ResDtoMapper;
 
-    public V1AccountController(
+    public V2AccountController(
         IUserRegistrationService registrationService,
         IUserAuthenticationService authenticationService,
         IUserProfileService profileService,
         IUserEmailService emailService,
-        IUserMapper userMapper)
+        IUserMapper userMapper,
+        IV1ResDtoMapper v1ResDtoMapper)
     {
         this.registrationService = registrationService;
         this.authenticationService = authenticationService;
         this.profileService = profileService;
         this.emailService = emailService;
         this.userMapper = userMapper;
+        this.v1ResDtoMapper = v1ResDtoMapper;
     }
 
     [HttpPost("register")]
-    public async Task<IActionResult> RegisterAsync([FromBody] V1RegisterUserDto registerDto)
+    public async Task<ActionResult> RegisterAsync([FromBody] V2RegisterUserDto registerDto)
     {
         if (!ModelState.IsValid)
             return BadRequest(ModelState);
@@ -39,7 +44,7 @@ public class V1AccountController : ControllerBase
         var registerDomain = userMapper.MapToDomain(registerDto);
         var resultState = await registrationService.RegisterUserAsync(registerDomain);
 
-        return resultState.Match<IActionResult>(
+        return resultState.Match<ActionResult>(
             exists => Conflict(new ProblemDetails
             {
                 Title = "Registration Failed",
@@ -81,7 +86,7 @@ public class V1AccountController : ControllerBase
     }
 
     [HttpPost("login")]
-    public async Task<IActionResult> LoginAsync([FromBody] V1LoginUserDto loginDto)
+    public async Task<IActionResult> LoginAsync([FromBody] V2LoginUserDto loginDto)
     {
         if (!ModelState.IsValid)
             return BadRequest(ModelState);
@@ -101,22 +106,12 @@ public class V1AccountController : ControllerBase
         );
     }
 
-    private async Task<IActionResult> LoginSuccessResponse(string email)
+    private async Task<ActionResult> LoginSuccessResponse(string email)
     {
         var user = await profileService.GetUserByEmailAsync(email);
         var roles = await profileService.GetUserRolesAsync(user!);
 
-        return Ok(new
-        {
-            message = "Logged in successfully",
-            user = new
-            {
-                user!.Id,
-                user.Email,
-                user.EmailConfirmed,
-                Roles = roles
-            }
-        });
+        return Ok(v1ResDtoMapper.Map(userMapper.MapToDomain(user!)));
     }
 
     [HttpPost("logout")]
@@ -141,7 +136,7 @@ public class V1AccountController : ControllerBase
 
     [HttpGet("me")]
     [Authorize]
-    public async Task<IActionResult> GetCurrentUser()
+    public async Task<ActionResult<V2UserResDto>> GetCurrentUser()
     {
         var user = await profileService.GetCurrentUserAsync(User);
         if (user == null)
@@ -149,21 +144,12 @@ public class V1AccountController : ControllerBase
 
         var roles = await profileService.GetUserRolesAsync(user);
 
-        return Ok(new
-        {
-            user.Id,
-            user.Email,
-            user.EmailConfirmed,
-            user.IsActive,
-            user.CreatedAt,
-            user.LastLoginAt,
-            Roles = roles
-        });
+        return Ok(v1ResDtoMapper.Map(userMapper.MapToDomain(user)));
     }
 
     [HttpPost("change-password")]
     [Authorize]
-    public async Task<IActionResult> ChangePasswordAsync([FromBody] V1ChangePasswordDto changePasswordDto)
+    public async Task<IActionResult> ChangePasswordAsync([FromBody] V2ChangePasswordDto changePasswordDto)
     {
         if (!ModelState.IsValid)
             return BadRequest(ModelState);
@@ -184,14 +170,14 @@ public class V1AccountController : ControllerBase
     }
 
     [HttpPost("forgot-password")]
-    public async Task<IActionResult> ForgotPasswordAsync([FromBody] V1ForgotPasswordDto forgotPasswordDto)
+    public async Task<IActionResult> ForgotPasswordAsync([FromBody] V2ForgotPasswordDto forgotPasswordDto)
     {
         // TODO: Implement password reset service
         return Ok(new { message = "If the email exists, a password reset link has been sent" });
     }
 
     [HttpPost("resend-confirmation")]
-    public async Task<IActionResult> ResendConfirmationEmailAsync([FromBody] V1ResendConfirmationDto dto)
+    public async Task<IActionResult> ResendConfirmationEmailAsync([FromBody] V2ResendConfirmationDto dto)
     {
         var result = await emailService.SendConfirmationEmailAsync(dto.Email);
 

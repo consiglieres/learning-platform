@@ -2,7 +2,7 @@ using System.ComponentModel.DataAnnotations;
 
 namespace LearningPlatformApi.V2.Account.Req;
 
-public class V1ChangePasswordDto
+public class V2ChangePasswordDto
 {
     [Required] public string CurrentPassword { get; set; } = string.Empty;
 

@@ -1,6 +1,6 @@
 namespace LearningPlatformApi.V2.Account.Res;
 
-public class V1UserResDto
+public class V2UserResDto
 {
     public required string Id { get; set; }
     

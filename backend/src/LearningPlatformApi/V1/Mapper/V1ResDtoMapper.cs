@@ -9,6 +9,7 @@ using LearningPlatformApi.V1.Models.Courses.Res;
 using LearningPlatformApi.V1.Models.Lessons;
 using LearningPlatformApi.V1.Models.Module;
 using LearningPlatformApi.V1.Models.Tasks;
+using LearningPlatformApi.V2.Account.Res;
 using Riok.Mapperly.Abstractions;
 
 namespace LearningPlatformApi.V1.Mapper;

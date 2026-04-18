@@ -1,6 +1,6 @@
 using System.ComponentModel.DataAnnotations;
 
-namespace LearningPlatformApi.V1.Models.Account.Req;
+namespace LearningPlatformApi.V2.Account.Req;
 
 public class V1ResendConfirmationDto
 {

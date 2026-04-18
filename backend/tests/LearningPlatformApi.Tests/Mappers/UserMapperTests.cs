@@ -2,7 +2,7 @@ using AwesomeAssertions;
 using LearningPlatformApi.Domain.Entities;
 using LearningPlatformApi.Mapper.Impl;
 using LearningPlatformApi.Persistence.Entities;
-using LearningPlatformApi.V1.Models.Account.Req;
+using LearningPlatformApi.V2.Account.Req;
 
 namespace LearningPlatformApi.Tests.Mappers;
 
@@ -254,7 +254,7 @@ public class UserMapperTests
     public void MapToDomain_WhenV1RegisterUserDtoIsValid_ShouldMapToRegisterUserCorrectly()
     {
         // Arrange
-        var dto = new V1RegisterUserDto
+        var dto = new V2RegisterUserDto
         {
             Email = "test@example.com",
             Password = "Password123!",
@@ -273,7 +273,7 @@ public class UserMapperTests
     public void MapToDomain_WhenV1RegisterUserDtoHasMinimalFields_ShouldMapCorrectly()
     {
         // Arrange
-        var dto = new V1RegisterUserDto
+        var dto = new V2RegisterUserDto
         {
             Email = "minimal@example.com",
             Password = "pass123",
@@ -318,7 +318,7 @@ public class UserMapperTests
     public void MapToDomain_WhenV1RegisterUserDtoIsNull_ShouldThrowNullReferenceException()
     {
         // Arrange
-        V1RegisterUserDto? dto = null;
+        V2RegisterUserDto? dto = null;
 
         // Act & Assert
         var act = () => mapper.MapToDomain(dto!);

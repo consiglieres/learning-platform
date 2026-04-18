@@ -1,7 +1,7 @@
 using LearningPlatformApi.Domain.Entities;
 using LearningPlatformApi.Domain.ValueObjects;
 using LearningPlatformApi.Persistence.Entities;
-using LearningPlatformApi.V1.Models.Account.Req;
+using LearningPlatformApi.V2.Account.Req;
 using Riok.Mapperly.Abstractions;
 
 namespace LearningPlatformApi.Mapper.Impl;
@@ -21,4 +21,6 @@ internal partial class UserMapper : IUserMapper
     public partial UserEntity MapToEntity(User user);
 
     public partial RegisterUser MapToDomain(V1RegisterUserDto user);
+
+    public partial RegisterUser MapToDomain(V2RegisterUserDto user);
 }
