@@ -11,6 +11,9 @@ public sealed class ContentBlockEntityConfiguration : AuditableDbEntityConfigura
     {
         modelBuilder.ToTable("ContentBlocks");
         modelBuilder.HasKey(x => x.Id);
+        modelBuilder.HasIndex(x => new { x.PageId, x.Order })
+            .IsUnique()
+            .HasDatabaseName("IX_ContentBlocks_PageId");
 
         modelBuilder.Property(x => x.PageId)
             .IsRequired();
