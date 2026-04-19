@@ -19,10 +19,16 @@ public interface IV1ResDtoMapper
     V1UserResDto Map(User user);
 
     V1Course Map(Course course);
+    
+    V1CourseShort MapToShort(Course course);
 
     V1ModuleResDto Map(Module module);
+    
+    V1ModuleShortResDto MapToShort(Module course);
 
     V1LessonResDto Map(Lesson lesson);
+    
+    V1LessonShortResDto MapToShort(Lesson course);
 
     V1TaskShortInfo MapShort(CodingTask task);
 

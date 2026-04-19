@@ -4,6 +4,8 @@ using LearningPlatformApi.V2.Account.Res;
 
 namespace LearningPlatformApi.V1.Models.Page.Res;
 
+// todo: добавить методы поиска 
+// todo: добавить shortinfo для page и course
 public class V1PageDetailResDto : V1PageResDto
 {
     public required List<PageVersionInfoDto> VersionHistory { get; set; }

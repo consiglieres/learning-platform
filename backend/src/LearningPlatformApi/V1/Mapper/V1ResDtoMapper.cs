@@ -22,11 +22,36 @@ internal partial class V1ResDtoMapper : IV1ResDtoMapper
     public partial V1UserResDto Map(User user);
 
     public partial V1Course Map(Course course);
+    
+    [MapperRequiredMapping(RequiredMappingStrategy.Target)]
+    public partial V1CourseShort MapToShort(Course course);
 
     public partial V1ModuleResDto Map(Module module);
 
+    public V1ModuleShortResDto MapToShort(Module course)
+    {
+        return new V1ModuleShortResDto()
+        {
+            Id = course.Id,
+            Name = course.Name,
+            ModuleOrder = course.ModuleOrder,
+            CourseId = course.CourseId,
+            LessonIds = course.Lessons.Select(x => x.Id).ToArray(),
+            IntroductionPageId = course.IntroductionPage.Id,
+            CreatedAt = course.CreatedAt,
+            CreatedBy = Map(course.CreatedBy),
+            UpdatedAt = course.UpdatedAt,
+            UpdatedBy = course.UpdatedBy == null ? null : Map(course.UpdatedBy),
+            DeletedAt = course.DeletedAt,
+            DeletedBy = course.DeletedBy == null ? null : Map(course.DeletedBy)
+        };
+    }
+
     [MapperRequiredMapping(RequiredMappingStrategy.Target)]
     public partial V1LessonResDto Map(Lesson lesson);
+
+    [MapperRequiredMapping(RequiredMappingStrategy.Target)]
+    public partial V1LessonShortResDto MapToShort(Lesson course);
 
     [MapperRequiredMapping(RequiredMappingStrategy.Target)]
     public partial V1TaskShortInfo MapShort(CodingTask task);
@@ -47,4 +72,9 @@ internal partial class V1ResDtoMapper : IV1ResDtoMapper
     public partial V1PageContentBlock Map(PageContentBlock page);
 
     public partial VersionDto Map(EntityVersion version);
+
+    private string MapLists(Lesson lessons)
+    {
+        return lessons.Id;
+    }
 }

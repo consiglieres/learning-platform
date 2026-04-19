@@ -10,7 +10,7 @@ public class V1ModuleResDto : VersionableResDto
     public int ModuleOrder { get; set; }
     public required string CourseId { get; set; }
 
-    public required List<V1LessonResDto> Lessons { get; set; }
+    public required List<V1LessonShortResDto> Lessons { get; set; }
 
     public required V1PageResDto IntroductionPage { get; set; }
 }
