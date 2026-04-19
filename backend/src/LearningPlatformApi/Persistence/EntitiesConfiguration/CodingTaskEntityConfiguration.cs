@@ -9,7 +9,7 @@ public class CodingTaskEntityConfiguration : VersionableDbEntityConfiguration<Co
 {
     protected override void OverrideConfigure(EntityTypeBuilder<CodingTaskEntity> modelBuilder)
     {
-        modelBuilder.HasKey(x => x.Id);
+        base.OverrideConfigure(modelBuilder);
         modelBuilder.ToTable("CodingTasks");
     }
 }

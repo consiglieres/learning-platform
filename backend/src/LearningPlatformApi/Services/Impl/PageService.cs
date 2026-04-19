@@ -45,56 +45,23 @@ public class PageService(
         CancellationToken cancellationToken)
     {
         var page = await pageRepository.GetLastAsync(id, cancellationToken);
-        page.Order = request.Order;
-        page.Type = request.Type;
-
-        var existingBlocksDict = page.ContentBlocks
-            .ToDictionary(b => b.Id, b => b);
-
-        var updatedBlocks = new List<PageContentBlock>();
-        var processedBlockIds = new HashSet<string>();
-
-        foreach (var blockRequest in request.ContentBlocks)
-        {
-            PageContentBlock contentBlock;
-
-            if (!string.IsNullOrEmpty(blockRequest.Id) &&
-                existingBlocksDict.TryGetValue(blockRequest.Id, out var existingBlock))
+        var newPage = new Page(id, request.Order, request.Type);
+        var contentBlocks = request.ContentBlocks.Select(x =>
             {
-                contentBlock = existingBlock with
-                {
-                    Order = blockRequest.Order,
-                    Type = blockRequest.Type,
-                    Data = blockRequest.Data
-                };
-                contentBlock.MarkAsUpdated(user, DateTimeOffset.UtcNow);
-                processedBlockIds.Add(blockRequest.Id);
-            }
-            else
-            {
-                contentBlock = new PageContentBlock(
-                    blockRequest.Id ?? Guid.NewGuid().ToString(),
-                    page.Id,
-                    blockRequest.Order,
-                    blockRequest.Type,
-                    blockRequest.Data);
+                var contentBlock = new PageContentBlock(Guid.NewGuid().ToString(), page.Id, x.Order, x.Type, x.Data);
                 contentBlock.MarkAsCreated(user, DateTimeOffset.UtcNow);
-            }
-
-            updatedBlocks.Add(contentBlock);
-        }
-
-        var unchangedBlocks = page.ContentBlocks
-            .Where(b => !processedBlockIds.Contains(b.Id))
+                return contentBlock;
+            })
             .ToList();
+        newPage.MarkAsCreated(user, DateTimeOffset.UtcNow);
+        newPage.ContentBlocks = contentBlocks;
+        newPage.Version = EntityVersion.IncrementVersion(page.Version);
 
-        updatedBlocks.AddRange(unchangedBlocks);
+        await pageRepository.CreateAsync(newPage, cancellationToken);
+        await unitOfWork.SaveChangesAsync(cancellationToken);
+        var createdPage = await pageRepository.GetLastAsync(newPage.Id, cancellationToken);
 
-        page.ContentBlocks = updatedBlocks;
-
-        var updated = await pageRepository.UpdateAsync(page, cancellationToken);
-
-        return resDtoMapper.Map(updated);
+        return resDtoMapper.Map(createdPage);
     }
 
     public async Task<V1PageResDto> GetLatestAsync(string id, CancellationToken cancellationToken)

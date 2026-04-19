@@ -9,9 +9,9 @@ public class PageEntityConfiguration : VersionableDbEntityConfiguration<PageEnti
 {
     protected override void OverrideConfigure(EntityTypeBuilder<PageEntity> modelBuilder)
     {
+        base.OverrideConfigure(modelBuilder);
         modelBuilder.ToTable("Pages");
-
-        modelBuilder.HasKey(x => x.Id);
+        
         modelBuilder.Property(x => x.Order)
             .IsRequired();
         modelBuilder.Property(x => x.TypeCode)

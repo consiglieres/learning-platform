@@ -14,7 +14,7 @@ public abstract record VersionableEntity<TKey> : AuditableEntity<TKey>, IVersion
         this.Version = Version;
     }
 
-    public EntityVersion Version { get; init; }
+    public EntityVersion Version { get; set; }
 
     public void Deconstruct(out TKey id, out EntityVersion version)
     {

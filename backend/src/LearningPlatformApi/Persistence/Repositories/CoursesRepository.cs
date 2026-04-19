@@ -5,6 +5,7 @@ using LearningPlatformApi.Domain.ValueObjects;
 using LearningPlatformApi.Mapper;
 using LearningPlatformApi.Persistence.Context;
 using LearningPlatformApi.Persistence.Entities;
+using LearningPlatformApi.Persistence.Entities.Page;
 using LearningPlatformApi.Persistence.Repositories.Base.Impl;
 using Microsoft.EntityFrameworkCore;
 
@@ -12,9 +13,9 @@ namespace LearningPlatformApi.Persistence.Repositories;
 
 public class CoursesRepository(
     ApplicationContext context,
-    IDbEntityMapper<Course, string, CourseEntity, string> pageMapper,
+    IDbEntityMapper<Course, string, CourseEntity, string> courseMapper,
     ILogger<CoursesRepository> logger)
-    : PublicationWorkflowRepository<Course, string, CourseEntity, string>(context, pageMapper, logger),
+    : PublicationWorkflowRepository<Course, string, CourseEntity, string>(context, courseMapper, logger),
         ICourseRepository
 {
     public new async Task<Course> GetAsync(string id, EntityVersion version,
@@ -32,7 +33,7 @@ public class CoursesRepository(
 
         if (entities == null) throw new DomainException("Entity not found");
 
-        return pageMapper.Map(entities);
+        return courseMapper.Map(entities);
     }
 
     public new async Task<Course> GetLastAsync(string id, CancellationToken cancellationToken = default)
@@ -43,20 +44,28 @@ public class CoursesRepository(
             .Include(x => x.UpdatedByUser)
             .Include(x => x.DeletedByUser)
             .Include(x => x.Categories)
-            .Include(x => x.IntroductionPage)
-            .ThenInclude(x => x.ContentBlocks)
             .Include(x => x.Modules)
             .OrderByDescending(x => x.VersionOrder)
-            .LastOrDefaultAsync(cancellationToken);
-
+            .FirstOrDefaultAsync(cancellationToken);
         if (entities == null) throw new DomainException("Entity not found");
+        
+        var page = await context.Set<PageEntity>()
+            .Include(x => x.CreatedByUser)
+            .Include(x => x.UpdatedByUser)
+            .Include(x => x.DeletedByUser)
+            .Include(x => x.ContentBlocks)
+            .OrderByDescending(x => x.VersionOrder)
+            .FirstOrDefaultAsync(x => x.Id.Equals(entities.PageId), cancellationToken);
+        if (page == null) throw new DomainException("Entity not found");
+        
+        entities.IntroductionPage = page;
 
-        return pageMapper.Map(entities);
+        return courseMapper.Map(entities);
     }
 
     public override async Task CreateAsync(Course course, CancellationToken cancellationToken = default)
     {
-        var courseEntity = pageMapper.Map(course);
+        var courseEntity = courseMapper.Map(course);
 
         if (courseEntity.Categories.Any())
         {
@@ -75,6 +84,8 @@ public class CoursesRepository(
             courseEntity.Categories = categoriesToAdd;
         }
 
+        courseEntity.IntroductionPage = null!;
+
         await context.Courses.AddAsync(courseEntity, cancellationToken);
     }
 
@@ -88,7 +99,8 @@ public class CoursesRepository(
 
         if (dbEntity == null) throw new DomainException("Entity not found");
 
-        var updated = pageMapper.Map(entity);
+        entity.Version = EntityVersion.IncrementVersion(entity.Version);
+        var updated = courseMapper.Map(entity);
         context.Entry(dbEntity).CurrentValues.SetValues(updated);
 
         await UpdateCategoriesAsync(dbEntity, entity.Categories, cancellationToken);

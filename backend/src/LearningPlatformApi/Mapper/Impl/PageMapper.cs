@@ -1,4 +1,5 @@
 using LearningPlatformApi.Domain.Entities.Page;
+using LearningPlatformApi.Domain.ValueObjects;
 using LearningPlatformApi.Domain.ValueObjects.Page;
 using LearningPlatformApi.Mapper;
 using LearningPlatformApi.Persistence.Entities.Page;
@@ -58,7 +59,8 @@ internal partial class PageMapper : IDbEntityMapper<Page, string, PageEntity, st
             ContentBlocks = entity.ContentBlocks.Select(Map).ToList(),
             CreatedAt = entity.CreatedAt,
             UpdatedAt = entity.UpdatedAt,
-            DeletedAt = entity.DeletedAt
+            DeletedAt = entity.DeletedAt,
+            Version = new EntityVersion(entity.VersionOrder, entity.Tag)
         };
 
         // Маппинг пользователей аудита
@@ -85,6 +87,8 @@ internal partial class PageMapper : IDbEntityMapper<Page, string, PageEntity, st
             Order = page.Order,
             TypeCode = page.Type.Code,
             TypeName = page.Type.Name,
+            VersionOrder = page.Version.Order,
+            Tag = page.Version.Tag,
             ContentBlocks = page.ContentBlocks?.Select(Map).ToList() ?? new List<ContentBlockEntity>(),
             CreatedAt = page.CreatedAt,
             CreatedBy = page.CreatedBy.Id,

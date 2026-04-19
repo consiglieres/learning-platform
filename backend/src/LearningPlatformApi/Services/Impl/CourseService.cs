@@ -20,6 +20,7 @@ namespace LearningPlatformApi.Services.Impl;
 public class CourseService(
     ICourseRepository courseRepository,
     ICourseCategoriesRepository courseCategoriesRepository,
+    IPageRepository pageRepository,
     IUnitOfWork unitOfWork) : ICourseService
 {
     public async Task<OneOf<OperationNotSucceeded<Error>, Success<Course>>> CreateCourseDraftAsync(
@@ -30,6 +31,7 @@ public class CourseService(
 
         course.AddCategories(categories);
         await courseRepository.CreateAsync(course, cancellationToken);
+        await pageRepository.CreateAsync(course.IntroductionPage, cancellationToken);
         await unitOfWork.SaveChangesAsync(cancellationToken);
         var created = await courseRepository.GetLastAsync(course.Id, cancellationToken);
 
@@ -68,10 +70,18 @@ public class CourseService(
         if (title != null) existingCourse.Title = title;
         if (description != null) existingCourse.Description = description;
         if (categories != null && categories.Any()) existingCourse.ResetCategories(categories);
-        var updated = await courseRepository.UpdateAsync(existingCourse, cancellationToken);
+        
+        existingCourse.Version = EntityVersion.IncrementVersion(existingCourse.Version);
+        await courseRepository.CreateAsync(existingCourse, cancellationToken);
         await unitOfWork.SaveChangesAsync(cancellationToken);
+        var updated = await GetCourseLastAsync(courseId, cancellationToken);
+        
+        if (updated.IsT0)
+        {
+            return new NotFound();
+        }
 
-        return new Success<Course>(updated);
+        return new Success<Course>(updated.AsT1.Value);
     }
 
     public async Task<OneOf<NotFound, Success>> DeleteCourseAsync(string courseId, User user,

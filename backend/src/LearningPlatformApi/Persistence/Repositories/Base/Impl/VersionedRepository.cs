@@ -16,14 +16,14 @@ public class VersionedRepository<TVersionableEntity, TDomainId, TVersionableDbEn
     where TDbId : IEquatable<TDbId>
 {
     private readonly DbContext context;
-    private readonly IDbEntityMapper<TVersionableEntity, TDomainId, TVersionableDbEntity, TDbId> pageMapper;
+    private readonly IDbEntityMapper<TVersionableEntity, TDomainId, TVersionableDbEntity, TDbId> courseMapper;
 
     protected VersionedRepository(DbContext context,
-        IDbEntityMapper<TVersionableEntity, TDomainId, TVersionableDbEntity, TDbId> pageMapper,
+        IDbEntityMapper<TVersionableEntity, TDomainId, TVersionableDbEntity, TDbId> courseMapper,
         ILogger<VersionedRepository<TVersionableEntity, TDomainId, TVersionableDbEntity, TDbId>> logger)
     {
         this.context = context;
-        this.pageMapper = pageMapper;
+        this.courseMapper = courseMapper;
     }
 
     public virtual async Task<TVersionableEntity> GetAsync(TDomainId id, EntityVersion version,
@@ -33,11 +33,12 @@ public class VersionedRepository<TVersionableEntity, TDomainId, TVersionableDbEn
             .Include(x => x.CreatedByUser)
             .Include(x => x.UpdatedByUser)
             .Include(x => x.DeletedByUser)
+            .OrderByDescending(x => x.VersionOrder)
             .FirstOrDefaultAsync(x => x.Id.Equals(id) && x.VersionOrder == version.Order, cancellationToken);
 
         if (entities == null) throw new DomainException("Entity not found");
 
-        return pageMapper.Map(entities);
+        return courseMapper.Map(entities);
     }
 
     public virtual async Task<IReadOnlyCollection<TVersionableEntity>> GetAllVersionsAsync(TDomainId id,
@@ -52,7 +53,7 @@ public class VersionedRepository<TVersionableEntity, TDomainId, TVersionableDbEn
 
         if (entities == null) throw new DomainException("Entity not found");
 
-        return entities.Select(pageMapper.Map).ToList();
+        return entities.Select(courseMapper.Map).ToList();
     }
 
     public virtual async Task<TVersionableEntity> GetLastAsync(TDomainId id,
@@ -64,23 +65,23 @@ public class VersionedRepository<TVersionableEntity, TDomainId, TVersionableDbEn
             .Include(x => x.UpdatedByUser)
             .Include(x => x.DeletedByUser)
             .OrderByDescending(x => x.VersionOrder)
-            .LastOrDefaultAsync(cancellationToken);
+            .FirstOrDefaultAsync(cancellationToken);
 
         if (entities == null) throw new DomainException("Entity not found");
 
-        return pageMapper.Map(entities);
+        return courseMapper.Map(entities);
     }
 
     public virtual async Task CreateAsync(TVersionableEntity entity, CancellationToken cancellationToken = default)
     {
-        var dbEntity = pageMapper.Map(entity);
+        var dbEntity = courseMapper.Map(entity);
         await context.Set<TVersionableDbEntity>().AddAsync(dbEntity, cancellationToken);
     }
 
     public virtual async Task DeleteAsync(TVersionableEntity entity, User user,
         CancellationToken cancellationToken = default)
     {
-        var dbId = pageMapper.MapId(entity.Id);
+        var dbId = courseMapper.MapId(entity.Id);
         var dbEntity = await context.Set<TVersionableDbEntity>()
             .FirstOrDefaultAsync(x => x.Id.Equals(dbId) && x.VersionOrder == entity.Version.Order, cancellationToken);
 
@@ -92,7 +93,7 @@ public class VersionedRepository<TVersionableEntity, TDomainId, TVersionableDbEn
 
     public virtual async Task DeleteAsync(TDomainId id, User user, CancellationToken cancellationToken = default)
     {
-        var dbId = pageMapper.MapId(id);
+        var dbId = courseMapper.MapId(id);
         var dbEntities = await context.Set<TVersionableDbEntity>()
             .Where(x => x.Id.Equals(dbId))
             .ToListAsync(cancellationToken);
@@ -106,24 +107,24 @@ public class VersionedRepository<TVersionableEntity, TDomainId, TVersionableDbEn
     public virtual async Task<TVersionableEntity> UpdateAsync(TVersionableEntity entity,
         CancellationToken cancellationToken = default)
     {
-        var dbId = pageMapper.MapId(entity.Id);
+        var dbId = courseMapper.MapId(entity.Id);
         var dbEntity = await context.Set<TVersionableDbEntity>()
             .FirstOrDefaultAsync(x => x.Id.Equals(dbId) && x.VersionOrder == entity.Version.Order,
                 cancellationToken);
 
         if (dbEntity == null) throw new DomainException("Entity not found");
 
-        var updated = pageMapper.Map(entity);
+        var updated = courseMapper.Map(entity);
         context.Entry(dbEntity).CurrentValues.SetValues(updated);
-        return pageMapper.Map(dbEntity);
+        return courseMapper.Map(dbEntity);
     }
 
     public virtual async Task AddNewVersion(TVersionableEntity entity, CancellationToken cancellationToken = default)
     {
         var lastEntity = await context.Set<TVersionableDbEntity>()
-            .Where(x => x.Id.Equals(pageMapper.MapId(entity.Id)))
+            .Where(x => x.Id.Equals(courseMapper.MapId(entity.Id)))
             .OrderByDescending(x => x.VersionOrder)
-            .LastOrDefaultAsync(cancellationToken);
+            .FirstOrDefaultAsync(cancellationToken);
 
         if (lastEntity != null && lastEntity.VersionOrder >= entity.Version.Order)
             throw new DomainException("Entity is already created");

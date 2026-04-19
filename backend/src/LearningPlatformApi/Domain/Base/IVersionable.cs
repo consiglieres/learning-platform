@@ -4,5 +4,5 @@ namespace LearningPlatformApi.Domain.Base;
 
 public interface IVersionable
 {
-    EntityVersion Version { get; init; }
+    EntityVersion Version { get; set; }
 }

@@ -9,7 +9,7 @@ public class TestTaskEntityConfiguration : VersionableDbEntityConfiguration<Test
 {
     protected override void OverrideConfigure(EntityTypeBuilder<TestTaskEntity> entityTypeBuilder)
     {
-        entityTypeBuilder.HasKey(x => x.Id);
+        base.OverrideConfigure(entityTypeBuilder);
         entityTypeBuilder.ToTable("TestTask");
     }
 }

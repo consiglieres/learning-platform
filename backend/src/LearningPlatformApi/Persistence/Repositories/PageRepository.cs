@@ -12,10 +12,10 @@ namespace LearningPlatformApi.Persistence.Repositories;
 
 public sealed class PageRepository(
     ApplicationContext context,
-    IDbEntityMapper<Page, string, PageEntity, string> pageMapper,
+    IDbEntityMapper<Page, string, PageEntity, string> courseMapper,
     IDbEntityMapper<PageContentBlock, string, ContentBlockEntity, string> contentBlockMapper,
     ILogger<PageRepository> logger)
-    : VersionedRepository<Page, string, PageEntity, string>(context, pageMapper, logger), IPageRepository
+    : VersionedRepository<Page, string, PageEntity, string>(context, courseMapper, logger), IPageRepository
 {
     public override async Task<Page> GetAsync(string id, EntityVersion version,
         CancellationToken cancellationToken = default)
@@ -25,11 +25,12 @@ public sealed class PageRepository(
             .Include(x => x.UpdatedByUser)
             .Include(x => x.DeletedByUser)
             .Include(x => x.ContentBlocks)
+            .OrderByDescending(x => x.VersionOrder)
             .FirstOrDefaultAsync(x => x.Id.Equals(id) && x.VersionOrder == version.Order, cancellationToken);
 
         if (entities == null) throw new DomainException("Entity not found");
 
-        return pageMapper.Map(entities);
+        return courseMapper.Map(entities);
     }
 
     public override async Task<Page> GetLastAsync(string id, CancellationToken cancellationToken = default)
@@ -41,11 +42,11 @@ public sealed class PageRepository(
             .Include(x => x.DeletedByUser)
             .Include(x => x.ContentBlocks)
             .OrderByDescending(x => x.VersionOrder)
-            .LastOrDefaultAsync(cancellationToken);
+            .FirstOrDefaultAsync(cancellationToken);
 
         if (entities == null) throw new DomainException("Entity not found");
 
-        return pageMapper.Map(entities);
+        return courseMapper.Map(entities);
     }
 
     public override async Task<IReadOnlyCollection<Page>> GetAllVersionsAsync(string id,
@@ -61,7 +62,7 @@ public sealed class PageRepository(
 
         if (entities == null) throw new DomainException("Entity not found");
 
-        return entities.Select(pageMapper.Map).ToList();
+        return entities.Select(courseMapper.Map).ToList();
     }
 
     public override async Task<Page> UpdateAsync(Page entity,
@@ -75,8 +76,11 @@ public sealed class PageRepository(
 
         if (dbEntity == null) throw new DomainException("Entity not found");
 
-        var updated = pageMapper.Map(entity);
+        entity.Version = EntityVersion.IncrementVersion(entity.Version);
+        var updated = courseMapper.Map(entity);
         context.Entry(dbEntity).CurrentValues.SetValues(updated);
+        dbEntity.VersionOrder = entity.Version.Order;
+        dbEntity.Tag = entity.Version.Tag;
 
         foreach (var existingBlock in dbEntity.ContentBlocks.ToList())
         {
@@ -92,6 +96,6 @@ public sealed class PageRepository(
 
         await context.SaveChangesAsync(cancellationToken);
 
-        return pageMapper.Map(dbEntity);
+        return courseMapper.Map(dbEntity);
     }
 }
