@@ -23,7 +23,7 @@ public abstract class AuditableDbEntity<TId>(TId id) : DbEntity<TId>(id), ICreat
 
     public UserEntity? DeletedByUser { get; set; }
 
-    public void MarkAsCreated(User cratedBy, DateTimeOffset createdAt)
+    public void MarkAsCreated(User cratedBy, DateTimeOffset createdAt, bool force = false)
     {
         CreatedAt = createdAt;
         CreatedBy = cratedBy.Id;

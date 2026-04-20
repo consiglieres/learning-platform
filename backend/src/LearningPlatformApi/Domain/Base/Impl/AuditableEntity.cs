@@ -14,9 +14,9 @@ public abstract record AuditableEntity<TKey>(TKey Id)
     public DateTimeOffset? DeletedAt { get; set; }
     public User? DeletedBy { get; set; }
 
-    public void MarkAsCreated(User createdBy, DateTimeOffset createdAt)
+    public void MarkAsCreated(User createdBy, DateTimeOffset createdAt, bool force = false)
     {
-        if (CreatedBy != null)
+        if (CreatedBy != null && !force)
             throw new DomainException("Entity has already been created");
 
         CreatedBy = createdBy ?? throw new ArgumentNullException(nameof(createdBy));

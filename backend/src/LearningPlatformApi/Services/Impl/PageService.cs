@@ -137,25 +137,36 @@ public class PageService(
     public async Task<V1PageResDto> RollbackToVersionAsync(string id, int targetVersionOrder, string? reason,
         CancellationToken cancellationToken)
     {
-        var targetPage = await pageRepository.GetAsync(id, new EntityVersion(targetVersionOrder), cancellationToken);
-
-        var currentPage = await pageRepository.GetLastAsync(id, cancellationToken);
-
-        var rolledBackPage = targetPage with
+        try
         {
-            Version = new EntityVersion(currentPage.Version.Order + 1, Guid.NewGuid().ToString())
-        };
+            await unitOfWork.BeginTransactionAsync(cancellationToken);
+            var targetPage = await pageRepository.GetAsync(id, new EntityVersion(targetVersionOrder), cancellationToken);
 
-        rolledBackPage.ContentBlocks = targetPage.ContentBlocks.Select(block => block with
+            var currentPage = await pageRepository.GetLastAsync(id, cancellationToken);
+
+            var rolledBackPage = targetPage with
+            {
+                Version = new EntityVersion(currentPage.Version.Order + 1, Guid.NewGuid().ToString())
+            };
+
+            rolledBackPage.ContentBlocks = targetPage.ContentBlocks.Select(block => block with
+            {
+                Id = Guid.NewGuid().ToString(),
+                PageId = rolledBackPage.Id
+            }).ToList();
+            rolledBackPage.MarkAsCreated(currentPage.CreatedBy, DateTimeOffset.UtcNow, force: true);
+
+            await pageRepository.CreateAsync(rolledBackPage, cancellationToken);
+            await unitOfWork.SaveChangesAsync(cancellationToken);
+            await unitOfWork.CommitTransactionAsync(cancellationToken);
+            
+            return resDtoMapper.Map(rolledBackPage);
+        }
+        catch (Exception)
         {
-            Id = Guid.NewGuid().ToString(),
-            PageId = rolledBackPage.Id
-        }).ToList();
-        rolledBackPage.MarkAsCreated(currentPage.CreatedBy, DateTimeOffset.UtcNow);
-
-        await pageRepository.CreateAsync(rolledBackPage, cancellationToken);
-
-        return resDtoMapper.Map(rolledBackPage);
+            await unitOfWork.RollbackTransactionAsync(cancellationToken);
+            throw;
+        }
     }
 
     public async Task<List<PageVersionInfoDto>> GetVersionHistoryAsync(string id, int limit,
