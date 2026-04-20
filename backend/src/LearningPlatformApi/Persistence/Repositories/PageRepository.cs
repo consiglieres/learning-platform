@@ -65,37 +65,28 @@ public sealed class PageRepository(
         return entities.Select(courseMapper.Map).ToList();
     }
 
-    public override async Task<Page> UpdateAsync(Page entity,
+    public override Task<Page> UpdateAsync(Page entity,
         CancellationToken cancellationToken = default)
     {
-        var dbId = entity.Id;
-        var dbEntity = await context.Set<PageEntity>()
-            .Include(x => x.ContentBlocks)
-            .FirstOrDefaultAsync(x => x.Id.Equals(dbId) && x.VersionOrder == entity.Version.Order,
-                cancellationToken);
-
-        if (dbEntity == null) throw new DomainException("Entity not found");
-
-        entity.Version = EntityVersion.IncrementVersion(entity.Version);
-        var updated = courseMapper.Map(entity);
-        context.Entry(dbEntity).CurrentValues.SetValues(updated);
-        dbEntity.VersionOrder = entity.Version.Order;
-        dbEntity.Tag = entity.Version.Tag;
-
-        foreach (var existingBlock in dbEntity.ContentBlocks.ToList())
+        throw new NotSupportedException("Use CreateAsync for versioned entities. Update is not supported.");
+    }
+    
+    public override async Task CreateAsync(Page entity, CancellationToken cancellationToken = default)
+    {
+        var dbEntity = courseMapper.Map(entity);
+    
+        var dbBlocks = entity.ContentBlocks
+            .Select(contentBlockMapper.Map)
+            .ToList();
+    
+        foreach (var block in dbBlocks)
         {
-            dbEntity.ContentBlocks.Remove(existingBlock);
-            context.Entry(existingBlock).State = EntityState.Deleted;
+            block.PageId = dbEntity.Id;
+            block.PageVersion = dbEntity.VersionOrder;
+            context.Set<ContentBlockEntity>().Add(block);
         }
-
-        foreach (var newBlock in entity.ContentBlocks)
-        {
-            var dbBlock = contentBlockMapper.Map(newBlock);
-            dbEntity.ContentBlocks.Add(dbBlock);
-        }
-
-        await context.SaveChangesAsync(cancellationToken);
-
-        return courseMapper.Map(dbEntity);
+    
+        dbEntity.ContentBlocks = dbBlocks;
+        await context.Set<PageEntity>().AddAsync(dbEntity, cancellationToken);
     }
 }

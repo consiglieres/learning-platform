@@ -23,45 +23,67 @@ public class PageService(
     public async Task<V1PageResDto> CreateAsync(CreatePageRequest request, User user,
         CancellationToken cancellationToken)
     {
-        var page = new Page(Guid.NewGuid().ToString(), request.Order, request.Type);
-        var contentBlocks = request.ContentBlocks.Select(x =>
-            {
-                var contentBlock = new PageContentBlock(Guid.NewGuid().ToString(), page.Id, x.Order, x.Type, x.Data);
-                contentBlock.MarkAsCreated(user, DateTimeOffset.UtcNow);
-                return contentBlock;
-            })
-            .ToList();
-        page.MarkAsCreated(user, DateTimeOffset.UtcNow);
-        page.ContentBlocks = contentBlocks;
+        await unitOfWork.BeginTransactionAsync(cancellationToken);
+        
+        try
+        {
+            var page = new Page(Guid.NewGuid().ToString(), request.Order, request.Type);
+            var contentBlocks = request.ContentBlocks.Select(x =>
+                {
+                    var contentBlock =
+                        new PageContentBlock(Guid.NewGuid().ToString(), page.Id, x.Order, x.Type, x.Data);
+                    contentBlock.MarkAsCreated(user, DateTimeOffset.UtcNow);
+                    return contentBlock;
+                })
+                .ToList();
+            page.MarkAsCreated(user, DateTimeOffset.UtcNow);
+            page.ContentBlocks = contentBlocks;
+            await pageRepository.CreateAsync(page, cancellationToken);
+            await unitOfWork.SaveChangesAsync(cancellationToken);
+            
+            await unitOfWork.CommitTransactionAsync(cancellationToken);
+            var createdPage = await pageRepository.GetLastAsync(page.Id, cancellationToken);
 
-        await pageRepository.CreateAsync(page, cancellationToken);
-        await unitOfWork.SaveChangesAsync(cancellationToken);
-        var createdPage = await pageRepository.GetLastAsync(page.Id, cancellationToken);
-
-        return resDtoMapper.Map(createdPage);
+            return resDtoMapper.Map(createdPage);
+        }
+        catch (Exception)
+        {
+            await unitOfWork.RollbackTransactionAsync(cancellationToken);
+            throw;
+        }
     }
 
     public async Task<V1PageResDto> UpdateAsync(string id, User user, UpdatePageRequest request,
         CancellationToken cancellationToken)
     {
-        var page = await pageRepository.GetLastAsync(id, cancellationToken);
-        var newPage = new Page(id, request.Order, request.Type);
-        var contentBlocks = request.ContentBlocks.Select(x =>
-            {
-                var contentBlock = new PageContentBlock(Guid.NewGuid().ToString(), page.Id, x.Order, x.Type, x.Data);
-                contentBlock.MarkAsCreated(user, DateTimeOffset.UtcNow);
-                return contentBlock;
-            })
-            .ToList();
-        newPage.MarkAsCreated(user, DateTimeOffset.UtcNow);
-        newPage.ContentBlocks = contentBlocks;
-        newPage.Version = EntityVersion.IncrementVersion(page.Version);
+        await unitOfWork.BeginTransactionAsync(cancellationToken);
 
-        await pageRepository.CreateAsync(newPage, cancellationToken);
-        await unitOfWork.SaveChangesAsync(cancellationToken);
-        var createdPage = await pageRepository.GetLastAsync(newPage.Id, cancellationToken);
-
-        return resDtoMapper.Map(createdPage);
+        try 
+        {
+            var page = await pageRepository.GetLastAsync(id, cancellationToken);
+            var newPage = new Page(id, request.Order, request.Type);
+            var contentBlocks = request.ContentBlocks.Select(x =>
+                {
+                    var contentBlock = new PageContentBlock(Guid.NewGuid().ToString(), page.Id, x.Order, x.Type, x.Data);
+                    contentBlock.MarkAsCreated(user, DateTimeOffset.UtcNow);
+                    return contentBlock;
+                })
+                .ToList();
+            newPage.MarkAsCreated(user, DateTimeOffset.UtcNow);
+            newPage.ContentBlocks = contentBlocks;
+            newPage.Version = EntityVersion.IncrementVersion(page.Version);
+            await pageRepository.CreateAsync(newPage, cancellationToken);
+            await unitOfWork.SaveChangesAsync(cancellationToken);
+            
+            await unitOfWork.CommitTransactionAsync(cancellationToken);
+            var createdPage = await pageRepository.GetLastAsync(newPage.Id, cancellationToken);
+            return resDtoMapper.Map(createdPage);
+        }
+        catch (Exception)
+        {
+            await unitOfWork.RollbackTransactionAsync(cancellationToken);
+            throw;
+        }
     }
 
     public async Task<V1PageResDto> GetLatestAsync(string id, CancellationToken cancellationToken)
@@ -86,11 +108,30 @@ public class PageService(
 
     public async Task<V1PageResDto> RestoreAsync(string id, User user, CancellationToken cancellationToken)
     {
-        var page = await pageRepository.GetLastAsync(id, cancellationToken);
-        page.Restore(user, DateTimeOffset.UtcNow);
-        var updated = await pageRepository.UpdateAsync(page, cancellationToken);
-
-        return resDtoMapper.Map(updated);
+        var deletedPage = await pageRepository.GetLastAsync(id, cancellationToken);
+    
+        if (deletedPage == null)
+            throw new DomainException("No deleted version found");
+    
+        var restoredPage = new Page(id, deletedPage.Order, deletedPage.Type)
+        {
+            ContentBlocks = deletedPage.ContentBlocks.Select(block => new PageContentBlock(
+                Guid.NewGuid().ToString(),
+                id,
+                block.Order,
+                block.Type,
+                block.Data
+            )).ToList(),
+            Version = EntityVersion.IncrementVersion(deletedPage.Version)
+        };
+    
+        restoredPage.MarkAsCreated(user, DateTimeOffset.UtcNow);
+        restoredPage.Restore(user, DateTimeOffset.UtcNow);
+    
+        await pageRepository.CreateAsync(restoredPage, cancellationToken);
+        await unitOfWork.SaveChangesAsync(cancellationToken);
+    
+        return resDtoMapper.Map(restoredPage);
     }
 
     public async Task<V1PageResDto> RollbackToVersionAsync(string id, int targetVersionOrder, string? reason,

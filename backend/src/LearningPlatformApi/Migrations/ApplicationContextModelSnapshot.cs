@@ -403,15 +403,12 @@ namespace LearningPlatformApi.Migrations
                     b.Property<int>("Order")
                         .HasColumnType("integer");
 
-                    b.Property<string>("PageEntityId")
-                        .HasColumnType("text");
-
-                    b.Property<int?>("PageEntityVersionOrder")
-                        .HasColumnType("integer");
-
                     b.Property<string>("PageId")
                         .IsRequired()
                         .HasColumnType("text");
+
+                    b.Property<int>("PageVersion")
+                        .HasColumnType("integer");
 
                     b.Property<string>("Type")
                         .IsRequired()
@@ -431,9 +428,9 @@ namespace LearningPlatformApi.Migrations
 
                     b.HasIndex("UpdatedBy");
 
-                    b.HasIndex("PageEntityId", "PageEntityVersionOrder");
+                    b.HasIndex("PageId", "PageVersion");
 
-                    b.HasIndex("PageId", "Order")
+                    b.HasIndex("PageId", "Order", "PageVersion")
                         .IsUnique()
                         .HasDatabaseName("IX_ContentBlocks_PageId");
 
@@ -1026,7 +1023,9 @@ namespace LearningPlatformApi.Migrations
 
                     b.HasOne("LearningPlatformApi.Persistence.Entities.Page.PageEntity", null)
                         .WithMany("ContentBlocks")
-                        .HasForeignKey("PageEntityId", "PageEntityVersionOrder");
+                        .HasForeignKey("PageId", "PageVersion")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
 
                     b.Navigation("CreatedByUser");
 
