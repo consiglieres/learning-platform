@@ -1,5 +1,6 @@
 using LearningPlatformApi.Settings;
 using MailKit.Net.Smtp;
+using MailKit.Security;
 using Microsoft.Extensions.Options;
 using MimeKit;
 
@@ -16,9 +17,10 @@ public class EmailService(IOptions<EmailSettings> emailSettings) : IEmailService
         message.Body = new TextPart("plain") { Text = body };
 
         using var smtp = new SmtpClient();
-        await smtp.ConnectAsync(emailSettings.Value.SmtpHost, emailSettings.Value.SmtpPort, MailKit.Security.SecureSocketOptions.None,
+        await smtp.ConnectAsync(emailSettings.Value.SmtpHost, emailSettings.Value.SmtpPort, SecureSocketOptions.None,
             cancellationToken);
-        await smtp.AuthenticateAsync(emailSettings.Value.SmtpUsername, emailSettings.Value.SmtpPassword, cancellationToken);
+        await smtp.AuthenticateAsync(emailSettings.Value.SmtpUsername, emailSettings.Value.SmtpPassword,
+            cancellationToken);
 
         await smtp.SendAsync(message, cancellationToken);
         await smtp.DisconnectAsync(true, cancellationToken);

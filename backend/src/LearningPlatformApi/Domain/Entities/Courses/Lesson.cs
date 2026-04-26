@@ -4,47 +4,37 @@ using LearningPlatformApi.Domain.Exceptions;
 
 namespace LearningPlatformApi.Domain.Entities.Courses;
 
-public record Lesson : PublicationWorkflowEntity<string>
+public record Lesson : VersionableEntity<string>
 {
-    public string Name { get; private set; }
-
-    public int Order { get; private set; }
-
-    public int PassThreshold { get; private set; }
-
-    public Page.CoursePage CoursePageContent { get; private set; }
-
-    public string ModuleId { get; private set; }
-
-    public Module Module { get; private set; } = null!;
-
-    private readonly List<BaseTask> tasks = new();
-
-    public IReadOnlyCollection<BaseTask> Tasks => tasks.AsReadOnly();
-
-    private Lesson(string id) : base(id) { }
-
-    public Lesson(string name, int order, int passThreshold, Module module, User creator)
+    public Lesson(string name, int lessonOrder, int passThreshold, Page.Page page, string moduleId, User creator)
         : base(Guid.NewGuid().ToString())
     {
         Name = name;
-        Order = order;
+        LessonOrder = lessonOrder;
         PassThreshold = passThreshold;
-        Module = module;
-        ModuleId = module.Id;
+        PageContent = page;
+        Tasks = [];
+        ModuleId = moduleId;
         MarkAsCreated(creator, DateTimeOffset.UtcNow);
     }
 
+    public string Name { get; private set; }
+
+    public int LessonOrder { get; private set; }
+
+    public int PassThreshold { get; private set; }
+
+    public Page.Page PageContent { get; private set; }
+
+    public string ModuleId { get; private set; }
+
+    public List<BaseTask> Tasks { get; set; }
+
     public void AddTask(BaseTask task)
     {
-        if (tasks.Any(t => t.Order == task.Order))
+        if (Tasks.Any(t => t.Order == task.Order))
             throw new DomainException($"Task with order {task.Order} already exists");
 
-        tasks.Add(task);
-    }
-
-    public override bool CanBeSubmitted()
-    {
-        throw new NotImplementedException();
+        Tasks.Add(task);
     }
 }

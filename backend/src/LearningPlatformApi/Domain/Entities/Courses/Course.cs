@@ -1,5 +1,4 @@
 using LearningPlatformApi.Domain.Base.Impl;
-using LearningPlatformApi.Domain.Entities.Page;
 using LearningPlatformApi.Domain.Exceptions;
 using LearningPlatformApi.Domain.ValueObjects.Page;
 
@@ -7,41 +6,50 @@ namespace LearningPlatformApi.Domain.Entities.Courses;
 
 public record Course : PublicationWorkflowEntity<string>
 {
-    public string Title { get; private set; }
-    public string Description { get; private set; }
-
-    private readonly List<TypedCategory> categories = new();
-
-    public IReadOnlyCollection<TypedCategory> Categories => categories.AsReadOnly();
-
-    private readonly List<Module> modules = new();
-
-    public IReadOnlyCollection<Module> Modules => modules.AsReadOnly();
-
-    public CoursePage IntroductionCoursePage { get; }
-
     public Course(string title, string description, User creator) : base(Guid.NewGuid().ToString())
     {
         Title = title;
         Description = description;
-        IntroductionCoursePage = CoursePage.EmptyPage(PageType.Introduction);
+        IntroductionPage = Page.Page.EmptyPage(PageType.Introduction, creator);
         MarkAsCreated(creator, DateTimeOffset.UtcNow);
     }
 
+    public string Title { get; set; }
+    public string Description { get; set; }
+
+    public List<TypedCategory> Categories { get; set; } = [];
+
+    public List<Module> Modules { get; set; } = [];
+
+    public Page.Page IntroductionPage { get; set; }
+
     public void AddModule(Module module)
     {
-        if (modules.Any(m => m.Order == module.Order))
-            throw new DomainException($"Module with order {module.Order} already exists");
+        if (Modules.Any(m => m.ModuleOrder == module.ModuleOrder))
+            throw new DomainException($"Module with order {module.ModuleOrder} already exists");
 
-        modules.Add(module);
+        Modules.Add(module);
     }
 
     public void AddCategory(TypedCategory category)
     {
-        if (categories.Any(c => c.Type == category.Type && c.Value == category.Value))
+        if (Categories.Any(c => c.Type == category.Type && c.Value == category.Value))
             throw new DomainException("Category already added");
 
-        categories.Add(category);
+        Categories.Add(category);
+    }
+
+    public void ResetCategories(IReadOnlyCollection<TypedCategory> categoriesList)
+    {
+        Categories.Clear();
+        Categories.AddRange(categoriesList);
+    }
+
+    public void AddCategories(IReadOnlyCollection<TypedCategory> categoriesList)
+    {
+        if (Categories.Any(categoriesList.Contains)) throw new DomainException("Category already added");
+
+        Categories.AddRange(categoriesList);
     }
 
     public override bool CanBeSubmitted()

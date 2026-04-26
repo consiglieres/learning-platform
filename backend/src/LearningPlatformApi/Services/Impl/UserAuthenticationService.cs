@@ -7,8 +7,8 @@ namespace LearningPlatformApi.Services.Impl;
 
 public class UserAuthenticationService : IUserAuthenticationService
 {
-    private readonly UserManager<UserEntity> userManager;
     private readonly SignInManager<UserEntity> signInManager;
+    private readonly UserManager<UserEntity> userManager;
 
     public UserAuthenticationService(
         UserManager<UserEntity> userManager,
@@ -18,40 +18,26 @@ public class UserAuthenticationService : IUserAuthenticationService
         this.signInManager = signInManager;
     }
 
-    public async Task<OneOf<Success, AuthenticationError, AccountLockedError, EmailNotConfirmedError, AccountDeactivatedError>>
+    public async Task<OneOf<Success, AuthenticationError, AccountLockedError, EmailNotConfirmedError,
+            AccountDeactivatedError>>
         LoginAsync(string email, string password, bool rememberMe)
     {
         var user = await userManager.FindByEmailAsync(email);
-        if (user == null)
-        {
-            return new AuthenticationError("Invalid email or password");
-        }
+        if (user == null) return new AuthenticationError("Invalid email or password");
 
-        if (!user.EmailConfirmed)
-        {
-            return new EmailNotConfirmedError("Please confirm your email before logging in");
-        }
+        if (!user.EmailConfirmed) return new EmailNotConfirmedError("Please confirm your email before logging in");
 
-        if (!user.IsActive)
-        {
-            return new AccountDeactivatedError("Account is deactivated. Contact support.");
-        }
+        if (!user.IsActive) return new AccountDeactivatedError("Account is deactivated. Contact support.");
 
         var result = await signInManager.PasswordSignInAsync(
             user,
             password,
             rememberMe,
-            lockoutOnFailure: true);
+            true);
 
-        if (result.IsLockedOut)
-        {
-            return new AccountLockedError("Account locked out. Try again later.");
-        }
+        if (result.IsLockedOut) return new AccountLockedError("Account locked out. Try again later.");
 
-        if (!result.Succeeded)
-        {
-            return new AuthenticationError("Invalid email or password");
-        }
+        if (!result.Succeeded) return new AuthenticationError("Invalid email or password");
 
         user.LastLoginAt = DateTimeOffset.UtcNow;
         await userManager.UpdateAsync(user);

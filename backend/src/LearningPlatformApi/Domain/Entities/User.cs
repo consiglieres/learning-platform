@@ -2,17 +2,11 @@ using LearningPlatformApi.Domain.Base.Impl;
 
 namespace LearningPlatformApi.Domain.Entities;
 
-public record User(string Id) : AuditableEntity<string>(Id)
+public record User(string Id) : DomainEntity<string>(Id)
 {
     public required string UserName { get; set; }
 
-    public required string NormalizedUserName { get; init; }
-
     public required string Email { get; set; }
-
-    public required string FirstName { get; set; }
-
-    public required string LastName { get; set; }
 
     public required string NormalizedEmail { get; set; }
 
@@ -35,4 +29,8 @@ public record User(string Id) : AuditableEntity<string>(Id)
     public DateTimeOffset? LastLoginAt { get; set; }
 
     public bool IsActive { get; set; }
+
+    public DateTimeOffset CreatedAt { get; set; }
+
+    public DateTimeOffset UpdatedAt { get; set; }
 }

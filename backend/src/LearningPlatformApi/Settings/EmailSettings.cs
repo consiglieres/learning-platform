@@ -1,5 +1,8 @@
+using JetBrains.Annotations;
+
 namespace LearningPlatformApi.Settings;
 
+[UsedImplicitly(ImplicitUseTargetFlags.WithMembers)]
 public class EmailSettings
 {
     public required string SmtpFrom { get; set; }

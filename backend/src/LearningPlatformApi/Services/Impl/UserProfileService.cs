@@ -36,10 +36,7 @@ public class UserProfileService(
     {
         var result = await userManager.ChangePasswordAsync(user, currentPassword, newPassword);
 
-        if (!result.Succeeded)
-        {
-            return new OperationNotSucceeded<IdentityResult>(result);
-        }
+        if (!result.Succeeded) return new OperationNotSucceeded<IdentityResult>(result);
 
         await userManager.UpdateSecurityStampAsync(user);
         await signInManager.SignOutAsync();

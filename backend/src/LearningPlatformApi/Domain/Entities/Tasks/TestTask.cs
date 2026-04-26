@@ -1,31 +1,29 @@
-using LearningPlatformApi.Domain.Entities.Courses;
-using LearningPlatformApi.Domain.Entities.Page;
 using LearningPlatformApi.Domain.ValueObjects.Task;
 
 namespace LearningPlatformApi.Domain.Entities.Tasks;
 
 public record TestTask : BaseTask
 {
-    public string Question { get; private set; }
-
     private readonly List<string> options = new();
 
-    public IReadOnlyCollection<string> Options => options.AsReadOnly();
-
-    private readonly IReadOnlyCollection<string> correctAnswer;
-
-    public TestTask(string name, int order, Difficulty difficulty, Lesson lesson, CoursePage page,
-        string question, IEnumerable<string> options, IEnumerable<string> correctAnswer)
-        : base(Guid.NewGuid().ToString(), name, order, difficulty, lesson, page)
+    public TestTask(string name, int order, Difficulty difficulty, string lessonId, Page.Page page,
+        string question, IEnumerable<string> options, IEnumerable<string> correctAnswer, User createdBy)
+        : base(Guid.NewGuid().ToString(), name, order, difficulty, lessonId, page)
     {
         Question = question;
         this.options.AddRange(options);
-        this.correctAnswer = correctAnswer.ToList();
-        MarkAsCreated(lesson.Module.CreatedBy, DateTimeOffset.UtcNow);
+        Answer = correctAnswer.ToList();
+        MarkAsCreated(createdBy, DateTimeOffset.UtcNow);
     }
+
+    public string Question { get; private set; }
+
+    public IReadOnlyCollection<string> Options => options.AsReadOnly();
+
+    public IReadOnlyCollection<string> Answer { get; set; }
 
     public override bool CheckAnswer(object answer)
     {
-        return answer.Equals(correctAnswer);
+        return answer.Equals(Answer);
     }
 }

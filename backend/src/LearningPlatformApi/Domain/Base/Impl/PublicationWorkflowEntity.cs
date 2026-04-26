@@ -4,31 +4,31 @@ using LearningPlatformApi.Domain.ValueObjects;
 
 namespace LearningPlatformApi.Domain.Base.Impl;
 
-public abstract record PublicationWorkflowEntity<TKey> : AuditableEntity<TKey>, IPublicationWorkflow
+public abstract record PublicationWorkflowEntity<TKey> : VersionableEntity<TKey>, IPublicationWorkflow
 {
-    public string? ModerationComment { get; private set; }
+    protected PublicationWorkflowEntity(TKey id) : base(id)
+    {
+        Status = PublicationWorkflowStatus.Draft;
+    }
 
-    public DateTimeOffset? SubmittedForModerationAt { get; private set; }
+    public string? ModerationComment { get; set; }
 
-    public User? SubmittedBy { get; private set; }
+    public DateTimeOffset? SubmittedForModerationAt { get; set; }
 
-    public DateTimeOffset? PublishedAt { get; private set; }
+    public User? SubmittedBy { get; set; }
 
-    public User? PublishedBy { get; private set; }
+    public DateTimeOffset? PublishedAt { get; set; }
+
+    public User? PublishedBy { get; set; }
 
     public PublicationWorkflowStatus Status
     {
         get;
-        private set
+        set
         {
             field = value;
             OnStatusChanged();
         }
-    }
-
-    protected PublicationWorkflowEntity(TKey id) : base(id)
-    {
-        Status = PublicationWorkflowStatus.Draft;
     }
 
     public virtual void SubmitForModeration(User author)
@@ -101,12 +101,12 @@ public abstract record PublicationWorkflowEntity<TKey> : AuditableEntity<TKey>, 
     }
 
     /// <summary>
-    /// Проверка, можно ли отправлять на модерацию
+    ///     Проверка, можно ли отправлять на модерацию
     /// </summary>
     public abstract bool CanBeSubmitted();
 
     /// <summary>
-    /// Виртуальный метод, вызываемый при изменении статуса
+    ///     Виртуальный метод, вызываемый при изменении статуса
     /// </summary>
     protected virtual void OnStatusChanged()
     {

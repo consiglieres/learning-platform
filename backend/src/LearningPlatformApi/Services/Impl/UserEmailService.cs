@@ -1,4 +1,3 @@
-using OneOf;
 using System.Text;
 using LearningPlatformApi.Domain.HandleStates;
 using LearningPlatformApi.Persistence.Entities;
@@ -6,6 +5,7 @@ using LearningPlatformApi.Settings;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.WebUtilities;
 using Microsoft.Extensions.Options;
+using OneOf;
 
 namespace LearningPlatformApi.Services.Impl;
 
@@ -15,7 +15,6 @@ public class UserEmailService(
     IOptions<EmailSettings> emailOptions)
     : IUserEmailService
 {
-
     public async Task<OneOf<EntityNotExists, OperationNotSucceeded<IReadOnlyCollection<IdentityError>>, Success>>
         ConfirmEmailAsync(string email, string token)
     {
@@ -23,10 +22,7 @@ public class UserEmailService(
         if (user == null)
             return new EntityNotExists(email, "User not found");
 
-        if (user.EmailConfirmed)
-        {
-            return new Success();
-        }
+        if (user.EmailConfirmed) return new Success();
 
         var decodedToken = Encoding.UTF8.GetString(WebEncoders.Base64UrlDecode(token));
         var result = await userManager.ConfirmEmailAsync(user, decodedToken);
@@ -41,15 +37,9 @@ public class UserEmailService(
         SendConfirmationEmailAsync(string email)
     {
         var user = await userManager.FindByEmailAsync(email);
-        if (user == null)
-        {
-            return new EntityNotExists(email, "User not found");
-        }
+        if (user == null) return new EntityNotExists(email, "User not found");
 
-        if (user.EmailConfirmed)
-        {
-            return new EmailAlreadyConfirmedError("Email is already confirmed");
-        }
+        if (user.EmailConfirmed) return new EmailAlreadyConfirmedError("Email is already confirmed");
 
         var token = await userManager.GenerateEmailConfirmationTokenAsync(user);
         var confirmationLink = GenerateEmailConfirmationLink(user, token);

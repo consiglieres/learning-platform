@@ -1,13 +1,20 @@
 using LearningPlatformApi.Authorization.AuthorizationHandlers;
+using LearningPlatformApi.Domain.Entities.Courses;
+using LearningPlatformApi.Domain.Entities.Page;
+using LearningPlatformApi.Domain.Entities.Tasks;
+using LearningPlatformApi.Domain.Repositories;
 using LearningPlatformApi.Hosting;
 using LearningPlatformApi.Mapper;
 using LearningPlatformApi.Mapper.Impl;
-using LearningPlatformApi.Persistence;
 using LearningPlatformApi.Persistence.Context;
 using LearningPlatformApi.Persistence.Entities;
+using LearningPlatformApi.Persistence.Entities.Page;
+using LearningPlatformApi.Persistence.Repositories;
+using LearningPlatformApi.Persistence.Repositories.Base;
 using LearningPlatformApi.Services;
 using LearningPlatformApi.Services.Impl;
 using LearningPlatformApi.Settings;
+using LearningPlatformApi.V1.Mapper;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
@@ -27,33 +34,37 @@ builder.Services.AddOptions<EmailSettings>()
 
 // Persistence
 builder.Services.AddDbContext<ApplicationContext>(options =>
-    options.UseNpgsql(configuration.GetConnectionString("ApplicationContext")));
+{
+    options.UseNpgsql(configuration.GetConnectionString("ApplicationContext"));
+    options.EnableDetailedErrors();
+    options.EnableSensitiveDataLogging();
+});
 
 // Identity - ПОЛНАЯ настройка
 builder.Services.AddIdentity<UserEntity, IdentityRole>(options =>
-{
-    options.Password.RequireDigit = true;
-    options.Password.RequiredLength = 6;
-    options.Password.RequireNonAlphanumeric = false;
-    options.Password.RequireUppercase = true;
-    options.Password.RequireLowercase = true;
+    {
+        options.Password.RequireDigit = true;
+        options.Password.RequiredLength = 6;
+        options.Password.RequireNonAlphanumeric = false;
+        options.Password.RequireUppercase = true;
+        options.Password.RequireLowercase = true;
 
-    // Настройки блокировки
-    options.Lockout.DefaultLockoutTimeSpan = TimeSpan.FromMinutes(5);
-    options.Lockout.MaxFailedAccessAttempts = 5;
-    options.Lockout.AllowedForNewUsers = true;
+        // Настройки блокировки
+        options.Lockout.DefaultLockoutTimeSpan = TimeSpan.FromMinutes(5);
+        options.Lockout.MaxFailedAccessAttempts = 5;
+        options.Lockout.AllowedForNewUsers = true;
 
-    // Настройки пользователя
-    options.User.RequireUniqueEmail = true;
+        // Настройки пользователя
+        options.User.RequireUniqueEmail = true;
 
-    // Настройки входа
-    options.SignIn.RequireConfirmedEmail = true;
-    options.SignIn.RequireConfirmedPhoneNumber = false;
-})
-.AddEntityFrameworkStores<ApplicationContext>()
-.AddDefaultTokenProviders()
-.AddSignInManager()
-.AddUserManager<UserManager<UserEntity>>();
+        // Настройки входа
+        options.SignIn.RequireConfirmedEmail = true;
+        options.SignIn.RequireConfirmedPhoneNumber = false;
+    })
+    .AddEntityFrameworkStores<ApplicationContext>()
+    .AddDefaultTokenProviders()
+    .AddSignInManager()
+    .AddUserManager<UserManager<UserEntity>>();
 
 builder.Services.AddScoped<IUnitOfWork, UnitOfWork>();
 
@@ -62,10 +73,22 @@ builder.Services.AddCors(options =>
     options.AddPolicy("FrontendApp", policy =>
     {
         policy.WithOrigins("http://localhost:3000", "https://yourfrontend.com")
-              .AllowCredentials()
-              .AllowAnyHeader()
-              .AllowAnyMethod();
+            .AllowCredentials()
+            .AllowAnyHeader()
+            .AllowAnyMethod();
     });
+});
+
+builder.Services.ConfigureApplicationCookie(options =>
+{
+    options.Cookie.SameSite = SameSiteMode.Lax;
+    options.Cookie.HttpOnly = true;
+    options.Cookie.SecurePolicy = CookieSecurePolicy.SameAsRequest;
+    options.Events.OnRedirectToLogin = context =>
+    {
+        context.Response.StatusCode = 401;
+        return Task.CompletedTask;
+    };
 });
 
 // Services
@@ -73,11 +96,29 @@ builder.Services.AddScoped<IEmailService, EmailService>();
 builder.Services.AddScoped<IAuthorizationHandler, ResourceAuthorizationHandler>();
 
 // Mappers
-builder.Services.AddScoped<IUserMapper, UserMapper>();
+builder.Services.AddSingleton<IUserMapper, UserMapper>();
+builder.Services.AddSingleton<IDbEntityMapper<CodingTask, string, CodingTaskEntity, string>, CodingTaskMapper>();
+builder.Services.AddSingleton<IDbEntityMapper<Course, string, CourseEntity, string>, CourseMapper>();
+builder.Services.AddSingleton<IDbEntityMapper<Lesson, string, LessonEntity, string>, LessonMapper>();
+builder.Services.AddSingleton<IDbEntityMapper<Module, string, ModuleEntity, string>, ModuleMapper>();
+builder.Services.AddSingleton<IDbEntityMapper<Page, string, PageEntity, string>, PageMapper>();
+builder.Services.AddSingleton<IDbEntityMapper<PageContentBlock, string, ContentBlockEntity, string>, PageMapper>();
+builder.Services.AddSingleton<IDbEntityMapper<TestTask, string, TestTaskEntity, string>, TestTaskMapper>();
+builder.Services.AddSingleton<IV1ResDtoMapper, V1ResDtoMapper>();
+builder.Services.AddSingleton<ICourseCategoryMapper, CourseCategoryMapper>();
+
+// Services
 builder.Services.AddScoped<IUserRegistrationService, UserRegistrationService>();
 builder.Services.AddScoped<IUserAuthenticationService, UserAuthenticationService>();
 builder.Services.AddScoped<IUserProfileService, UserProfileService>();
 builder.Services.AddScoped<IUserEmailService, UserEmailService>();
+builder.Services.AddScoped<ICourseService, CourseService>();
+builder.Services.AddScoped<IPageService, PageService>();
+
+// Repositories
+builder.Services.AddScoped<ICourseRepository, CoursesRepository>();
+builder.Services.AddScoped<ICourseCategoriesRepository, CourseCategoryRepository>();
+builder.Services.AddScoped<IPageRepository, PageRepository>();
 
 // Authorization policies
 builder.Services.AddAuthorization(options =>
@@ -100,21 +141,15 @@ builder.Services.AddControllers();
 builder.Services.AddOpenApi();
 
 var app = builder.Build();
+app.UseCors("FrontendApp");
 
 if (app.Environment.IsDevelopment())
 {
     app.MapOpenApi();
     app.MapScalarApiReference();
-
-    // Для разработки разрешаем не-HTTPS
-    app.UseCors(policy =>
-        policy.AllowAnyOrigin()
-              .AllowAnyHeader()
-              .AllowAnyMethod());
 }
 else
 {
-    app.UseCors("FrontendApp");
     app.UseHttpsRedirection();
 }
 

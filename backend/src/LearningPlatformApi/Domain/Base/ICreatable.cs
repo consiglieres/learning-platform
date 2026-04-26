@@ -4,5 +4,5 @@ namespace LearningPlatformApi.Domain.Base;
 
 public interface ICreatable
 {
-    void MarkAsCreated(User cratedBy, DateTimeOffset createdAt);
+    void MarkAsCreated(User cratedBy, DateTimeOffset createdAt, bool force);
 }

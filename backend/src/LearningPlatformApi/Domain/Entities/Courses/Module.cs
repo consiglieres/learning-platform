@@ -1,44 +1,36 @@
 using LearningPlatformApi.Domain.Base.Impl;
-using LearningPlatformApi.Domain.Entities.Page;
 using LearningPlatformApi.Domain.Exceptions;
 using LearningPlatformApi.Domain.ValueObjects.Page;
 
 namespace LearningPlatformApi.Domain.Entities.Courses;
 
-public record Module : PublicationWorkflowEntity<string>
+public record Module : VersionableEntity<string>
 {
-    public string Name { get; private set; }
-    public int Order { get; private set; }
-    public string CourseId { get; private set; }
-
-    private readonly List<Lesson> lessons = new();
-
-    public IReadOnlyCollection<Lesson> Lessons => lessons.AsReadOnly();
-
-    public CoursePage IntroductionPage { get; }
-
-    private Module(string id) : base(id) { }
-
-    public Module(string name, int order, string courseId, User creator)
+    public Module(string name, int moduleOrder, string courseId, User creator,
+        IReadOnlyCollection<Lesson> lessons)
         : base(Guid.NewGuid().ToString())
     {
         Name = name;
-        Order = order;
+        ModuleOrder = moduleOrder;
         CourseId = courseId;
-        IntroductionPage = CoursePage.EmptyPage(PageType.Introduction);
+        Lessons = lessons.ToList();
+        IntroductionPage = Page.Page.EmptyPage(PageType.Introduction, creator);
         MarkAsCreated(creator, DateTimeOffset.UtcNow);
     }
 
+    public string Name { get; private set; }
+    public int ModuleOrder { get; private set; }
+    public string CourseId { get; private set; }
+
+    public List<Lesson> Lessons { get; set; }
+
+    public Page.Page IntroductionPage { get; set; }
+
     public void AddLesson(Lesson lesson)
     {
-        if (lessons.Any(t => t.Order == lesson.Order))
-            throw new DomainException($"Lesson with order {lesson.Order} already exists");
+        if (Lessons.Any(t => t.LessonOrder == lesson.LessonOrder))
+            throw new DomainException($"Lesson with order {lesson.LessonOrder} already exists");
 
-        lessons.Add(lesson);
-    }
-
-    public override bool CanBeSubmitted()
-    {
-        throw new NotImplementedException();
+        Lessons.Add(lesson);
     }
 }
