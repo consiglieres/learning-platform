@@ -24,7 +24,7 @@ public class PageService(
         CancellationToken cancellationToken)
     {
         await unitOfWork.BeginTransactionAsync(cancellationToken);
-        
+
         try
         {
             var page = new Page(Guid.NewGuid().ToString(), request.Order, request.Type);
@@ -40,7 +40,7 @@ public class PageService(
             page.ContentBlocks = contentBlocks;
             await pageRepository.CreateAsync(page, cancellationToken);
             await unitOfWork.SaveChangesAsync(cancellationToken);
-            
+
             await unitOfWork.CommitTransactionAsync(cancellationToken);
             var createdPage = await pageRepository.GetLastAsync(page.Id, cancellationToken);
 
@@ -58,7 +58,7 @@ public class PageService(
     {
         await unitOfWork.BeginTransactionAsync(cancellationToken);
 
-        try 
+        try
         {
             var page = await pageRepository.GetLastAsync(id, cancellationToken);
             var newPage = new Page(id, request.Order, request.Type);
@@ -74,7 +74,7 @@ public class PageService(
             newPage.Version = EntityVersion.IncrementVersion(page.Version);
             await pageRepository.CreateAsync(newPage, cancellationToken);
             await unitOfWork.SaveChangesAsync(cancellationToken);
-            
+
             await unitOfWork.CommitTransactionAsync(cancellationToken);
             var createdPage = await pageRepository.GetLastAsync(newPage.Id, cancellationToken);
             return resDtoMapper.Map(createdPage);
@@ -168,7 +168,7 @@ public class PageService(
             await pageRepository.CreateAsync(rolledBackPage, cancellationToken);
             await unitOfWork.SaveChangesAsync(cancellationToken);
             await unitOfWork.CommitTransactionAsync(cancellationToken);
-            
+
             return resDtoMapper.Map(rolledBackPage);
         }
         catch (Exception)

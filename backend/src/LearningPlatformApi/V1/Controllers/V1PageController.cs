@@ -170,7 +170,7 @@ public class V1PageController(
                 Status = StatusCodes.Status404NotFound
             });
         var user = userMapper.MapToDomain(dbUser);
-        
+
         var result = await pageService.RestoreAsync(id, user, cancellationToken);
         return Ok(result);
     }

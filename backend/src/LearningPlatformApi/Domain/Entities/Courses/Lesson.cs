@@ -26,7 +26,7 @@ public record Lesson : VersionableEntity<string>
 
     public Page.Page PageContent { get; private set; }
 
-    public string ModuleId { get; private set; }
+    public string ModuleId { get; set; }
 
     public List<BaseTask> Tasks { get; set; }
 

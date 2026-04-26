@@ -1,6 +1,7 @@
 using LearningPlatformApi.V1.Models.Base;
 using LearningPlatformApi.V1.Models.Courses.Req;
 using LearningPlatformApi.V1.Models.Module;
+using LearningPlatformApi.V1.Models.Module.Res;
 using LearningPlatformApi.V1.Models.Page;
 
 namespace LearningPlatformApi.V1.Models.Courses.Res;

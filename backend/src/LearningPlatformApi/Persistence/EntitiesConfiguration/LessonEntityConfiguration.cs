@@ -10,7 +10,7 @@ public class LessonEntityConfiguration : VersionableDbEntityConfiguration<Lesson
     protected override void OverrideConfigure(EntityTypeBuilder<LessonEntity> modelBuilder)
     {
         base.OverrideConfigure(modelBuilder);
-        
+
         modelBuilder.HasIndex(x => new { x.ModuleId, x.LessonOrder })
             .IsUnique()
             .HasDatabaseName("IX_ModuleId_LessonOrder");

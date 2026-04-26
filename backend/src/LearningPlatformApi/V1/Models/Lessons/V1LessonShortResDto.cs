@@ -9,6 +9,6 @@ public class V1LessonShortResDto : AuditableResDto
     public int LessonOrder { get; set; }
 
     public int PassThreshold { get; set; }
-    
+
     public required string ModuleId { get; set; }
 }

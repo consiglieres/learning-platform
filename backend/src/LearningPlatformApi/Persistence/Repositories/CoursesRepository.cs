@@ -48,7 +48,7 @@ public class CoursesRepository(
             .OrderByDescending(x => x.VersionOrder)
             .FirstOrDefaultAsync(cancellationToken);
         if (entities == null) throw new DomainException("Entity not found");
-        
+
         var page = await context.Set<PageEntity>()
             .Include(x => x.CreatedByUser)
             .Include(x => x.UpdatedByUser)
@@ -57,7 +57,7 @@ public class CoursesRepository(
             .OrderByDescending(x => x.VersionOrder)
             .FirstOrDefaultAsync(x => x.Id.Equals(entities.PageId), cancellationToken);
         if (page == null) throw new DomainException("Entity not found");
-        
+
         entities.IntroductionPage = page;
 
         return courseMapper.Map(entities);

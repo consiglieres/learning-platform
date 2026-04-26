@@ -18,9 +18,9 @@ public record Module : VersionableEntity<string>
         MarkAsCreated(creator, DateTimeOffset.UtcNow);
     }
 
-    public string Name { get; private set; }
-    public int ModuleOrder { get; private set; }
-    public string CourseId { get; private set; }
+    public string Name { get; set; }
+    public int ModuleOrder { get; set; }
+    public string CourseId { get; set; }
 
     public List<Lesson> Lessons { get; set; }
 

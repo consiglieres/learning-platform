@@ -11,12 +11,12 @@ public class PageEntityConfiguration : VersionableDbEntityConfiguration<PageEnti
     {
         base.OverrideConfigure(modelBuilder);
         modelBuilder.ToTable("Pages");
-            
+
         modelBuilder.HasMany(e => e.ContentBlocks)
             .WithOne()
             .HasForeignKey(e => new { e.PageId, e.PageVersion })
             .HasPrincipalKey(e => new { e.Id, e.VersionOrder });
-        
+
         modelBuilder.Property(x => x.Order)
             .IsRequired();
         modelBuilder.Property(x => x.TypeCode)

@@ -114,11 +114,13 @@ builder.Services.AddScoped<IUserProfileService, UserProfileService>();
 builder.Services.AddScoped<IUserEmailService, UserEmailService>();
 builder.Services.AddScoped<ICourseService, CourseService>();
 builder.Services.AddScoped<IPageService, PageService>();
+builder.Services.AddScoped<IModuleService, ModuleService>();
 
 // Repositories
 builder.Services.AddScoped<ICourseRepository, CoursesRepository>();
 builder.Services.AddScoped<ICourseCategoriesRepository, CourseCategoryRepository>();
 builder.Services.AddScoped<IPageRepository, PageRepository>();
+builder.Services.AddScoped<IModulesRepository, ModulesRepository>();
 
 // Authorization policies
 builder.Services.AddAuthorization(options =>

@@ -70,22 +70,22 @@ public sealed class PageRepository(
     {
         throw new NotSupportedException("Use CreateAsync for versioned entities. Update is not supported.");
     }
-    
+
     public override async Task CreateAsync(Page entity, CancellationToken cancellationToken = default)
     {
         var dbEntity = courseMapper.Map(entity);
-    
+
         var dbBlocks = entity.ContentBlocks
             .Select(contentBlockMapper.Map)
             .ToList();
-    
+
         foreach (var block in dbBlocks)
         {
             block.PageId = dbEntity.Id;
             block.PageVersion = dbEntity.VersionOrder;
             context.Set<ContentBlockEntity>().Add(block);
         }
-    
+
         dbEntity.ContentBlocks = dbBlocks;
         await context.Set<PageEntity>().AddAsync(dbEntity, cancellationToken);
     }

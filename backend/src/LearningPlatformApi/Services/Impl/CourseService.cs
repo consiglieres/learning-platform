@@ -70,12 +70,12 @@ public class CourseService(
         if (title != null) existingCourse.Title = title;
         if (description != null) existingCourse.Description = description;
         if (categories != null && categories.Any()) existingCourse.ResetCategories(categories);
-        
+
         existingCourse.Version = EntityVersion.IncrementVersion(existingCourse.Version);
         await courseRepository.CreateAsync(existingCourse, cancellationToken);
         await unitOfWork.SaveChangesAsync(cancellationToken);
         var updated = await GetCourseLastAsync(courseId, cancellationToken);
-        
+
         if (updated.IsT0)
         {
             return new NotFound();

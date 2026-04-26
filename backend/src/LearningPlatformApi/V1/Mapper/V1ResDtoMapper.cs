@@ -8,6 +8,7 @@ using LearningPlatformApi.V1.Models.Courses.Req;
 using LearningPlatformApi.V1.Models.Courses.Res;
 using LearningPlatformApi.V1.Models.Lessons;
 using LearningPlatformApi.V1.Models.Module;
+using LearningPlatformApi.V1.Models.Module.Res;
 using LearningPlatformApi.V1.Models.Page;
 using LearningPlatformApi.V1.Models.Tasks;
 using LearningPlatformApi.V2.Account.Res;
@@ -22,7 +23,7 @@ internal partial class V1ResDtoMapper : IV1ResDtoMapper
     public partial V1UserResDto Map(User user);
 
     public partial V1Course Map(Course course);
-    
+
     [MapperRequiredMapping(RequiredMappingStrategy.Target)]
     public partial V1CourseShort MapToShort(Course course);
 

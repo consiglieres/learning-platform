@@ -8,6 +8,6 @@ public abstract class VersionableDbEntityConfiguration<TEntity, TKey> : Auditabl
 {
     protected override void OverrideConfigure(EntityTypeBuilder<TEntity> modelBuilder)
     {
-        modelBuilder.HasKey(x => new { x.Id, x.VersionOrder});
+        modelBuilder.HasKey(x => new { x.Id, x.VersionOrder });
     }
 }
