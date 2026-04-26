@@ -47,7 +47,8 @@ public class CoursesRepository(
             .Include(x => x.Modules)
             .OrderByDescending(x => x.VersionOrder)
             .FirstOrDefaultAsync(cancellationToken);
-        if (entities == null) throw new DomainException("Entity not found");
+    
+        if (entities == null) throw new DomainException("Course not found");
 
         var page = await context.Set<PageEntity>()
             .Include(x => x.CreatedByUser)
@@ -56,8 +57,29 @@ public class CoursesRepository(
             .Include(x => x.ContentBlocks)
             .OrderByDescending(x => x.VersionOrder)
             .FirstOrDefaultAsync(x => x.Id.Equals(entities.PageId), cancellationToken);
-        if (page == null) throw new DomainException("Entity not found");
+    
+        if (page == null) throw new DomainException("Page not found");
 
+        var moduleEntities = await context.Set<ModuleEntity>()
+            .Where(m => m.CourseId == entities.Id && m.CourseVersion == entities.VersionOrder)
+            .Where(m => m.VersionOrder == context.Set<ModuleEntity>()
+                .Where(sub => sub.ModuleOrder == m.ModuleOrder)
+                .Max(sub => sub.VersionOrder))
+            .Include(m => m.Lessons)
+            .Include(m => m.CreatedByUser)
+            .Include(m => m.UpdatedByUser)
+            .Include(m => m.DeletedByUser)
+            .Include(m => m.IntroductionPage)
+            .ThenInclude(p => p.CreatedByUser)
+            .Include(m => m.IntroductionPage)
+            .ThenInclude(p => p.UpdatedByUser)
+            .Include(m => m.IntroductionPage)
+            .ThenInclude(p => p.DeletedByUser)
+            .Include(m => m.IntroductionPage)
+            .ThenInclude(p => p.ContentBlocks)
+            .ToListAsync(cancellationToken);
+
+        entities.Modules = moduleEntities;
         entities.IntroductionPage = page;
 
         return courseMapper.Map(entities);

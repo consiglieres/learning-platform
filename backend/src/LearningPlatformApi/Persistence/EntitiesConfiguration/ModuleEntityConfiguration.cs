@@ -11,7 +11,7 @@ public class ModuleEntityConfiguration : VersionableDbEntityConfiguration<Module
     {
         base.OverrideConfigure(modelBuilder);
 
-        modelBuilder.HasIndex(x => new { x.CourseId, x.ModuleOrder })
+        modelBuilder.HasIndex(x => new { x.CourseId, x.ModuleOrder, x.VersionOrder })
             .IsUnique()
             .HasDatabaseName("IX_CourseId_ModuleOrder");
     }

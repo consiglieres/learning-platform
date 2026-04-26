@@ -47,7 +47,6 @@ public class ModuleService(IModulesRepository moduleRepository, IV1ResDtoMapper 
                 user,
                 currentModule.Lessons);
 
-            newModule.MarkAsCreated(user, DateTimeOffset.UtcNow);
             newModule.Version = EntityVersion.IncrementVersion(currentModule.Version);
 
             await moduleRepository.CreateAsync(newModule, cancellationToken);

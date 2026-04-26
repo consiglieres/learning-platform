@@ -19,7 +19,7 @@ public record Course : PublicationWorkflowEntity<string>
 
     public List<TypedCategory> Categories { get; set; } = [];
 
-    public List<Module> Modules { get; set; } = [];
+    public List<Module> Modules { get; set; }
 
     public Page.Page IntroductionPage { get; set; }
 
