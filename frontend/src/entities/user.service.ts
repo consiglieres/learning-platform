@@ -7,17 +7,17 @@ import {BehaviorSubject, firstValueFrom, Observable} from 'rxjs';
 export class UserService {
   private readonly _urlApi: string = "http://localhost:5172/api/v1/V1Account/"
 
-  public _userDataSubject = new BehaviorSubject<IUserData | string>('null');
-  public userData$ = this._userDataSubject.asObservable()
+  public _userDataSubject = new BehaviorSubject<IUserData | null>(null);
+  public userData$: Observable<IUserData | null> = this._userDataSubject.asObservable()
 
   private readonly _http = inject(HttpClient)
 
-  public registration (registrationData: IRegistration) : Observable<{ status: string }> {
+  public registration (registrationData: IRegistration): Observable<{ status: string }> {
     return this._http.post<{ status: string }>(this._urlApi + "register", registrationData)
   }
 
   public authorization (authorizationData: IAuthorization): Observable<{ token: string }> {
-    return this._http.post<{  error: string, token: string }>( this._urlApi + 'login', authorizationData)
+    return this._http.post<{ error: string, token: string }>( this._urlApi + 'login', authorizationData)
   }
 
   public getUserDataPromise(): Promise<IUserData> {

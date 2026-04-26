@@ -38,6 +38,7 @@ export class AuthorizationModal {
       email: this.userAuthorizationForm().value().email,
       password: this.userAuthorizationForm().value().password
     }
+
     const validationResult = this._paginationService.validateAuthorization(userData);
 
     if (!validationResult.isValid) {
@@ -48,6 +49,7 @@ export class AuthorizationModal {
     else {
       this._userService.authorization(userData).pipe(take(1)).subscribe({
         next: result => {
+          this._userService.getUserDataPromise()
           setTimeout(() => {
             this.closeModal.emit()
           }, 1000)
@@ -59,7 +61,6 @@ export class AuthorizationModal {
     }
 
   }
-
 
   public close(): void {
       this.closeModal.emit();

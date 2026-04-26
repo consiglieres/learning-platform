@@ -1,1 +1,37 @@
-<p>profile works!</p>
+<app-breadcrumbs></app-breadcrumbs>
+
+@if(userData$ | async; as userData){
+  @if(userData !== null){
+    <section class="profile">
+      <section class="bradcrumps">Главная / Мой профиль</section>
+      <section class="user">
+        <section class="information">
+          <div class="">
+            <img class="img" src="{{userData.img}}">
+            <h1 class="">{{userData.name}}</h1>
+          </div>
+          <section class="main-information">
+            <h2 class="main-information__logo">Основная информация</h2>
+            <div class="second-information">
+              <p class="second-information__connection-date">Присоединиться {{userData.dateConnection}}</p>
+              <p class="second-information__email">Email {{userData.email}}</p>
+            </div>
+            <div class="edit-data">
+              <button class="edit-data__email">Сменить почту</button>
+              <button class="edit-data__password">Сменить пароль</button>
+            </div>
+          </section>
+        </section>
+
+        <section class="courses">
+          <div class="header">
+            <h2 class="header__logo">Мои курсы</h2>
+            <h3 class="header__count-courses">{{userData.courseComplete}}</h3>
+          </div>
+          <section class="list">
+          </section>
+        </section>
+      </section>
+    </section>
+  }
+}

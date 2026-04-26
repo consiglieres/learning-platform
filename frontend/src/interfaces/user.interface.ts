@@ -22,5 +22,7 @@ export interface IUserData {
   email: string;
   name: string;
   phone: string;
-
+  img: string;
+  dateConnection: string;
+  courseComplete: string;
 }

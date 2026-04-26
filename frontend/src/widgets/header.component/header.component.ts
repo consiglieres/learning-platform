@@ -3,21 +3,32 @@ import {RouterLink} from '@angular/router';
 import {ModalService} from '../../entities/modal.service';
 import {UserService} from '../../entities/user.service';
 import {AsyncPipe} from '@angular/common';
+import {IUserData} from '../../interfaces/user.interface';
 
 @Component({
   selector: 'app-header',
   imports: [
     RouterLink,
-    AsyncPipe,
   ],
   templateUrl: './header.component.html',
   styleUrl: './header.component.scss',
 })
-export class HeaderComponent {
+export class HeaderComponent implements OnInit {
   private _userService = inject(UserService);
   private _modalService = inject(ModalService);
 
-  public userData$ = this._userService.userData$
+  public check: boolean = false
+  public userData!: IUserData;
+
+  ngOnInit() {
+    this._userService.userData$.subscribe(result => {
+      if(result !== null){
+        this.check = true
+        this.userData = result
+      }
+    });
+  }
+
 
   public showModalRegistration(): void {
     this._modalService.openRegistration();

@@ -9,19 +9,16 @@
     <a routerLink="about" class="left__link">О нас</a>
   </section>
 
-  @if (userData$ | async; as user) {
-    @if (user === 'null') {
-      <section class="right">
-        <button class="right__button-brightness"></button>
-        <button class="right__button-registration" (click)="showModalRegistration()">Регистрация</button>
-        <button class="right__button-authorization" (click)="showModalAuthorization()">Войти</button>
-      </section>
-    } @else {
-      <section class="right">
-        <button class="right__button-brightness"></button>
-        <a routerLink="/profile" class="right__link-profile">
-        </a>
-      </section>
-    }
+  @if(check === false){
+    <section class="right">
+      <button class="right__button-brightness"></button>
+      <button class="right__button-registration" (click)="showModalRegistration()">Регистрация</button>
+      <button class="right__button-authorization" (click)="showModalAuthorization()">Войти</button>
+    </section>
+  } @else {
+    <section class="right">
+      <button class="right__button-brightness"></button>
+      <a routerLink="/profile" class="right__link-profile">{{userData.name}}</a>
+    </section>
   }
 </section>

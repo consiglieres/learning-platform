@@ -8,7 +8,6 @@ import {FilterService} from '../../entities/filter.service';
 @Component({
   selector: 'app-course',
   imports: [
-    RouterLink,
     Topic
   ],
   templateUrl: './course.html',
