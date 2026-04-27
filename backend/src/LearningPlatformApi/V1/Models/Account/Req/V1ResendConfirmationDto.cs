@@ -1,8 +1,8 @@
 using System.ComponentModel.DataAnnotations;
 
-namespace LearningPlatformApi.V2.Account.Req;
+namespace LearningPlatformApi.V1.Models.Account.Req;
 
 public class V1ResendConfirmationDto
 {
-    [Required][EmailAddress] public string Email { get; set; }
+    [Required][EmailAddress] public required string Email { get; set; }
 }

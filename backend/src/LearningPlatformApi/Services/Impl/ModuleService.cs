@@ -182,7 +182,7 @@ public class ModuleService(IModulesRepository moduleRepository, IV1ResDtoMapper 
         return history;
     }
 
-    public async Task<ModuleComparisonResDto> CompareVersionsAsync(string id, int sourceVersion, int targetVersion, CancellationToken cancellationToken)
+    public Task<ModuleComparisonResDto> CompareVersionsAsync(string id, int sourceVersion, int targetVersion, CancellationToken cancellationToken)
     {
         throw new NotImplementedException();
         /*var sourceModule = await moduleRepository.GetAsync(id, new EntityVersion(sourceVersion), cancellationToken);
@@ -316,7 +316,7 @@ public class ModuleService(IModulesRepository moduleRepository, IV1ResDtoMapper 
         return modules.Select(resDtoMapper.Map).ToList();
     }
 
-    public async Task<V1ModuleResDto> ReorderLessonsAsync(string id, List<string> lessonIds, CancellationToken cancellationToken)
+    public Task<V1ModuleResDto> ReorderLessonsAsync(string id, List<string> lessonIds, CancellationToken cancellationToken)
     {
         throw new NotImplementedException();
         /*await unitOfWork.BeginTransactionAsync(cancellationToken);

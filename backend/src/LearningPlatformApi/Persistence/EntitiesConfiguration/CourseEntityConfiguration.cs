@@ -12,7 +12,7 @@ public class CourseEntityConfiguration : PublicationDbEntityConfiguration<Course
 
         modelBuilder.Property(x => x.PageId)
             .IsRequired(false); // Теперь может быть NULL
-        
+
         modelBuilder.HasMany(x => x.Modules)
             .WithOne()
             .HasForeignKey(e => new { e.CourseId, e.CourseVersion })

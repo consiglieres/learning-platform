@@ -381,17 +381,4 @@ public class PageService(
 
         return changes.Any() ? string.Join(", ", changes) : "No significant changes";
     }
-
-    private async Task<Page?> GetPreviousVersionAsync(string id, int currentVersionOrder,
-        CancellationToken cancellationToken)
-    {
-        try
-        {
-            return await pageRepository.GetAsync(id, new EntityVersion(currentVersionOrder - 1), cancellationToken);
-        }
-        catch (DomainException)
-        {
-            return null;
-        }
-    }
 }

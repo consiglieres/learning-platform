@@ -15,7 +15,7 @@ public class V1ModulesController(
 {
     [HttpGet("{id}")]
     public async Task<ActionResult<V1ModuleResDto>> GetModule(
-        string id, 
+        string id,
         [FromQuery] int? versionOrder = null,
         CancellationToken cancellationToken = default)
     {
@@ -25,7 +25,7 @@ public class V1ModulesController(
 
         return Ok(result);
     }
-    
+
     [HttpGet("{id}/latest")]
     public async Task<ActionResult<V1ModuleResDto>> GetLatestModule(
         string id,
@@ -78,7 +78,7 @@ public class V1ModulesController(
 
     [HttpPut("{id}")]
     public async Task<ActionResult<V1ModuleResDto>> UpdateModule(
-        string id, 
+        string id,
         [FromBody] UpdateModuleRequest request,
         CancellationToken cancellationToken = default)
     {
@@ -105,9 +105,9 @@ public class V1ModulesController(
         CancellationToken cancellationToken = default)
     {
         var result = await moduleService.RollbackToVersionAsync(
-            id, 
-            request.TargetVersionOrder, 
-            request.Reason, 
+            id,
+            request.TargetVersionOrder,
+            request.Reason,
             cancellationToken);
         return Ok(result);
     }
@@ -155,7 +155,7 @@ public class V1ModulesController(
 
     [HttpPost("{id}/restore")]
     public async Task<ActionResult<V1ModuleResDto>> RestoreModule(
-        string id, 
+        string id,
         CancellationToken cancellationToken = default)
     {
         if (!ModelState.IsValid)

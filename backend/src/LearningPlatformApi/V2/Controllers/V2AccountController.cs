@@ -109,7 +109,6 @@ public class V2AccountController : ControllerBase
     private async Task<ActionResult> LoginSuccessResponse(string email)
     {
         var user = await profileService.GetUserByEmailAsync(email);
-        var roles = await profileService.GetUserRolesAsync(user!);
 
         return Ok(v1ResDtoMapper.Map(userMapper.MapToDomain(user!)));
     }
@@ -142,7 +141,6 @@ public class V2AccountController : ControllerBase
         if (user == null)
             return NotFound();
 
-        var roles = await profileService.GetUserRolesAsync(user);
 
         return Ok(v1ResDtoMapper.Map(userMapper.MapToDomain(user)));
     }
@@ -170,10 +168,10 @@ public class V2AccountController : ControllerBase
     }
 
     [HttpPost("forgot-password")]
-    public async Task<IActionResult> ForgotPasswordAsync([FromBody] V2ForgotPasswordDto forgotPasswordDto)
+    public Task<IActionResult> ForgotPasswordAsync([FromBody] V2ForgotPasswordDto forgotPasswordDto)
     {
         // TODO: Implement password reset service
-        return Ok(new { message = "If the email exists, a password reset link has been sent" });
+        return Task.FromResult<IActionResult>(Ok(new { message = "If the email exists, a password reset link has been sent" }));
     }
 
     [HttpPost("resend-confirmation")]
@@ -182,8 +180,8 @@ public class V2AccountController : ControllerBase
         var result = await emailService.SendConfirmationEmailAsync(dto.Email);
 
         return result.Match<IActionResult>(
-            success => Ok(new { message = "Confirmation email sent" }),
-            notExists => Ok(new { message = "If the email exists, a confirmation link has been sent" }),
+            _ => Ok(new { message = "Confirmation email sent" }),
+            _ => Ok(new { message = "If the email exists, a confirmation link has been sent" }),
             alreadyConfirmed => BadRequest(new { error = alreadyConfirmed.Message })
         );
     }

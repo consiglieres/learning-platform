@@ -81,7 +81,7 @@ public class ModulesRepository(
 
         if (page != null)
         {
-            moduleEntity.Page = page;   
+            moduleEntity.Page = page;
         }
         await context.Set<ModuleEntity>().AddAsync(moduleEntity, cancellationToken);
     }

@@ -47,7 +47,7 @@ public class CoursesRepository(
             .Include(x => x.Modules)
             .OrderByDescending(x => x.VersionOrder)
             .FirstOrDefaultAsync(cancellationToken);
-    
+
         if (entities == null) throw new DomainException("Course not found");
 
         var page = await context.Set<PageEntity>()
@@ -57,7 +57,7 @@ public class CoursesRepository(
             .Include(x => x.ContentBlocks)
             .OrderByDescending(x => x.VersionOrder)
             .FirstOrDefaultAsync(x => x.Id.Equals(entities.PageId), cancellationToken);
-    
+
         if (page == null) throw new DomainException("Page not found");
 
         var moduleEntities = await context.Set<ModuleEntity>()

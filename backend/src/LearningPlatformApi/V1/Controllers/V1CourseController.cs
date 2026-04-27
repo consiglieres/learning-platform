@@ -265,7 +265,7 @@ public class V1CoursesController(
     [Authorize(Roles = "Admin,Moderator")]
     public async Task<IActionResult> RejectCourseAsync(string courseId, [FromBody] V1ModerationCommentRequest request)
     {
-        if (string.IsNullOrEmpty(request?.Comment))
+        if (string.IsNullOrEmpty(request.Comment))
             return BadRequest(new { error = "Rejection comment is required" });
 
         var entityUser = await profileService.GetCurrentUserAsync(User);

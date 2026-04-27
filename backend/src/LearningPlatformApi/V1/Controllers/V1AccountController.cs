@@ -1,5 +1,6 @@
 using LearningPlatformApi.Mapper;
 using LearningPlatformApi.Services;
+using LearningPlatformApi.V1.Models.Account.Req;
 using LearningPlatformApi.V2.Account.Req;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
@@ -184,10 +185,10 @@ public class V1AccountController : ControllerBase
     }
 
     [HttpPost("forgot-password")]
-    public async Task<IActionResult> ForgotPasswordAsync([FromBody] V1ForgotPasswordDto forgotPasswordDto)
+    public Task<IActionResult> ForgotPasswordAsync([FromBody] V1ForgotPasswordDto forgotPasswordDto)
     {
         // TODO: Implement password reset service
-        return Ok(new { message = "If the email exists, a password reset link has been sent" });
+        return Task.FromResult<IActionResult>(Ok(new { message = "If the email exists, a password reset link has been sent" }));
     }
 
     [HttpPost("resend-confirmation")]

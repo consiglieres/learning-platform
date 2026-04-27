@@ -1,4 +1,5 @@
 using LearningPlatformApi.Domain.ValueObjects.Page;
+using LearningPlatformApi.V1.Models.Account.Res;
 using LearningPlatformApi.V1.Models.Base;
 using LearningPlatformApi.V2.Account.Res;
 

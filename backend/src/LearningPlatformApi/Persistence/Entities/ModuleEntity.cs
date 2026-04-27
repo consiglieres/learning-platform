@@ -14,7 +14,7 @@ public class ModuleEntity(string id) : VersionableDbEntity<string>(id)
     public string PageId { get; set; }
 
     public string CourseId { get; set; }
-    
+
     public int CourseVersion { get; set; }
 
     public IReadOnlyCollection<LessonEntity> Lessons { get; set; }
