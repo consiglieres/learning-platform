@@ -5,6 +5,7 @@ using LearningPlatformApi.Domain.ValueObjects;
 using LearningPlatformApi.Mapper;
 using LearningPlatformApi.Persistence.Context;
 using LearningPlatformApi.Persistence.Entities;
+using LearningPlatformApi.Persistence.Entities.Page;
 using LearningPlatformApi.Persistence.Repositories.Base.Impl;
 using Microsoft.EntityFrameworkCore;
 
@@ -25,7 +26,7 @@ public class ModulesRepository(
             .Include(x => x.CreatedByUser)
             .Include(x => x.UpdatedByUser)
             .Include(x => x.DeletedByUser)
-            .Include(x => x.IntroductionPage)
+            .Include(x => x.Page)
             .ThenInclude(x => x.ContentBlocks)
             .Include(x => x.Lessons)
             .FirstOrDefaultAsync(x => x.Id.Equals(id) && x.VersionOrder == version.Order, cancellationToken);
@@ -42,7 +43,7 @@ public class ModulesRepository(
             .Include(x => x.CreatedByUser)
             .Include(x => x.UpdatedByUser)
             .Include(x => x.DeletedByUser)
-            .Include(x => x.IntroductionPage)
+            .Include(x => x.Page)
             .ThenInclude(x => x.ContentBlocks)
             .Include(x => x.Lessons)
             .OrderByDescending(x => x.VersionOrder)
@@ -60,7 +61,7 @@ public class ModulesRepository(
             .Include(x => x.CreatedByUser)
             .Include(x => x.UpdatedByUser)
             .Include(x => x.DeletedByUser)
-            .Include(x => x.IntroductionPage)
+            .Include(x => x.Page)
             .ThenInclude(x => x.ContentBlocks)
             .Include(x => x.Lessons)
             .OrderByDescending(x => x.VersionOrder)
@@ -70,5 +71,18 @@ public class ModulesRepository(
         if (entities == null) throw new DomainException("Entity not found");
 
         return entities.Select(moduleMapper.Map).ToList();
+    }
+
+    public override async Task CreateAsync(Module entity, CancellationToken cancellationToken = default)
+    {
+        var moduleEntity = moduleMapper.Map(entity);
+        var page = await context.Set<PageEntity>()
+            .FirstOrDefaultAsync(x => x.Id == moduleEntity.Page.Id && x.VersionOrder == moduleEntity.Page.VersionOrder, cancellationToken);
+
+        if (page != null)
+        {
+            moduleEntity.Page = page;   
+        }
+        await context.Set<ModuleEntity>().AddAsync(moduleEntity, cancellationToken);
     }
 }

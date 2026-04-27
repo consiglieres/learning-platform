@@ -38,7 +38,7 @@ internal partial class V1ResDtoMapper : IV1ResDtoMapper
             ModuleOrder = course.ModuleOrder,
             CourseId = course.CourseId,
             LessonIds = course.Lessons.Select(x => x.Id).ToArray(),
-            IntroductionPageId = course.IntroductionPage.Id,
+            IntroductionPageId = course.Page.Id,
             CreatedAt = course.CreatedAt,
             CreatedBy = Map(course.CreatedBy),
             UpdatedAt = course.UpdatedAt,

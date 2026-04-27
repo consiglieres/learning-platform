@@ -19,7 +19,7 @@ public class ModuleService(IModulesRepository moduleRepository, IV1ResDtoMapper 
 {
     public async Task<V1ModuleResDto> CreateAsync(CreateModuleRequest request, User user, CancellationToken cancellationToken)
     {
-        var module = new Module(Guid.NewGuid().ToString(), request.ModuleOrder,
+        var module = new Module(request.Name, request.ModuleOrder,
             request.CourseId, user, []);
 
         await moduleRepository.CreateAsync(module, cancellationToken);
@@ -103,24 +103,14 @@ public class ModuleService(IModulesRepository moduleRepository, IV1ResDtoMapper 
             if (deletedModule == null)
                 throw new DomainException($"No deleted version found for module {id}");
 
-            var restoredModule = new Module(
-                deletedModule.Name,
-                deletedModule.ModuleOrder,
-                deletedModule.CourseId,
-                user,
-                deletedModule.Lessons)
-            {
-                Version = EntityVersion.IncrementVersion(deletedModule.Version)
-            };
+            deletedModule.Restore(user, DateTimeOffset.UtcNow);
+            deletedModule.Version = EntityVersion.IncrementVersion(deletedModule.Version);
 
-            restoredModule.MarkAsCreated(user, DateTimeOffset.UtcNow);
-            restoredModule.Restore(user, DateTimeOffset.UtcNow);
-
-            await moduleRepository.CreateAsync(restoredModule, cancellationToken);
+            await moduleRepository.CreateAsync(deletedModule, cancellationToken);
             await unitOfWork.SaveChangesAsync(cancellationToken);
             await unitOfWork.CommitTransactionAsync(cancellationToken);
 
-            return resDtoMapper.Map(restoredModule);
+            return resDtoMapper.Map(deletedModule);
         }
         catch (Exception)
         {

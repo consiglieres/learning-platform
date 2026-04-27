@@ -20,7 +20,7 @@ internal partial class ModuleMapper(
             userMapper.MapToDomain(entity.CreatedByUser),
             entity.Lessons.Select(lessonMapper.Map).ToList())
         {
-            IntroductionPage = pageMapper.Map(entity.IntroductionPage),
+            Page = pageMapper.Map(entity.Page),
             Id = entity.Id,
             Version = new EntityVersion(entity.VersionOrder, entity.Tag),
             CreatedAt = entity.CreatedAt,
@@ -38,8 +38,8 @@ internal partial class ModuleMapper(
         {
             Name = entity.Name,
             ModuleOrder = entity.ModuleOrder,
-            IntroductionPage = pageMapper.Map(entity.IntroductionPage),
-            PageId = entity.IntroductionPage.Id,
+            Page = pageMapper.Map(entity.Page),
+            PageId = entity.Page.Id,
             CourseId = entity.CourseId,
             Lessons = entity.Lessons.Select(lessonMapper.Map).ToList(),
             VersionOrder = entity.Version.Order,

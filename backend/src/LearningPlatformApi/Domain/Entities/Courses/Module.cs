@@ -14,7 +14,7 @@ public record Module : VersionableEntity<string>
         ModuleOrder = moduleOrder;
         CourseId = courseId;
         Lessons = lessons.ToList();
-        IntroductionPage = Page.Page.EmptyPage(PageType.Introduction, creator);
+        Page = Entities.Page.Page.EmptyPage(PageType.Introduction, creator);
         MarkAsCreated(creator, DateTimeOffset.UtcNow);
     }
 
@@ -24,7 +24,7 @@ public record Module : VersionableEntity<string>
 
     public List<Lesson> Lessons { get; set; }
 
-    public Page.Page IntroductionPage { get; set; }
+    public Page.Page Page { get; set; }
 
     public void AddLesson(Lesson lesson)
     {

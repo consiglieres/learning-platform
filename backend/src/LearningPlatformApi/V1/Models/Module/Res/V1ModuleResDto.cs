@@ -12,5 +12,5 @@ public class V1ModuleResDto : VersionableResDto
 
     public required List<V1LessonShortResDto> Lessons { get; set; }
 
-    public required V1PageResDto IntroductionPage { get; set; }
+    public required V1PageResDto Page { get; set; }
 }

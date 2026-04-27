@@ -69,13 +69,13 @@ public class CoursesRepository(
             .Include(m => m.CreatedByUser)
             .Include(m => m.UpdatedByUser)
             .Include(m => m.DeletedByUser)
-            .Include(m => m.IntroductionPage)
+            .Include(m => m.Page)
             .ThenInclude(p => p.CreatedByUser)
-            .Include(m => m.IntroductionPage)
+            .Include(m => m.Page)
             .ThenInclude(p => p.UpdatedByUser)
-            .Include(m => m.IntroductionPage)
+            .Include(m => m.Page)
             .ThenInclude(p => p.DeletedByUser)
-            .Include(m => m.IntroductionPage)
+            .Include(m => m.Page)
             .ThenInclude(p => p.ContentBlocks)
             .ToListAsync(cancellationToken);
 

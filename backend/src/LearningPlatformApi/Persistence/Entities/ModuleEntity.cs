@@ -9,7 +9,7 @@ public class ModuleEntity(string id) : VersionableDbEntity<string>(id)
 
     public int ModuleOrder { get; set; }
 
-    public PageEntity IntroductionPage { get; set; }
+    public PageEntity Page { get; set; }
 
     public string PageId { get; set; }
 

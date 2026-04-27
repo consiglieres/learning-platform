@@ -30,6 +30,7 @@ public class CourseService(
         var course = new Course(title, description, user);
 
         course.AddCategories(categories);
+        course.Modules = [];
         await courseRepository.CreateAsync(course, cancellationToken);
         await pageRepository.CreateAsync(course.IntroductionPage, cancellationToken);
         await unitOfWork.SaveChangesAsync(cancellationToken);
