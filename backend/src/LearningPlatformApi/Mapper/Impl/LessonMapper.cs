@@ -63,13 +63,10 @@ internal partial class LessonMapper(
             Tag = entity.Version.Tag,
             CreatedAt = entity.CreatedAt,
             CreatedBy = entity.CreatedBy.Id,
-            CreatedByUser = userMapper.MapToEntity(entity.CreatedBy),
             UpdatedAt = entity.UpdatedAt,
             UpdatedBy = entity.UpdatedBy?.Id,
-            UpdatedByUser = entity.UpdatedBy == null ? null : userMapper.MapToEntity(entity.UpdatedBy),
             DeletedAt = entity.DeletedAt,
             DeletedBy = entity.DeletedBy?.Id,
-            DeletedByUser = entity.DeletedBy == null ? null : userMapper.MapToEntity(entity.DeletedBy)
         };
     }
 

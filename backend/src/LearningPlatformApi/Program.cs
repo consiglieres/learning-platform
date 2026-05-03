@@ -104,6 +104,7 @@ builder.Services.AddSingleton<IDbEntityMapper<Module, string, ModuleEntity, stri
 builder.Services.AddSingleton<IDbEntityMapper<Page, string, PageEntity, string>, PageMapper>();
 builder.Services.AddSingleton<IDbEntityMapper<PageContentBlock, string, ContentBlockEntity, string>, PageMapper>();
 builder.Services.AddSingleton<IDbEntityMapper<TestTask, string, TestTaskEntity, string>, TestTaskMapper>();
+builder.Services.AddSingleton<IDbEntityMapper<Lesson, string, LessonEntity, string>, LessonMapper>();
 builder.Services.AddSingleton<IV1ResDtoMapper, V1ResDtoMapper>();
 builder.Services.AddSingleton<ICourseCategoryMapper, CourseCategoryMapper>();
 
@@ -115,12 +116,14 @@ builder.Services.AddScoped<IUserEmailService, UserEmailService>();
 builder.Services.AddScoped<ICourseService, CourseService>();
 builder.Services.AddScoped<IPageService, PageService>();
 builder.Services.AddScoped<IModuleService, ModuleService>();
+builder.Services.AddScoped<ILessonService, LessonService>();
 
 // Repositories
 builder.Services.AddScoped<ICourseRepository, CoursesRepository>();
 builder.Services.AddScoped<ICourseCategoriesRepository, CourseCategoryRepository>();
 builder.Services.AddScoped<IPageRepository, PageRepository>();
 builder.Services.AddScoped<IModulesRepository, ModulesRepository>();
+builder.Services.AddScoped<ILessonRepository, LessonRepository>();
 
 // Authorization policies
 builder.Services.AddAuthorization(options =>

@@ -3,6 +3,7 @@ using System;
 using LearningPlatformApi.Persistence.Context;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 
@@ -11,9 +12,11 @@ using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 namespace LearningPlatformApi.Migrations
 {
     [DbContext(typeof(ApplicationContext))]
-    partial class ApplicationContextModelSnapshot : ModelSnapshot
+    [Migration("20260503232318_LessonTaskRoute")]
+    partial class LessonTaskRoute
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -295,13 +298,13 @@ namespace LearningPlatformApi.Migrations
 
                     b.HasIndex("UpdatedBy");
 
+                    b.HasIndex("ModuleId", "LessonOrder")
+                        .IsUnique()
+                        .HasDatabaseName("IX_ModuleId_LessonOrder");
+
                     b.HasIndex("ModuleId", "ModuleVersionOrder");
 
                     b.HasIndex("PageEntityId", "PageEntityVersionOrder");
-
-                    b.HasIndex("ModuleId", "LessonOrder", "VersionOrder")
-                        .IsUnique()
-                        .HasDatabaseName("IX_ModuleId_LessonOrder");
 
                     b.ToTable("Lessons");
                 });

@@ -15,6 +15,8 @@ public abstract class TaskBaseEntity(string id) : VersionableDbEntity<string>(id
     public int DifficultyPoints { get; set; }
 
     public string LessonId { get; set; }
+    
+    public int LessonVersion { get; set; }
 
     public LessonEntity Lesson { get; set; }
 

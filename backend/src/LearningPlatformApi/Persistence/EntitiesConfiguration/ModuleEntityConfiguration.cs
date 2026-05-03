@@ -10,6 +10,10 @@ public class ModuleEntityConfiguration : VersionableDbEntityConfiguration<Module
     protected override void OverrideConfigure(EntityTypeBuilder<ModuleEntity> modelBuilder)
     {
         base.OverrideConfigure(modelBuilder);
+        modelBuilder.HasOne<CourseEntity>()
+            .WithMany(x => x.Modules)
+            .HasForeignKey(e => new { e.CourseId, e.CourseVersion })
+            .HasPrincipalKey(e => new { e.Id, e.VersionOrder });
 
         modelBuilder.HasOne(x => x.Page)
             .WithOne();

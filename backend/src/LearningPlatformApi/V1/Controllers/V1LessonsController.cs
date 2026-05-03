@@ -26,7 +26,7 @@ public class V1LessonsController(
         return Ok(result);
     }
 
-    [HttpGet("{id}/latest")]
+    [HttpGet("{id}/latest", Name = "GetLatestLesson")]
     public async Task<ActionResult<V1LessonResDto>> GetLatestLessonAsync(
         string id,
         CancellationToken cancellationToken = default)
@@ -62,7 +62,7 @@ public class V1LessonsController(
         var user = userMapper.MapToDomain(dbUser);
 
         var result = await lessonService.CreateAsync(request, user, cancellationToken);
-        return CreatedAtAction(nameof(GetLessonAsync), new { id = result.Id }, result);
+        return CreatedAtRoute("GetLatestLesson", new { id = result.Id }, result);
     }
 
     [HttpPut("{id}")]

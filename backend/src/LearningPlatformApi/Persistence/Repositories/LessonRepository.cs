@@ -1,4 +1,5 @@
 using LearningPlatformApi.Domain.Entities.Courses;
+using LearningPlatformApi.Domain.Entities.Tasks;
 using LearningPlatformApi.Domain.Exceptions;
 using LearningPlatformApi.Domain.Repositories;
 using LearningPlatformApi.Domain.ValueObjects;
@@ -45,6 +46,7 @@ public class LessonRepository(
             .Include(x => x.PageEntity)
             .ThenInclude(x => x.ContentBlocks)
             .Include(x => x.Module)
+            .Include(x => x.Tasks)
             .OrderByDescending(x => x.VersionOrder)
             .FirstOrDefaultAsync(cancellationToken);
 

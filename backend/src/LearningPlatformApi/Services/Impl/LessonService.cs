@@ -43,10 +43,13 @@ public class LessonService(ILessonRepository lessonRepository, IV1ResDtoMapper r
             existingLesson.Name = request.Name;
             existingLesson.LessonOrder = request.LessonOrder;
             existingLesson.PassThreshold = request.PassThreshold;
+            existingLesson.Version = EntityVersion.IncrementVersion(existingLesson.Version);
             await lessonRepository.CreateAsync(existingLesson, cancellationToken);
             await unitOfWork.SaveChangesAsync(cancellationToken);
+            await unitOfWork.CommitTransactionAsync(cancellationToken);
+            var upadted = await lessonRepository.GetLastAsync(id, cancellationToken);
             
-            return resDtoMapper.Map(existingLesson);
+            return resDtoMapper.Map(upadted);
         }
         catch (Exception)
         {
