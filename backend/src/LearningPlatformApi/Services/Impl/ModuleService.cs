@@ -40,14 +40,11 @@ public class ModuleService(IModulesRepository moduleRepository, IV1ResDtoMapper 
             if (currentModule == null)
                 throw new DomainException($"Module with id {id} not found");
 
-            var newModule = new Module(
-                request.Name,
-                request.ModuleOrder,
-                currentModule.CourseId,
-                user,
-                currentModule.Lessons);
-
-            newModule.Version = EntityVersion.IncrementVersion(currentModule.Version);
+            var newModule = new Module(currentModule.Id, request.Name,
+                request.ModuleOrder, currentModule.CourseId, user, currentModule.Lessons)
+            {
+                Version = EntityVersion.IncrementVersion(currentModule.Version)
+            };
 
             await moduleRepository.CreateAsync(newModule, cancellationToken);
             await unitOfWork.SaveChangesAsync(cancellationToken);

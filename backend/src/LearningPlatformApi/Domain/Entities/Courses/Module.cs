@@ -17,6 +17,18 @@ public record Module : VersionableEntity<string>
         Page = Entities.Page.Page.EmptyPage(PageType.Introduction, creator);
         MarkAsCreated(creator, DateTimeOffset.UtcNow);
     }
+    
+    public Module(string id, string name, int moduleOrder, string courseId, User creator,
+        IReadOnlyCollection<Lesson> lessons)
+        : base(id)
+    {
+        Name = name;
+        ModuleOrder = moduleOrder;
+        CourseId = courseId;
+        Lessons = lessons.ToList();
+        Page = Entities.Page.Page.EmptyPage(PageType.Introduction, creator);
+        MarkAsCreated(creator, DateTimeOffset.UtcNow);
+    }
 
     public string Name { get; set; }
     public int ModuleOrder { get; set; }
