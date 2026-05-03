@@ -6,6 +6,7 @@ using LearningPlatformApi.V1.Models.Account.Res;
 using LearningPlatformApi.V1.Models.Courses.Req;
 using LearningPlatformApi.V1.Models.Courses.Res;
 using LearningPlatformApi.V1.Models.Lessons;
+using LearningPlatformApi.V1.Models.Lessons.Res;
 using LearningPlatformApi.V1.Models.Module.Res;
 using LearningPlatformApi.V1.Models.Page;
 using LearningPlatformApi.V1.Models.Tasks;

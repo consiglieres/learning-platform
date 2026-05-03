@@ -1,5 +1,6 @@
 using LearningPlatformApi.V1.Models.Base;
 using LearningPlatformApi.V1.Models.Lessons;
+using LearningPlatformApi.V1.Models.Lessons.Res;
 
 namespace LearningPlatformApi.V1.Models.Module.Res;
 

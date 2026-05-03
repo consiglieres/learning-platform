@@ -2,7 +2,7 @@ using LearningPlatformApi.V1.Models.Base;
 using LearningPlatformApi.V1.Models.Page;
 using LearningPlatformApi.V1.Models.Tasks;
 
-namespace LearningPlatformApi.V1.Models.Lessons;
+namespace LearningPlatformApi.V1.Models.Lessons.Res;
 
 public class V1LessonResDto : VersionableResDto
 {
