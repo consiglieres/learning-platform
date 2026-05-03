@@ -18,13 +18,13 @@ public record Lesson : VersionableEntity<string>
         MarkAsCreated(creator, DateTimeOffset.UtcNow);
     }
 
-    public string Name { get; private set; }
+    public string Name { get; set; }
 
-    public int LessonOrder { get; private set; }
+    public int LessonOrder { get; set; }
 
-    public int PassThreshold { get; private set; }
+    public int PassThreshold { get; set; }
 
-    public Page.Page PageContent { get; private set; }
+    public Page.Page PageContent { get; set; }
 
     public string ModuleId { get; set; }
 

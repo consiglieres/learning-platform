@@ -24,7 +24,7 @@ public interface ILessonService
 
     /*Task<V1LessonResDto> CopyModuleAsync(CopyModuleRequest request, User user, CancellationToken cancellationToken);*/
 
-    Task<List<V1LessonResDto>> GetModulesByIdsAsync(List<string> ids, CancellationToken cancellationToken);
+    Task<List<V1LessonResDto>> GetLessonsByIdsAsync(List<string> ids, CancellationToken cancellationToken);
 
-    Task<V1LessonResDto> ReorderLessonsAsync(string id, List<string> lessonIds, CancellationToken cancellationToken);
+    Task<IReadOnlyCollection<V1LessonResDto>> ReorderLessonsAsync(string id, List<string> lessonIds, CancellationToken cancellationToken);
 }

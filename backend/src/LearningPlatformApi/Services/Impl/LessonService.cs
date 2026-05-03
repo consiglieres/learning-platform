@@ -1,6 +1,10 @@
 using LearningPlatformApi.Domain.Entities;
 using LearningPlatformApi.Domain.Entities.Courses;
+using LearningPlatformApi.Domain.Entities.Page;
+using LearningPlatformApi.Domain.Exceptions;
 using LearningPlatformApi.Domain.Repositories;
+using LearningPlatformApi.Domain.ValueObjects;
+using LearningPlatformApi.Domain.ValueObjects.Page;
 using LearningPlatformApi.Mapper;
 using LearningPlatformApi.Persistence.Entities;
 using LearningPlatformApi.Persistence.Repositories.Base;
@@ -14,39 +18,105 @@ public class LessonService(ILessonRepository lessonRepository, IV1ResDtoMapper r
     IUnitOfWork unitOfWork, IDbEntityMapper<Lesson, string, LessonEntity, string> lessonMapper)
     : ILessonService
 {
-    public Task<V1LessonResDto> CreateAsync(V1CreateLessonReqDto request, User user, CancellationToken cancellationToken)
+    public async Task<V1LessonResDto> CreateAsync(V1CreateLessonReqDto request, User user, CancellationToken cancellationToken)
     {
-        throw new NotImplementedException();
+        var newLesson = new Lesson(request.Name, request.LessonOrder, request.PassThreshold,
+            Page.EmptyPage(PageType.Theory, user), request.ModuleId, user);
+        
+        await lessonRepository.CreateAsync(newLesson, cancellationToken);
+        await unitOfWork.SaveChangesAsync(cancellationToken);
+        var created = await lessonRepository.GetAsync(newLesson.Id, newLesson.Version, cancellationToken);
+
+        return resDtoMapper.Map(created);
     }
 
-    public Task<V1LessonResDto> UpdateAsync(string id, User user, V1UpdateLessonReqDto request, CancellationToken cancellationToken)
+    public async Task<V1LessonResDto> UpdateAsync(string id, User user, V1UpdateLessonReqDto request, CancellationToken cancellationToken)
     {
-        throw new NotImplementedException();
+        await unitOfWork.BeginTransactionAsync(cancellationToken);
+
+        try
+        {
+            var existingLesson = await lessonRepository.GetLastAsync(id, cancellationToken);
+            if (existingLesson == null)
+                throw new DomainException("Lesson not found");
+
+            existingLesson.Name = request.Name;
+            existingLesson.LessonOrder = request.LessonOrder;
+            existingLesson.PassThreshold = request.PassThreshold;
+            await lessonRepository.CreateAsync(existingLesson, cancellationToken);
+            await unitOfWork.SaveChangesAsync(cancellationToken);
+            
+            return resDtoMapper.Map(existingLesson);
+        }
+        catch (Exception)
+        {
+            await unitOfWork.RollbackTransactionAsync(cancellationToken);
+            throw;
+        }
     }
 
-    public Task<V1LessonResDto> GetLatestAsync(string id, CancellationToken cancellationToken)
+    public async Task<V1LessonResDto> GetLatestAsync(string id, CancellationToken cancellationToken)
     {
-        throw new NotImplementedException();
+        var lesson = await lessonRepository.GetLastAsync(id, cancellationToken);
+        return resDtoMapper.Map(lesson);
     }
 
-    public Task<V1LessonResDto> GetByVersionAsync(string id, int versionOrder, CancellationToken cancellationToken)
+    public async Task<V1LessonResDto> GetByVersionAsync(string id, int versionOrder, CancellationToken cancellationToken)
     {
-        throw new NotImplementedException();
+        var lesson = await lessonRepository.GetAsync(id, new EntityVersion(versionOrder), cancellationToken);
+        return resDtoMapper.Map(lesson);
     }
 
-    public Task DeleteAsync(string id, User user, CancellationToken cancellationToken)
+    public async Task DeleteAsync(string id, User user, CancellationToken cancellationToken)
     {
-        throw new NotImplementedException();
+        await lessonRepository.DeleteAsync(id, user, cancellationToken);
+        await unitOfWork.SaveChangesAsync(cancellationToken);
     }
 
-    public Task<V1LessonResDto> RestoreAsync(string id, User user, CancellationToken cancellationToken)
+    public async Task<V1LessonResDto> RestoreAsync(string id, User user, CancellationToken cancellationToken)
     {
-        throw new NotImplementedException();
+        var lesson = await lessonRepository.GetLastAsync(id, cancellationToken);
+        
+        lesson.Restore(user, DateTimeOffset.UtcNow);
+        lesson.Version = EntityVersion.IncrementVersion(lesson.Version);
+        
+        await lessonRepository.CreateAsync(lesson, cancellationToken);
+        await unitOfWork.SaveChangesAsync(cancellationToken);
+        
+        var updated = await lessonRepository.GetLastAsync(lesson.Id, cancellationToken);
+        return resDtoMapper.Map(updated);
     }
 
-    public Task<V1LessonResDto> RollbackToVersionAsync(string id, int targetVersionOrder, string? reason, CancellationToken cancellationToken)
+    public async Task<V1LessonResDto> RollbackToVersionAsync(string id, int targetVersionOrder, string? reason, CancellationToken cancellationToken)
     {
-        throw new NotImplementedException();
+        await unitOfWork.BeginTransactionAsync(cancellationToken);
+
+        try
+        {
+            var targetModule = await lessonRepository.GetAsync(id, new EntityVersion(targetVersionOrder), cancellationToken);
+            var currentModule = await lessonRepository.GetLastAsync(id, cancellationToken);
+
+            if (targetVersionOrder >= currentModule.Version.Order)
+                throw new DomainException("Cannot rollback to current or future version");
+
+            var rolledBackLesson = targetModule with
+            {
+                Version = new EntityVersion(currentModule.Version.Order + 1, Guid.NewGuid().ToString())
+            };
+
+            rolledBackLesson.MarkAsCreated(currentModule.CreatedBy, DateTimeOffset.UtcNow);
+
+            await lessonRepository.CreateAsync(rolledBackLesson, cancellationToken);
+            await unitOfWork.SaveChangesAsync(cancellationToken);
+            await unitOfWork.CommitTransactionAsync(cancellationToken);
+
+            return resDtoMapper.Map(rolledBackLesson);
+        }
+        catch (Exception)
+        {
+            await unitOfWork.RollbackTransactionAsync(cancellationToken);
+            throw;
+        }
     }
 
     public Task<List<V1LessonVersionInfoResDto>> GetVersionHistoryAsync(string id, int limit, CancellationToken cancellationToken)
@@ -54,13 +124,42 @@ public class LessonService(ILessonRepository lessonRepository, IV1ResDtoMapper r
         throw new NotImplementedException();
     }
 
-    public Task<List<V1LessonResDto>> GetModulesByIdsAsync(List<string> ids, CancellationToken cancellationToken)
+    public async Task<List<V1LessonResDto>> GetLessonsByIdsAsync(List<string> ids, CancellationToken cancellationToken)
     {
-        throw new NotImplementedException();
+        var lessons = await lessonRepository.GetLastAsync(ids, cancellationToken);
+        
+        return lessons.Select(resDtoMapper.Map).ToList();
     }
 
-    public Task<V1LessonResDto> ReorderLessonsAsync(string id, List<string> lessonIds, CancellationToken cancellationToken)
+    public async Task<IReadOnlyCollection<V1LessonResDto>> ReorderLessonsAsync(string id, List<string> lessonIds, CancellationToken cancellationToken)
     {
-        throw new NotImplementedException();
+        await unitOfWork.BeginTransactionAsync(cancellationToken);
+        try
+        {
+            var lessons = await lessonRepository.GetLastAsync(lessonIds, cancellationToken);
+            var lessonsById = lessons.ToDictionary(x => x.Id);
+
+            for (var i = 1; i < lessonIds.Count + 1; i++)
+            {
+                var lessonId = lessonIds[i];
+                if (!lessonsById.TryGetValue(lessonId, out var lesson))
+                {
+                    throw new DomainException("Reorder lesson id not found");
+                }
+
+                lesson.LessonOrder = i;
+                await lessonRepository.CreateAsync(lesson, cancellationToken);
+            }
+            await unitOfWork.SaveChangesAsync(cancellationToken);
+            await unitOfWork.CommitTransactionAsync(cancellationToken);
+            
+            var updatedLessons = await lessonRepository.GetLastAsync(lessonIds, cancellationToken);
+            return updatedLessons.Select(resDtoMapper.Map).ToList();
+        }
+        catch (Exception)
+        {
+            await unitOfWork.RollbackTransactionAsync(cancellationToken);
+            throw;
+        }
     }
 }
