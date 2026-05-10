@@ -1,1 +1,1 @@
-export type TModal = 'registration' | 'authorization' | null;
+export type TModal = 'registration' | 'authorization' | 'changePassword' | 'changeEmail' | null;

@@ -1,63 +1,64 @@
 <section class="course">
   <header class="header">
-    <div class="breadcrumbs"><a class="breadcrumbs__link">Главная</a>/<a class="breadcrumbs__link"></a></div>
-    <h1 class="haeder__title"></h1>
+    <div class="breadcrumbs">
+      <a class="breadcrumbs__link" routerLink="/">{{ breadcrumbs()[0] }}</a> /
+      <span class="breadcrumbs__current">{{ breadcrumbs()[1] }}</span>
+    </div>
+    <h1 class="header__title">{{ courseTitle() }}</h1>
     <section class="bubles">
-      <div class="bubles__main"></div>
-      <span class="bubles__line">|</span>
-      <div class="bubles__language"></div>
-      <div class="bubles__language"></div>
+      <div class="bubles__main">Стек:</div>
+      @for (lang of languages(); track lang) {
+        <div class="bubles__language">{{ lang }}</div>
+      }
     </section>
-    <span class="header__descriptions">Освойте востребованный стек технологий на практике. Проекты, максимально приближённые к реальным задачам индустрии, и экосистема поддержки, которая не даст сойти с дистанции.</span>
-    <button class="header__button">Начать обучение</button>
+    <span class="header__descriptions">{{ headerDescription() }}</span>
+    <button class="header__button" routerLink="/register">Начать обучение</button>
   </header>
 
   <section class="advantages">
     <section class="top">
-      <div class="card">
-        <img class="card__img" src="assets/advantages.png">
-        <section class="content">
-          <h3 class="content__title">500+ довольных студентов</h3>
-          <p class="content__description">уже закончили курс</p>
-        </section>
-      </div>
-      <div class="card">
-        <img class="card__img" src="content/assets/advantages.png">
-        <section class="content">
-          <h3 class="content__title">Учись самостоятельно</h3>
-          <p class="content__description">в свободное время</p>
-        </section>
-      </div>
-      <div class="card">
-        <img class="card__img" src="content/assets/advantages.png">
-        <section class="content">
-          <h3 class="content__title">Выбирай сам задания</h3>
-          <p class="content__description">по уровню сожности</p>
-        </section>
-      </div>
+      @for (card of advantagesTop(); track card.title) {
+        <div class="card">
+          <img class="card__img" [src]="card.img" alt="advantage">
+          <section class="content">
+            <h3 class="content__title">{{ card.title }}</h3>
+            <p class="content__description">{{ card.desc }}</p>
+          </section>
+        </div>
+      }
     </section>
     <section class="bottom">
-      <div class="card">
-        <img class="card__img" src="assets/advantages.png">
-        <section class="content">
-          <h3 class="content__title">Подходит для тех у кого уже есть опыт,</h3>
-          <p class="content__description">а также для новичков</p>
-        </section>
-      </div>
-      <div class="card">
-        <img class="card__img" src="assets/advantages.png">
-        <section class="content">
-          <h3 class="content__title">Ответим на все ваши вопросы</h3>
-          <p class="content__description">быстро и качественно</p>
-        </section>
-      </div>
+      @for (card of advantagesBottom(); track card.title) {
+        <div class="card">
+          <img class="card__img" [src]="card.img" alt="advantage">
+          <section class="content">
+            <h3 class="content__title">{{ card.title }}</h3>
+            <p class="content__description">{{ card.desc }}</p>
+          </section>
+        </div>
+      }
     </section>
   </section>
 
+  <!-- ПРОГРАММА ОБУЧЕНИЯ: используем категории с полями type/value -->
   <section class="content">
     <h2>Программа обучения</h2>
-    @for(content of contents; track content.title){
-      <app-topic [topicInformation]="content"></app-topic>
+    @if (loading()) {
+      <div class="loading-spinner">Загрузка...</div>
+    } @else if (error()) {
+      <div class="error-message">{{ error() }}</div>
+    } @else {
+      <div class="categories-list">
+        @for (cat of categories(); track cat.type) {
+          <div class="category-item">
+            <!-- Используем type как заголовок, value как описание (или наоборот) -->
+            <h3>{{ cat.type }}</h3>
+            <p>{{ cat.value }}</p>
+            <!-- Если нужна ссылка на страницу категории, можно построить маршрут -->
+            <button [routerLink]="['/category', cat.type]">Подробнее</button>
+          </div>
+        }
+      </div>
     }
   </section>
 
@@ -65,13 +66,12 @@
     <section class="left">
       <h2>Как проходит обучение?</h2>
       <p>Выбирайте сложность задания самостоятельно, фокусируясь на устранении пробелов и закреплении навыков на практике</p>
-      <button class="left__button">Начать обучение</button>
+      <button class="left__button" routerLink="/register">Начать обучение</button>
     </section>
     <section class="description">
-      @for(description of descriptions; track description.title){
-        <!--<img src="">-->
-        <h3>{{description.title}}</h3>
-        <p>{{description.description}}</p>
+      @for (desc of descriptions(); track desc.title) {
+        <h3>{{ desc.title }}</h3>
+        <p>{{ desc.description }}</p>
       }
     </section>
   </section>

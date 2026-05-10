@@ -1,24 +1,24 @@
-import { Component } from '@angular/core';
-import {CourseService} from '../../entities/course.service';
-import {IUserData} from '../../interfaces/user.interface';
-import {UserService} from '../../entities/user.service';
-import {Observable} from 'rxjs';
-import {AsyncPipe} from '@angular/common';
-import {Breadcrumbs} from '../../widgets/breadcrumbs/breadcrumbs';
-
+import { Component, inject } from '@angular/core';
+import { Observable } from 'rxjs';
+import {AsyncPipe, DatePipe} from '@angular/common';
+import { UserService } from '../../entities/user.service';
+import { CourseService } from '../../entities/course.service';
+import { ModalService } from '../../entities/modal.service';
+import { IUserData } from '../../interfaces/user.interface';
+import { ICourse } from '../../interfaces/courses.interface';
+import { Breadcrumbs } from '../../widgets/breadcrumbs/breadcrumbs';
 
 @Component({
   selector: 'app-profile',
-  imports: [AsyncPipe, Breadcrumbs],
+  imports: [AsyncPipe, Breadcrumbs, DatePipe],
   templateUrl: './profile.html',
-  styleUrl: './profile.scss',
-  providers: [CourseService]
+  styleUrls: ['./profile.scss']
 })
-
 export class Profile {
-  public userData$?: Observable<IUserData | null>;
+  private readonly _userService = inject(UserService);
+  private readonly _courseService = inject(CourseService);
+  public readonly modalService = inject(ModalService);
 
-  constructor(private _userService: UserService) {
-      this.userData$ = _userService.userData$
-  }
+  public readonly userData$: Observable<IUserData | null> = this._userService.userData$;
+  public readonly courses$: Observable<ICourse[]> = this._courseService.getMyCourses();
 }

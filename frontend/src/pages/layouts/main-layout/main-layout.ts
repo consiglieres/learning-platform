@@ -5,10 +5,12 @@ import { RouterOutlet } from '@angular/router';
 import {RegistrationModal} from '../../../widgets/registration-modal/registration-modal';
 import {AuthorizationModal} from '../../../widgets/authorization-modal/authorization-modal';
 import {ModalService} from '../../../entities/modal.service';
+import {ChangePasswordModal} from '../../../widgets/change-password-modal/change-password-modal';
+import {ChangeEmailModal} from '../../../widgets/change-email-modal/change-email-modal';
 
 @Component({
   selector: 'app-main-layout',
-  imports: [HeaderComponent, FooterComponent, RouterOutlet, RegistrationModal, AuthorizationModal],
+  imports: [HeaderComponent, FooterComponent, RouterOutlet, RegistrationModal, AuthorizationModal, ChangePasswordModal, ChangeEmailModal],
   templateUrl: './main-layout.html',
   styleUrl: './main-layout.scss',
 })

@@ -1,20 +1,21 @@
 export interface IRegistrationModel {
-  login: string,
-  email: string,
-  password: string,
-  confirmPassword: string,
-  confirmPolice: boolean
+  login: string;
+  email: string;
+  password: string;
+  confirmPassword: string;
+  confirmPolice: boolean;
 }
+
 export interface IRegistration {
-  login: string,
-  email: string,
-  password: string,
-  confirmPassword: string,
+  email: string;
+  password: string;
+  confirmPassword: string;
 }
 
 export interface IAuthorization {
   email: string;
   password: string;
+  rememberMe?: boolean;
 }
 
 export interface IUserData {
@@ -25,4 +26,15 @@ export interface IUserData {
   img: string;
   dateConnection: string;
   courseComplete: string;
+  login?: string;
+}
+
+export interface IChangePassword {
+  currentPassword: string;
+  newPassword: string;
+  confirmNewPassword: string;
+}
+
+export interface IChangeEmail {
+  newEmail: string;
 }

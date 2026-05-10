@@ -1,10 +1,11 @@
 import { Routes } from '@angular/router';
 import { MainLayout } from '../pages/layouts/main-layout/main-layout';
-import { MainPage } from '../pages/main.page/main.page';
+import { MainPage } from '../pages/main/main.page';
 import {CourseView} from '../pages/layouts/course-view/course-view';
 import {Course} from '../pages/course/course';
 import {Theme} from '../pages/theme/theme';
 import {Profile} from '../pages/profile/profile';
+import {authorizationGuard} from '../shared/guards/authorization.guard';
 
 export const routes: Routes = [
   {
@@ -27,7 +28,8 @@ export const routes: Routes = [
       },
       {
         path: 'profile',
-        component: Profile
+        component: Profile,
+        canActivate: [authorizationGuard]
       }
     ],
   },

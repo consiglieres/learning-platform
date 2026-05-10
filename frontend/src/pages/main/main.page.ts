@@ -3,7 +3,7 @@ import { CourseService } from '../../entities/course.service';
 import { CourseCard } from '../../features/course-card/course-card';
 
 @Component({
-  selector: 'app-main.page',
+  selector: 'app-main',
   imports: [CourseCard],
   templateUrl: './main.page.html',
   styleUrl: './main.page.scss',

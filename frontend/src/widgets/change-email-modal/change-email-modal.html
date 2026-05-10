@@ -1,0 +1,17 @@
+<section class="modal">
+  <button class="close-button" (click)="cancel()">×</button>
+  <h3 class="modal-title">Сменить email</h3>
+
+  <div class="field">
+    <p class="field__label">Новый email</p>
+    <input type="email" [formField]="emailForm.newEmail" class="field__input">
+  </div>
+  <div class="field">
+    <p class="field__label">Подтвердите email</p>
+    <input type="email" [formField]="emailForm.confirmEmail" class="field__input">
+  </div>
+
+  <span class="notification" [style.color]="colorNotification()">{{ notification() }}</span>
+
+  <button class="submit-button" (click)="submit()">Сменить email</button>
+</section>
