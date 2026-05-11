@@ -22,7 +22,7 @@ public class V1PageController(
         CancellationToken cancellationToken = default)
     {
         var result = versionOrder.HasValue
-            ? await pageService.GetByVersionAsync(id, versionOrder.Value, cancellationToken)
+            ? await pageService.GetByIdAsync(id, versionOrder.Value, cancellationToken)
             : await pageService.GetLatestAsync(id, cancellationToken);
 
         return Ok(result);

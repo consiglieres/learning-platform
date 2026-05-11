@@ -1,6 +1,5 @@
 using LearningPlatformApi.Domain.Entities.Page;
 using LearningPlatformApi.Domain.Entities.Tasks;
-using LearningPlatformApi.Domain.ValueObjects;
 using LearningPlatformApi.Domain.ValueObjects.Task;
 using LearningPlatformApi.Persistence.Entities;
 using LearningPlatformApi.Persistence.Entities.Page;
@@ -21,7 +20,6 @@ internal partial class TestTaskMapper(
             entity.CorrectAnswer, userMapper.MapToDomain(entity.CreatedByUser))
         {
             Id = entity.Id,
-            Version = new EntityVersion(entity.VersionOrder, entity.Tag),
             CreatedAt = entity.CreatedAt,
             CreatedBy = userMapper.MapToDomain(entity.CreatedByUser),
             UpdatedAt = entity.UpdatedAt,
@@ -45,8 +43,6 @@ internal partial class TestTaskMapper(
             LessonId = entity.LessonId,
             PageId = entity.PageContent.Id,
             Page = pageMapper.Map(entity.PageContent),
-            VersionOrder = entity.Version.Order,
-            Tag = entity.Version.Tag,
             CreatedAt = entity.CreatedAt,
             CreatedBy = entity.CreatedBy.Id,
             CreatedByUser = userMapper.MapToEntity(entity.CreatedBy),

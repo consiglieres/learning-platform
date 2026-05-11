@@ -21,7 +21,7 @@ public class V1ModulesController(
         CancellationToken cancellationToken = default)
     {
         var result = versionOrder.HasValue
-            ? await moduleService.GetByVersionAsync(id, versionOrder.Value, cancellationToken)
+            ? await moduleService.GetByIdAsync(id, versionOrder.Value, cancellationToken)
             : await moduleService.GetLatestAsync(id, cancellationToken);
 
         return Ok(result);

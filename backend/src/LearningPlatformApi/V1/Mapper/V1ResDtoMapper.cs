@@ -73,7 +73,6 @@ internal partial class V1ResDtoMapper : IV1ResDtoMapper
 
     public partial V1PageContentBlock Map(PageContentBlock page);
 
-    public partial VersionDto Map(EntityVersion version);
 
     private string MapLists(Lesson lessons)
     {

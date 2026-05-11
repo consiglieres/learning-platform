@@ -34,6 +34,24 @@ public class LessonRepository(
 
         return lessonMapper.Map(entities);
     }
+
+    public async Task<IReadOnlyCollection<Lesson>> GetByIdsAsync(IReadOnlyCollection<string> ids, CancellationToken cancellationToken = default)
+    {
+        var entities = await context.Set<LessonEntity>()
+            .Include(x => x.CreatedByUser)
+            .Include(x => x.UpdatedByUser)
+            .Include(x => x.DeletedByUser)
+            .Include(x => x.PageEntity)
+            .ThenInclude(x => x.ContentBlocks)
+            .Include(x => x.Module)
+            .Include(x => x.Tasks)
+            .Where(x => ids.Contains(x.Id))
+            .ToListAsync(cancellationToken);
+
+        if (entities == null) throw new DomainException("Entity not found");
+
+        return entities.Select(lessonMapper.Map).ToList();
+    }
     
     public override async Task CreateAsync(Lesson entity, CancellationToken cancellationToken = default)
     {

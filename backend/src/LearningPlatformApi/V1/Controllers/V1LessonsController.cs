@@ -20,7 +20,7 @@ public class V1LessonsController(
         CancellationToken cancellationToken = default)
     {
         var result = versionOrder.HasValue
-            ? await lessonService.GetByVersionAsync(id, versionOrder.Value, cancellationToken)
+            ? await lessonService.GetByIdAsync(id, versionOrder.Value, cancellationToken)
             : await lessonService.GetLatestAsync(id, cancellationToken);
 
         return Ok(result);

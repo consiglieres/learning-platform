@@ -33,6 +33,24 @@ public class ModulesRepository(
 
         return moduleMapper.Map(entities);
     }
+
+    public async Task<IReadOnlyCollection<Module>> GetByIdsAsync(IReadOnlyCollection<string> ids,
+        CancellationToken cancellationToken = default)
+    {
+        var entities = await context.Set<ModuleEntity>()
+            .Include(x => x.CreatedByUser)
+            .Include(x => x.UpdatedByUser)
+            .Include(x => x.DeletedByUser)
+            .Include(x => x.Page)
+            .ThenInclude(x => x.ContentBlocks)
+            .Include(x => x.Lessons)
+            .Where(x => ids.Contains(x.Id))
+            .ToListAsync(cancellationToken);
+
+        if (entities == null) throw new DomainException("Entity not found");
+
+        return entities.Select(moduleMapper.Map).ToList();
+    }
     
     public override async Task CreateAsync(Module entity, CancellationToken cancellationToken = default)
     {

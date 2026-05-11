@@ -105,7 +105,7 @@ public class V1CoursesController(
     [HttpGet("{courseId}/version/{version}")]
     public async Task<IActionResult> GetCourseVersionAsync(string courseId, int version)
     {
-        var result = await courseService.GetCourseVersionAsync(courseId, version);
+        var result = await courseService.GetCourseAsync(courseId, version);
 
         return result.Match<IActionResult>(
             notExists => NotFound(new ProblemDetails

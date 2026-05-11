@@ -1,7 +1,6 @@
 using LearningPlatformApi.Domain.Entities.Courses;
 using LearningPlatformApi.Domain.Entities.Page;
 using LearningPlatformApi.Domain.Entities.Tasks;
-using LearningPlatformApi.Domain.ValueObjects;
 using LearningPlatformApi.Persistence.Entities;
 using LearningPlatformApi.Persistence.Entities.Base;
 using LearningPlatformApi.Persistence.Entities.Page;
@@ -31,7 +30,6 @@ internal partial class LessonMapper(
                 throw new ArgumentOutOfRangeException();
             }).ToList(),
             Id = entity.Id,
-            Version = new EntityVersion(entity.VersionOrder, entity.Tag),
             CreatedAt = entity.CreatedAt,
             CreatedBy = userMapper.MapToDomain(entity.CreatedByUser),
             UpdatedAt = entity.UpdatedAt,
@@ -59,8 +57,6 @@ internal partial class LessonMapper(
 
                 throw new ArgumentOutOfRangeException();
             }).ToList(),
-            VersionOrder = entity.Version.Order,
-            Tag = entity.Version.Tag,
             CreatedAt = entity.CreatedAt,
             CreatedBy = entity.CreatedBy.Id,
             UpdatedAt = entity.UpdatedAt,

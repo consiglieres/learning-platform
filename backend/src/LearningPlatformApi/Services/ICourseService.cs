@@ -16,20 +16,13 @@ namespace LearningPlatformApi.Services;
 
 public interface ICourseService
 {
-    Task<OneOf<OperationNotSucceeded<Error>, Success<Course>>> CreateCourseDraftAsync(
-        CreateCourseDraftRequest request,
-        CancellationToken cancellationToken = default);
-
-    Task<OneOf<EntityNotExists, Success<Course>>> GetCourseLastAsync(
-        string courseId,
+    Task<OneOf<OperationNotSucceeded<Error>, Success<Course>>> CreateCourseDraftAsync(CreateCourseDraftRequest request,
         CancellationToken cancellationToken = default);
 
     Task<OneOf<EntityNotExists, Success<IReadOnlyCollection<TypedCategory>>>> GetCourseCategoriesAsync(
         CancellationToken cancellationToken = default);
 
-    Task<OneOf<EntityNotExists, Success<Course>>> GetCourseVersionAsync(
-        string courseId,
-        int version,
+    Task<OneOf<EntityNotExists, Success<Course>>> GetCourseAsync(string courseId, 
         CancellationToken cancellationToken = default);
 
     Task<OneOf<NotFound, OperationNotSucceeded<Error>, Success<Course>>> UpdateCourseInfoAsync(

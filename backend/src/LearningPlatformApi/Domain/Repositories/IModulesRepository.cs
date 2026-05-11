@@ -5,4 +5,6 @@ namespace LearningPlatformApi.Domain.Repositories;
 
 public interface IModulesRepository : IAuditableRepository<Module, string>
 {
+    Task<IReadOnlyCollection<Module>> GetByIdsAsync(IReadOnlyCollection<string> ids,
+        CancellationToken cancellationToken = default);
 }
