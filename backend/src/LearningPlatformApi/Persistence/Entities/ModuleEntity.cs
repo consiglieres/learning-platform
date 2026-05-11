@@ -14,6 +14,6 @@ public class ModuleEntity(string id) : AuditableDbEntity<string>(id)
     public string PageId { get; set; }
 
     public string CourseId { get; set; }
-    
+
     public IReadOnlyCollection<LessonEntity> Lessons { get; set; }
 }

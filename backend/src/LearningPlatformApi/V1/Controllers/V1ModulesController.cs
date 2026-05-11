@@ -61,7 +61,7 @@ public class V1ModulesController(
         var result = await moduleService.UpdateAsync(id, user, request, cancellationToken);
         return Ok(result);
     }
-    
+
     [HttpDelete("{id}")]
     public async Task<IActionResult> DeleteModule(string id, CancellationToken cancellationToken = default)
     {

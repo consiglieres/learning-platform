@@ -10,10 +10,8 @@ using Microsoft.EntityFrameworkCore;
 
 namespace LearningPlatformApi.Persistence.Repositories;
 
-public class ModulesRepository(
-    ApplicationContext context,
-    IDbEntityMapper<Module, string, ModuleEntity, string> moduleMapper,
-    ILogger<ModulesRepository> logger)
+public class ModulesRepository(ApplicationContext context,
+    IDbEntityMapper<Module, string, ModuleEntity, string> moduleMapper, ILogger<ModulesRepository> logger)
     : AuditableRepository<Module, string, ModuleEntity, string>(context, moduleMapper, logger),
         IModulesRepository
 
@@ -51,7 +49,7 @@ public class ModulesRepository(
 
         return entities.Select(moduleMapper.Map).ToList();
     }
-    
+
     public override async Task CreateAsync(Module entity, CancellationToken cancellationToken = default)
     {
         var moduleEntity = moduleMapper.Map(entity);

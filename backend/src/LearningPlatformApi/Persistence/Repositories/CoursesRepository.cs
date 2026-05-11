@@ -27,9 +27,9 @@ public class CoursesRepository(
             .Include(x => x.Categories)
             .Include(x => x.Modules)
             .FirstOrDefaultAsync(cancellationToken);
-        
-        if(entity == null) throw new DomainException("Entity not found");
-        
+
+        if (entity == null) throw new DomainException("Entity not found");
+
         var page = await context.Set<PageEntity>()
             .Include(x => x.CreatedByUser)
             .Include(x => x.UpdatedByUser)

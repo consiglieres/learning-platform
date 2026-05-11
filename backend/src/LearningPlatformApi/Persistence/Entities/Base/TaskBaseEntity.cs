@@ -15,7 +15,7 @@ public abstract class TaskBaseEntity(string id) : AuditableDbEntity<string>(id)
     public int DifficultyPoints { get; set; }
 
     public string LessonId { get; set; }
-    
+
     public LessonEntity Lesson { get; set; }
 
     public string PageId { get; set; }

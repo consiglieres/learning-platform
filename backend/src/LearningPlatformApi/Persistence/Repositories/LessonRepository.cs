@@ -10,11 +10,9 @@ using Microsoft.EntityFrameworkCore;
 
 namespace LearningPlatformApi.Persistence.Repositories;
 
-public class LessonRepository(
-    ApplicationContext context,
-    IDbEntityMapper<Lesson, string, LessonEntity, string> lessonMapper,
-    ILogger<LessonRepository> logger) :
-    AuditableRepository<Lesson, string, LessonEntity, string>(context, lessonMapper, logger),
+public class LessonRepository(ApplicationContext context,
+    IDbEntityMapper<Lesson, string, LessonEntity, string> lessonMapper, ILogger<LessonRepository> logger)
+    : AuditableRepository<Lesson, string, LessonEntity, string>(context, lessonMapper, logger),
     ILessonRepository
 {
     public override async Task<Lesson> GetByIdAsync(string id, CancellationToken cancellationToken = default)
@@ -52,7 +50,7 @@ public class LessonRepository(
 
         return entities.Select(lessonMapper.Map).ToList();
     }
-    
+
     public override async Task CreateAsync(Lesson entity, CancellationToken cancellationToken = default)
     {
         var lessonEntity = lessonMapper.Map(entity);
@@ -63,7 +61,7 @@ public class LessonRepository(
         {
             lessonEntity.PageEntity = page;
         }
-        
+
         await context.Set<LessonEntity>().AddAsync(lessonEntity, cancellationToken);
     }
 }

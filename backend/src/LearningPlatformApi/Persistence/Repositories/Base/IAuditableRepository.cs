@@ -8,9 +8,9 @@ public interface IAuditableRepository<TDomainEntity, TId>
     where TId : IEquatable<TId>
 {
     Task<TDomainEntity?> FindByIdAsync(TId id, CancellationToken cancellationToken = default);
-    
+
     Task<TDomainEntity> GetByIdAsync(TId id, CancellationToken cancellationToken = default);
-    
+
     Task CreateAsync(TDomainEntity entity, CancellationToken cancellationToken = default);
 
     Task DeleteAsync(TDomainEntity entity, User user, CancellationToken cancellationToken = default);

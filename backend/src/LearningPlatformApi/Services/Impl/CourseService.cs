@@ -45,7 +45,7 @@ public class CourseService(
 
         return new Success<IReadOnlyCollection<TypedCategory>>(categories);
     }
-    
+
     public async Task<OneOf<EntityNotExists, Success<Course>>> GetCourseAsync(string courseId, CancellationToken cancellationToken = default)
     {
         var draft = await courseRepository.GetByIdAsync(courseId, cancellationToken);

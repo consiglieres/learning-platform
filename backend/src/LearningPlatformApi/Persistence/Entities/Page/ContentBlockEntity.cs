@@ -6,7 +6,7 @@ namespace LearningPlatformApi.Persistence.Entities.Page;
 public class ContentBlockEntity(string id) : AuditableDbEntity<string>(id)
 {
     public string PageId { get; set; }
-    
+
     public int Order { get; set; }
 
     public string Data { get; set; }

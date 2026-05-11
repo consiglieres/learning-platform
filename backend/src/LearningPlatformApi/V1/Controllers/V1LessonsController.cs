@@ -14,14 +14,14 @@ public class V1LessonsController(
     IUserProfileService profileService) : ControllerBase
 {
     [HttpGet("{id}", Name = "GetLessonAsync")]
-    public async Task<ActionResult<V1LessonResDto>> GetLessonAsync(string id, 
+    public async Task<ActionResult<V1LessonResDto>> GetLessonAsync(string id,
         CancellationToken cancellationToken = default)
     {
         var result = await lessonService.GetByIdAsync(id, cancellationToken);
 
         return Ok(result);
     }
-    
+
     [HttpPost]
     public async Task<ActionResult<V1LessonResDto>> CreateLessonAsync([FromBody] V1CreateLessonReqDto request,
         CancellationToken cancellationToken = default)

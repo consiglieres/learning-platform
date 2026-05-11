@@ -17,7 +17,7 @@ public record Module : AuditableEntity<string>
         Page = Entities.Page.Page.EmptyPage(PageType.Introduction, creator);
         MarkAsCreated(creator, DateTimeOffset.UtcNow);
     }
-    
+
     public Module(string id, string name, int moduleOrder, string courseId, User creator,
         IReadOnlyCollection<Lesson> lessons)
         : base(id)

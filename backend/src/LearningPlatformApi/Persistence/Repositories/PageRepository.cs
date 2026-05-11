@@ -9,8 +9,7 @@ using Microsoft.EntityFrameworkCore;
 
 namespace LearningPlatformApi.Persistence.Repositories;
 
-public sealed class PageRepository(
-    ApplicationContext context,
+public sealed class PageRepository(ApplicationContext context,
     IDbEntityMapper<Page, string, PageEntity, string> courseMapper,
     IDbEntityMapper<PageContentBlock, string, ContentBlockEntity, string> contentBlockMapper,
     ILogger<PageRepository> logger)

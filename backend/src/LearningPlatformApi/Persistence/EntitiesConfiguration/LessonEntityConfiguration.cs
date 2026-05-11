@@ -14,7 +14,7 @@ public class LessonEntityConfiguration : AuditableDbEntityConfiguration<LessonEn
         modelBuilder.HasIndex(x => new { x.ModuleId, x.LessonOrder })
             .IsUnique()
             .HasDatabaseName("IX_ModuleId_LessonOrder");
-        
+
         modelBuilder.HasMany(x => x.Tasks)
             .WithOne(x => x.Lesson)
             .HasForeignKey(e => new { e.LessonId })

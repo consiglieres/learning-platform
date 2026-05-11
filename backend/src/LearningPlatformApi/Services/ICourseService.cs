@@ -22,7 +22,7 @@ public interface ICourseService
     Task<OneOf<EntityNotExists, Success<IReadOnlyCollection<TypedCategory>>>> GetCourseCategoriesAsync(
         CancellationToken cancellationToken = default);
 
-    Task<OneOf<EntityNotExists, Success<Course>>> GetCourseAsync(string courseId, 
+    Task<OneOf<EntityNotExists, Success<Course>>> GetCourseAsync(string courseId,
         CancellationToken cancellationToken = default);
 
     Task<OneOf<NotFound, OperationNotSucceeded<Error>, Success<Course>>> UpdateCourseInfoAsync(

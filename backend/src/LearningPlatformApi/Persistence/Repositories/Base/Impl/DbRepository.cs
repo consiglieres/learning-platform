@@ -36,7 +36,7 @@ public abstract class DbRepository<TDomainEntity, TDomainId, TDbEntity, TDbId>
     public virtual async Task<TDomainEntity> GetByIdAsync(TDomainId id, CancellationToken cancellationToken = default)
     {
         var founded = await FindByIdAsync(id, cancellationToken);
-        if(founded == null)
+        if (founded == null)
             throw new DomainException($"Entity with id {id} not found");
 
         return founded;

@@ -64,7 +64,7 @@ public class V1PageController(IPageService pageService, IUserMapper userMapper, 
         var result = await pageService.UpdateAsync(id, user, request, cancellationToken);
         return Ok(result);
     }
-    
+
     // DELETE: api/v1/pages/{id}
     [HttpDelete("{id}")]
     public async Task<IActionResult> DeletePage(string id, CancellationToken cancellationToken = default)

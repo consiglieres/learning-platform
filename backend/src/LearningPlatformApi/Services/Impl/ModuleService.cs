@@ -11,9 +11,7 @@ using LearningPlatformApi.V1.Models.Module.Res;
 
 namespace LearningPlatformApi.Services.Impl;
 
-public class ModuleService(IModulesRepository moduleRepository, IV1ResDtoMapper resDtoMapper,
-    IUnitOfWork unitOfWork, IDbEntityMapper<Module, string, ModuleEntity, string> moduleMapper,
-    IDbEntityMapper<Lesson, string, LessonEntity, string> lessonMapper) : IModuleService
+public class ModuleService(IModulesRepository moduleRepository, IV1ResDtoMapper resDtoMapper, IUnitOfWork unitOfWork) : IModuleService
 {
     public async Task<V1ModuleResDto> CreateAsync(CreateModuleRequest request, User user, CancellationToken cancellationToken)
     {

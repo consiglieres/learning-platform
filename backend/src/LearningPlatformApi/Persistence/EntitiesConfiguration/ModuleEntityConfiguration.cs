@@ -13,7 +13,7 @@ public class ModuleEntityConfiguration : AuditableDbEntityConfiguration<ModuleEn
         base.OverrideConfigure(modelBuilder);
         modelBuilder.HasOne<CourseEntity>()
             .WithMany(x => x.Modules)
-            .HasForeignKey(e => new { e.CourseId})
+            .HasForeignKey(e => new { e.CourseId })
             .HasPrincipalKey(e => new { e.Id });
 
         modelBuilder.HasOne(x => x.Page)
