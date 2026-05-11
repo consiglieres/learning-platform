@@ -13,38 +13,15 @@ public class V1LessonsController(
     ILessonService lessonService,
     IUserProfileService profileService) : ControllerBase
 {
-    [HttpGet("{id}")]
-    public async Task<ActionResult<V1LessonResDto>> GetLessonAsync(
-        string id,
-        [FromQuery] int? versionOrder = null,
+    [HttpGet("{id}", Name = "GetLessonAsync")]
+    public async Task<ActionResult<V1LessonResDto>> GetLessonAsync(string id, 
         CancellationToken cancellationToken = default)
     {
-        var result = versionOrder.HasValue
-            ? await lessonService.GetByIdAsync(id, versionOrder.Value, cancellationToken)
-            : await lessonService.GetLatestAsync(id, cancellationToken);
+        var result = await lessonService.GetByIdAsync(id, cancellationToken);
 
         return Ok(result);
     }
-
-    [HttpGet("{id}/latest", Name = "GetLatestLesson")]
-    public async Task<ActionResult<V1LessonResDto>> GetLatestLessonAsync(
-        string id,
-        CancellationToken cancellationToken = default)
-    {
-        var result = await lessonService.GetLatestAsync(id, cancellationToken);
-        return Ok(result);
-    }
-
-    [HttpGet("{id}/history")]
-    public async Task<ActionResult<List<V1LessonVersionInfoResDto>>> GetLessonHistoryAsync(
-        string id,
-        [FromQuery] int limit = 10,
-        CancellationToken cancellationToken = default)
-    {
-        var result = await lessonService.GetVersionHistoryAsync(id, limit, cancellationToken);
-        return Ok(result);
-    }
-
+    
     [HttpPost]
     public async Task<ActionResult<V1LessonResDto>> CreateLessonAsync([FromBody] V1CreateLessonReqDto request,
         CancellationToken cancellationToken = default)
@@ -62,13 +39,11 @@ public class V1LessonsController(
         var user = userMapper.MapToDomain(dbUser);
 
         var result = await lessonService.CreateAsync(request, user, cancellationToken);
-        return CreatedAtRoute("GetLatestLesson", new { id = result.Id }, result);
+        return CreatedAtRoute("GetLessonAsync", new { id = result.Id }, result);
     }
 
     [HttpPut("{id}")]
-    public async Task<ActionResult<V1LessonResDto>> UpdateLessonAsync(
-        string id,
-        [FromBody] V1UpdateLessonReqDto request,
+    public async Task<ActionResult<V1LessonResDto>> UpdateLessonAsync(string id, [FromBody] V1UpdateLessonReqDto request,
         CancellationToken cancellationToken = default)
     {
         if (!ModelState.IsValid)
@@ -84,20 +59,6 @@ public class V1LessonsController(
         var user = userMapper.MapToDomain(dbUser);
 
         var result = await lessonService.UpdateAsync(id, user, request, cancellationToken);
-        return Ok(result);
-    }
-
-    [HttpPost("{id}/rollback")]
-    public async Task<ActionResult<V1LessonResDto>> RollbackLessonAsync(
-        string id,
-        [FromBody] RollbackModuleRequest request,
-        CancellationToken cancellationToken = default)
-    {
-        var result = await lessonService.RollbackToVersionAsync(
-            id,
-            request.TargetVersionOrder,
-            request.Reason,
-            cancellationToken);
         return Ok(result);
     }
 

@@ -15,45 +15,10 @@ public class V1ModulesController(
     IUserProfileService profileService) : ControllerBase
 {
     [HttpGet("{id}")]
-    public async Task<ActionResult<V1ModuleResDto>> GetModule(
-        string id,
-        [FromQuery] int? versionOrder = null,
-        CancellationToken cancellationToken = default)
+    public async Task<ActionResult<V1ModuleResDto>> GetModule(string id, CancellationToken cancellationToken = default)
     {
-        var result = versionOrder.HasValue
-            ? await moduleService.GetByIdAsync(id, versionOrder.Value, cancellationToken)
-            : await moduleService.GetLatestAsync(id, cancellationToken);
+        var result = await moduleService.GetByIdAsync(id, cancellationToken);
 
-        return Ok(result);
-    }
-
-    [HttpGet("{id}/latest")]
-    public async Task<ActionResult<V1ModuleResDto>> GetLatestModule(
-        string id,
-        CancellationToken cancellationToken = default)
-    {
-        var result = await moduleService.GetLatestAsync(id, cancellationToken);
-        return Ok(result);
-    }
-
-    [HttpGet("{id}/history")]
-    public async Task<ActionResult<List<ModuleVersionInfoDto>>> GetModuleHistory(
-        string id,
-        [FromQuery] int limit = 10,
-        CancellationToken cancellationToken = default)
-    {
-        var result = await moduleService.GetVersionHistoryAsync(id, limit, cancellationToken);
-        return Ok(result);
-    }
-
-    [HttpGet("{id}/compare")]
-    public async Task<ActionResult<ModuleComparisonResDto>> CompareVersions(
-        string id,
-        [FromQuery] int sourceVersion,
-        [FromQuery] int targetVersion,
-        CancellationToken cancellationToken = default)
-    {
-        var result = await moduleService.CompareVersionsAsync(id, sourceVersion, targetVersion, cancellationToken);
         return Ok(result);
     }
 
@@ -78,9 +43,7 @@ public class V1ModulesController(
     }
 
     [HttpPut("{id}")]
-    public async Task<ActionResult<V1ModuleResDto>> UpdateModule(
-        string id,
-        [FromBody] UpdateModuleRequest request,
+    public async Task<ActionResult<V1ModuleResDto>> UpdateModule(string id, [FromBody] UpdateModuleRequest request,
         CancellationToken cancellationToken = default)
     {
         if (!ModelState.IsValid)
@@ -98,43 +61,7 @@ public class V1ModulesController(
         var result = await moduleService.UpdateAsync(id, user, request, cancellationToken);
         return Ok(result);
     }
-
-    [HttpPost("{id}/rollback")]
-    public async Task<ActionResult<V1ModuleResDto>> RollbackModule(
-        string id,
-        [FromBody] RollbackModuleRequest request,
-        CancellationToken cancellationToken = default)
-    {
-        var result = await moduleService.RollbackToVersionAsync(
-            id,
-            request.TargetVersionOrder,
-            request.Reason,
-            cancellationToken);
-        return Ok(result);
-    }
-
-    // this endpoint openapi says have some kind of shit
-    /*[HttpPost("/copy/{id}")]
-    public async Task<ActionResult<V1ModuleResDto>> CopyModule(
-        [FromBody] CopyModuleRequest request,
-        CancellationToken cancellationToken = default)
-    {
-        if (!ModelState.IsValid)
-            return BadRequest(ModelState);
-
-        var dbUser = await profileService.GetCurrentUserAsync(User);
-        if (dbUser == null)
-            return NotFound(new ProblemDetails
-            {
-                Title = "User Not Found",
-                Status = StatusCodes.Status404NotFound
-            });
-        var user = userMapper.MapToDomain(dbUser);
-
-        var result = await moduleService.CopyModuleAsync(request, user, cancellationToken);
-        return Ok(result);
-    }*/
-
+    
     [HttpDelete("{id}")]
     public async Task<IActionResult> DeleteModule(string id, CancellationToken cancellationToken = default)
     {

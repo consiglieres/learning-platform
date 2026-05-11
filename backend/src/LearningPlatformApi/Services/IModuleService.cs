@@ -15,6 +15,8 @@ public interface IModuleService
 
     Task DeleteAsync(string id, User user, CancellationToken cancellationToken);
     
+    Task<V1ModuleResDto> RestoreAsync(string id, User user, CancellationToken cancellationToken);
+    
     Task<IReadOnlyCollection<V1ModuleResDto>> GetModulesByIdsAsync(IReadOnlyCollection<string> ids, 
         CancellationToken cancellationToken);
 

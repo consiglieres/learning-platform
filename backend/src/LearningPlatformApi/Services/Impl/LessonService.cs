@@ -56,7 +56,7 @@ public class LessonService(ILessonRepository lessonRepository, IV1ResDtoMapper r
         }
     }
     
-    public async Task<V1LessonResDto> GetByIdAsync(string id, int versionOrder, CancellationToken cancellationToken)
+    public async Task<V1LessonResDto> GetByIdAsync(string id, CancellationToken cancellationToken)
     {
         var lesson = await lessonRepository.GetByIdAsync(id, cancellationToken);
         return resDtoMapper.Map(lesson);

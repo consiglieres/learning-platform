@@ -10,7 +10,7 @@ public interface ILessonService
 
     Task<V1LessonResDto> UpdateAsync(string id, User user, V1UpdateLessonReqDto request, CancellationToken cancellationToken);
     
-    Task<V1LessonResDto> GetByIdAsync(string id, int versionOrder, CancellationToken cancellationToken);
+    Task<V1LessonResDto> GetByIdAsync(string id, CancellationToken cancellationToken);
 
     Task DeleteAsync(string id, User user, CancellationToken cancellationToken);
 
