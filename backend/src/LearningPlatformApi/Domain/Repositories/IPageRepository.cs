@@ -3,6 +3,6 @@ using LearningPlatformApi.Persistence.Repositories.Base;
 
 namespace LearningPlatformApi.Domain.Repositories;
 
-public interface IPageRepository : IVersionedRepository<Page, string>
+public interface IPageRepository : IAuditableRepository<Page, string>
 {
 }

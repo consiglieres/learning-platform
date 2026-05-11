@@ -4,7 +4,7 @@ using LearningPlatformApi.Domain.Exceptions;
 
 namespace LearningPlatformApi.Domain.Entities.Courses;
 
-public record Lesson : VersionableEntity<string>
+public record Lesson : AuditableEntity<string>
 {
     public Lesson(string name, int lessonOrder, int passThreshold, Page.Page page, string moduleId, User creator)
         : base(Guid.NewGuid().ToString())

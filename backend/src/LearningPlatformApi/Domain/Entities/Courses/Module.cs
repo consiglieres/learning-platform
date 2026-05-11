@@ -4,7 +4,7 @@ using LearningPlatformApi.Domain.ValueObjects.Page;
 
 namespace LearningPlatformApi.Domain.Entities.Courses;
 
-public record Module : VersionableEntity<string>
+public record Module : AuditableEntity<string>
 {
     public Module(string name, int moduleOrder, string courseId, User creator,
         IReadOnlyCollection<Lesson> lessons)

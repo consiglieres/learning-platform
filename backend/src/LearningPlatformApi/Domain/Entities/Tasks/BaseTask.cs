@@ -3,7 +3,7 @@ using LearningPlatformApi.Domain.ValueObjects.Task;
 
 namespace LearningPlatformApi.Domain.Entities.Tasks;
 
-public abstract record BaseTask : VersionableEntity<string>
+public abstract record BaseTask : AuditableEntity<string>
 {
     protected BaseTask(string id, string name, int order, Difficulty difficulty, string lessonId, Page.Page pageContent)
         : base(id)

@@ -3,7 +3,7 @@ using LearningPlatformApi.Persistence.Entities.Page;
 
 namespace LearningPlatformApi.Persistence.Entities;
 
-public class LessonEntity(string id) : VersionableDbEntity<string>(id)
+public class LessonEntity(string id) : AuditableDbEntity<string>(id)
 {
     public string Name { get; set; }
 

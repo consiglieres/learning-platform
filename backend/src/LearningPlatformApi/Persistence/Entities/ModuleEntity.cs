@@ -3,7 +3,7 @@ using LearningPlatformApi.Persistence.Entities.Page;
 
 namespace LearningPlatformApi.Persistence.Entities;
 
-public class ModuleEntity(string id) : VersionableDbEntity<string>(id)
+public class ModuleEntity(string id) : AuditableDbEntity<string>(id)
 {
     public string Name { get; set; }
 
@@ -14,8 +14,6 @@ public class ModuleEntity(string id) : VersionableDbEntity<string>(id)
     public string PageId { get; set; }
 
     public string CourseId { get; set; }
-
-    public int CourseVersion { get; set; }
-
+    
     public IReadOnlyCollection<LessonEntity> Lessons { get; set; }
 }

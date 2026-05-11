@@ -2,7 +2,7 @@ using LearningPlatformApi.Persistence.Entities.Base;
 
 namespace LearningPlatformApi.Persistence.Entities.Page;
 
-public class PageEntity(string id) : VersionableDbEntity<string>(id)
+public class PageEntity(string id) : AuditableDbEntity<string>(id)
 {
     public int Order { get; set; }
 

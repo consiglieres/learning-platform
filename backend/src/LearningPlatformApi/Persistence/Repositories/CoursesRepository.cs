@@ -1,7 +1,6 @@
 using LearningPlatformApi.Domain.Entities.Courses;
 using LearningPlatformApi.Domain.Exceptions;
 using LearningPlatformApi.Domain.Repositories;
-using LearningPlatformApi.Domain.ValueObjects;
 using LearningPlatformApi.Mapper;
 using LearningPlatformApi.Persistence.Context;
 using LearningPlatformApi.Persistence.Entities;
@@ -18,53 +17,30 @@ public class CoursesRepository(
     : PublicationWorkflowRepository<Course, string, CourseEntity, string>(context, courseMapper, logger),
         ICourseRepository
 {
-    public new async Task<Course> GetAsync(string id, EntityVersion version,
-        CancellationToken cancellationToken = default)
+    public override async Task<Course> GetByIdAsync(string id, CancellationToken cancellationToken = default)
     {
-        var entities = await context.Set<CourseEntity>()
-            .Include(x => x.CreatedByUser)
-            .Include(x => x.UpdatedByUser)
-            .Include(x => x.DeletedByUser)
-            .Include(x => x.Categories)
-            .Include(x => x.IntroductionPage)
-            .ThenInclude(x => x.ContentBlocks)
-            .Include(x => x.Modules)
-            .FirstOrDefaultAsync(x => x.Id.Equals(id) && x.VersionOrder == version.Order, cancellationToken);
-
-        if (entities == null) throw new DomainException("Entity not found");
-
-        return courseMapper.Map(entities);
-    }
-
-    public new async Task<Course> GetLastAsync(string id, CancellationToken cancellationToken = default)
-    {
-        var entities = await context.Set<CourseEntity>()
+        var entity = await context.Set<CourseEntity>()
             .Where(x => x.Id.Equals(id))
             .Include(x => x.CreatedByUser)
             .Include(x => x.UpdatedByUser)
             .Include(x => x.DeletedByUser)
             .Include(x => x.Categories)
             .Include(x => x.Modules)
-            .OrderByDescending(x => x.VersionOrder)
             .FirstOrDefaultAsync(cancellationToken);
-
-        if (entities == null) throw new DomainException("Course not found");
-
+        
+        if(entity == null) throw new DomainException("Entity not found");
+        
         var page = await context.Set<PageEntity>()
             .Include(x => x.CreatedByUser)
             .Include(x => x.UpdatedByUser)
             .Include(x => x.DeletedByUser)
             .Include(x => x.ContentBlocks)
-            .OrderByDescending(x => x.VersionOrder)
-            .FirstOrDefaultAsync(x => x.Id.Equals(entities.PageId), cancellationToken);
+            .FirstOrDefaultAsync(x => x.Id.Equals(entity.PageId), cancellationToken);
 
         if (page == null) throw new DomainException("Page not found");
 
         var moduleEntities = await context.Set<ModuleEntity>()
-            .Where(m => m.CourseId == entities.Id && m.CourseVersion == entities.VersionOrder)
-            .Where(m => m.VersionOrder == context.Set<ModuleEntity>()
-                .Where(sub => sub.ModuleOrder == m.ModuleOrder)
-                .Max(sub => sub.VersionOrder))
+            .Where(m => m.CourseId == entity.Id)
             .Include(m => m.Lessons)
             .Include(m => m.CreatedByUser)
             .Include(m => m.UpdatedByUser)
@@ -79,10 +55,10 @@ public class CoursesRepository(
             .ThenInclude(p => p.ContentBlocks)
             .ToListAsync(cancellationToken);
 
-        entities.Modules = moduleEntities;
-        entities.IntroductionPage = page;
+        entity.Modules = moduleEntities;
+        entity.IntroductionPage = page;
 
-        return courseMapper.Map(entities);
+        return courseMapper.Map(entity);
     }
 
     public override async Task CreateAsync(Course course, CancellationToken cancellationToken = default)
@@ -116,12 +92,10 @@ public class CoursesRepository(
         var dbId = entity.Id;
         var dbEntity = await context.Set<CourseEntity>()
             .Include(x => x.Categories)
-            .FirstOrDefaultAsync(x => x.Id.Equals(dbId) && x.VersionOrder == entity.Version.Order,
-                cancellationToken);
+            .FirstOrDefaultAsync(x => x.Id.Equals(dbId), cancellationToken);
 
         if (dbEntity == null) throw new DomainException("Entity not found");
 
-        entity.Version = EntityVersion.IncrementVersion(entity.Version);
         var updated = courseMapper.Map(entity);
         context.Entry(dbEntity).CurrentValues.SetValues(updated);
 
@@ -129,7 +103,7 @@ public class CoursesRepository(
 
         await context.SaveChangesAsync(cancellationToken);
 
-        return await GetAsync(entity.Id, entity.Version, cancellationToken);
+        return await GetByIdAsync(entity.Id, cancellationToken);
     }
 
     private async Task UpdateCategoriesAsync(CourseEntity dbEntity, IReadOnlyCollection<TypedCategory> newCategories,

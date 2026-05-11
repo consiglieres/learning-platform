@@ -4,7 +4,7 @@ using Microsoft.EntityFrameworkCore.Metadata.Builders;
 
 namespace LearningPlatformApi.Persistence.EntitiesConfiguration;
 
-public class TestTaskBaseEntityConfiguration : VersionableDbEntityConfiguration<TaskBaseEntity, string>
+public class TestTaskBaseEntityConfiguration : AuditableDbEntityConfiguration<TaskBaseEntity, string>
 {
     protected override void OverrideConfigure(EntityTypeBuilder<TaskBaseEntity> entityTypeBuilder)
     {

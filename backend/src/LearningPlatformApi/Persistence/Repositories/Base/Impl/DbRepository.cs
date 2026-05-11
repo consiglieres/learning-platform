@@ -24,13 +24,22 @@ public abstract class DbRepository<TDomainEntity, TDomainId, TDbEntity, TDbId>
         this.mapper = mapper;
     }
 
-    public virtual async Task<TDomainEntity?> GetByIdAsync(TDomainId id, CancellationToken cancellationToken = default)
+    public virtual async Task<TDomainEntity?> FindByIdAsync(TDomainId id, CancellationToken cancellationToken = default)
     {
         var dbId = mapper.MapId(id);
         var dbEntity = await context.Set<TDbEntity>()
             .FirstOrDefaultAsync(x => x.Id.Equals(dbId), cancellationToken);
 
         return dbEntity != null ? mapper.Map(dbEntity) : null;
+    }
+
+    public virtual async Task<TDomainEntity> GetByIdAsync(TDomainId id, CancellationToken cancellationToken = default)
+    {
+        var founded = await FindByIdAsync(id, cancellationToken);
+        if(founded == null)
+            throw new DomainException($"Entity with id {id} not found");
+
+        return founded;
     }
 
     public virtual async Task CreateAsync(TDomainEntity entity, CancellationToken cancellationToken = default)
