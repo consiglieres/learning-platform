@@ -55,6 +55,41 @@ public class CoursesRepository(
             .ThenInclude(p => p.ContentBlocks)
             .ToListAsync(cancellationToken);
 
+        foreach (var module in moduleEntities)
+        {
+            var lessons = await context.Set<LessonEntity>()
+                .Include(x => x.CreatedByUser)
+                .Include(x => x.UpdatedByUser)
+                .Include(x => x.DeletedByUser)
+                .Include(x => x.PageEntity)
+                .ThenInclude(x => x.ContentBlocks)
+                .Where(x => x.ModuleId == module.Id)
+                .ToListAsync(cancellationToken);
+
+            foreach (var lesson in lessons)
+            {
+                var testTasks = await context.Set<TestTaskEntity>()
+                    .Include(x => x.CreatedByUser)
+                    .Include(x => x.UpdatedByUser)
+                    .Include(x => x.DeletedByUser)
+                    .Include(x => x.Page)
+                    .ThenInclude(x => x.ContentBlocks)
+                    .ToListAsync(cancellationToken);
+            
+                var codingTasks = await context.Set<CodingTaskEntity>()
+                    .Include(x => x.CreatedByUser)
+                    .Include(x => x.UpdatedByUser)
+                    .Include(x => x.DeletedByUser)
+                    .Include(x => x.Page)
+                    .ThenInclude(x => x.ContentBlocks)
+                    .ToListAsync(cancellationToken);
+                lesson.CodingTasks = codingTasks;
+                lesson.TestTasks = testTasks;
+            }
+
+            module.Lessons = lessons;
+        }
+        
         entity.Modules = moduleEntities;
         entity.IntroductionPage = page;
 

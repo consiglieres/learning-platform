@@ -27,6 +27,36 @@ public class ModulesRepository(ApplicationContext context,
             .Include(x => x.Lessons)
             .FirstOrDefaultAsync(x => x.Id.Equals(id), cancellationToken);
 
+        var lessons = await context.Set<LessonEntity>()
+            .Include(x => x.CreatedByUser)
+            .Include(x => x.UpdatedByUser)
+            .Include(x => x.DeletedByUser)
+            .Include(x => x.PageEntity)
+            .ThenInclude(x => x.ContentBlocks)
+            .Where(x => x.ModuleId == id)
+            .ToListAsync(cancellationToken);
+
+        foreach (var lesson in lessons)
+        {
+            var testTasks = await context.Set<TestTaskEntity>()
+                .Include(x => x.CreatedByUser)
+                .Include(x => x.UpdatedByUser)
+                .Include(x => x.DeletedByUser)
+                .Include(x => x.Page)
+                .ThenInclude(x => x.ContentBlocks)
+                .ToListAsync(cancellationToken);
+            
+            var codingTasks = await context.Set<CodingTaskEntity>()
+                .Include(x => x.CreatedByUser)
+                .Include(x => x.UpdatedByUser)
+                .Include(x => x.DeletedByUser)
+                .Include(x => x.Page)
+                .ThenInclude(x => x.ContentBlocks)
+                .ToListAsync(cancellationToken);
+            lesson.CodingTasks = codingTasks;
+            lesson.TestTasks = testTasks;
+        }
+        
         if (entities == null) throw new DomainException("Entity not found");
 
         return moduleMapper.Map(entities);
@@ -35,19 +65,15 @@ public class ModulesRepository(ApplicationContext context,
     public async Task<IReadOnlyCollection<Module>> GetByIdsAsync(IReadOnlyCollection<string> ids,
         CancellationToken cancellationToken = default)
     {
-        var entities = await context.Set<ModuleEntity>()
-            .Include(x => x.CreatedByUser)
-            .Include(x => x.UpdatedByUser)
-            .Include(x => x.DeletedByUser)
-            .Include(x => x.Page)
-            .ThenInclude(x => x.ContentBlocks)
-            .Include(x => x.Lessons)
-            .Where(x => ids.Contains(x.Id))
-            .ToListAsync(cancellationToken);
-
-        if (entities == null) throw new DomainException("Entity not found");
-
-        return entities.Select(moduleMapper.Map).ToList();
+        var entities = new List<Module>();
+        
+        foreach (var id in ids)
+        {
+            var module = await GetByIdAsync(id, cancellationToken);
+            entities.Add(module);
+        }
+        
+        return entities;
     }
     
     public override async Task<Module> UpdateAsync(Module entity, CancellationToken cancellationToken = default)
