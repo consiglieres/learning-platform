@@ -19,5 +19,7 @@ public class LessonEntity(string id) : AuditableDbEntity<string>(id)
 
     public string PageId { get; set; }
 
-    public IReadOnlyCollection<TaskBaseEntity> Tasks { get; set; }
+    public IList<CodingTaskEntity> CodingTasks { get; set; }
+    
+    public IList<TestTaskEntity> TestTasks { get; set; }
 }

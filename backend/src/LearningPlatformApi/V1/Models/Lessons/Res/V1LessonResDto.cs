@@ -16,5 +16,7 @@ public class V1LessonResDto : AuditableResDto
 
     public required string ModuleId { get; set; }
 
-    public required List<V1TaskShortInfo> Tasks { get; set; }
+    public required List<V1TaskShortInfo> CodingTasks { get; set; }
+    
+    public required List<V1TaskShortInfo> TestTasks { get; set; }
 }

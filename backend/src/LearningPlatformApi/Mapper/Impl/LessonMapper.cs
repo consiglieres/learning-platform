@@ -21,14 +21,8 @@ internal partial class LessonMapper(
             pageMapper.Map(entity.PageEntity), entity.ModuleId,
             userMapper.MapToDomain(entity.CreatedByUser))
         {
-            Tasks = entity.Tasks.Select<TaskBaseEntity, BaseTask>(x =>
-            {
-                if (x is CodingTaskEntity codingTaskEntity) return codingTaskMapper.Map(codingTaskEntity);
-
-                if (x is TestTaskEntity testTaskEntity) return testTaskMapper.Map(testTaskEntity);
-
-                throw new ArgumentOutOfRangeException();
-            }).ToList(),
+            CodingTasks = entity.CodingTasks.Select(codingTaskMapper.Map).ToList(),
+            TestTasks = entity.TestTasks.Select(testTaskMapper.Map).ToList(),
             Id = entity.Id,
             CreatedAt = entity.CreatedAt,
             CreatedBy = userMapper.MapToDomain(entity.CreatedByUser),
@@ -49,14 +43,8 @@ internal partial class LessonMapper(
             ModuleId = entity.ModuleId,
             PageEntity = pageMapper.Map(entity.PageContent),
             PageId = entity.PageContent.Id,
-            Tasks = entity.Tasks.Select<BaseTask, TaskBaseEntity>(x =>
-            {
-                if (x is CodingTask codingTaskEntity) return codingTaskMapper.Map(codingTaskEntity);
-
-                if (x is TestTask testTaskEntity) return testTaskMapper.Map(testTaskEntity);
-
-                throw new ArgumentOutOfRangeException();
-            }).ToList(),
+            CodingTasks = entity.CodingTasks.Select(codingTaskMapper.Map).ToList(),
+            TestTasks = entity.TestTasks.Select(testTaskMapper.Map).ToList(),
             CreatedAt = entity.CreatedAt,
             CreatedBy = entity.CreatedBy.Id,
             UpdatedAt = entity.UpdatedAt,

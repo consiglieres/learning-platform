@@ -39,7 +39,7 @@ public class ModuleService(IModulesRepository moduleRepository, IV1ResDtoMapper 
             var newModule = new Module(currentModule.Id, request.Name,
                 request.ModuleOrder, currentModule.CourseId, user, currentModule.Lessons);
 
-            await moduleRepository.CreateAsync(newModule, cancellationToken);
+            await moduleRepository.UpdateAsync(newModule, cancellationToken);
             await unitOfWork.SaveChangesAsync(cancellationToken);
             await unitOfWork.CommitTransactionAsync(cancellationToken);
 

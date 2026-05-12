@@ -25,7 +25,8 @@ public class LessonRepository(ApplicationContext context,
             .Include(x => x.PageEntity)
             .ThenInclude(x => x.ContentBlocks)
             .Include(x => x.Module)
-            .Include(x => x.Tasks)
+            .Include(x => x.CodingTasks)
+            .Include(x => x.TestTasks)
             .FirstOrDefaultAsync(cancellationToken);
 
         if (entities == null) throw new DomainException("Entity not found");
@@ -42,7 +43,8 @@ public class LessonRepository(ApplicationContext context,
             .Include(x => x.PageEntity)
             .ThenInclude(x => x.ContentBlocks)
             .Include(x => x.Module)
-            .Include(x => x.Tasks)
+            .Include(x => x.CodingTasks)
+            .Include(x => x.TestTasks)
             .Where(x => ids.Contains(x.Id))
             .ToListAsync(cancellationToken);
 
@@ -63,5 +65,21 @@ public class LessonRepository(ApplicationContext context,
         }
 
         await context.Set<LessonEntity>().AddAsync(lessonEntity, cancellationToken);
+    }
+
+    public override async Task<Lesson> UpdateAsync(Lesson entity, CancellationToken cancellationToken = default)
+    {
+        var entities = await context.Set<LessonEntity>()
+            .Where(x => x.Id.Equals(entity.Id))
+            .FirstOrDefaultAsync(cancellationToken);
+        
+        if(entities == null) throw new DomainException("Entity not found");
+        
+        entities.Name = entity.Name;
+        entities.LessonOrder = entity.LessonOrder;
+        entities.PassThreshold = entity.PassThreshold;
+        await context.SaveChangesAsync(cancellationToken);
+        
+        return await GetByIdAsync(entity.Id, cancellationToken);
     }
 }

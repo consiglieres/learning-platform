@@ -15,7 +15,12 @@ public class LessonEntityConfiguration : AuditableDbEntityConfiguration<LessonEn
             .IsUnique()
             .HasDatabaseName("IX_ModuleId_LessonOrder");
 
-        modelBuilder.HasMany(x => x.Tasks)
+        modelBuilder.HasMany(x => x.CodingTasks)
+            .WithOne(x => x.Lesson)
+            .HasForeignKey(e => new { e.LessonId })
+            .HasPrincipalKey(e => new { e.Id });
+        
+        modelBuilder.HasMany(x => x.TestTasks)
             .WithOne(x => x.Lesson)
             .HasForeignKey(e => new { e.LessonId })
             .HasPrincipalKey(e => new { e.Id });

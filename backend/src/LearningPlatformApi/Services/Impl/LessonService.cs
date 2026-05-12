@@ -41,7 +41,7 @@ public class LessonService(ILessonRepository lessonRepository, IV1ResDtoMapper r
             existingLesson.Name = request.Name;
             existingLesson.LessonOrder = request.LessonOrder;
             existingLesson.PassThreshold = request.PassThreshold;
-            await lessonRepository.CreateAsync(existingLesson, cancellationToken);
+            await lessonRepository.UpdateAsync(existingLesson, cancellationToken);
             await unitOfWork.SaveChangesAsync(cancellationToken);
             await unitOfWork.CommitTransactionAsync(cancellationToken);
             var upadted = await lessonRepository.GetByIdAsync(id, cancellationToken);

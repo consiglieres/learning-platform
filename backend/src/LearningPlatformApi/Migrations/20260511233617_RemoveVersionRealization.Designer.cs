@@ -3,6 +3,7 @@ using System;
 using LearningPlatformApi.Persistence.Context;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 
@@ -11,9 +12,11 @@ using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 namespace LearningPlatformApi.Migrations
 {
     [DbContext(typeof(ApplicationContext))]
-    partial class ApplicationContextModelSnapshot : ModelSnapshot
+    [Migration("20260511233617_RemoveVersionRealization")]
+    partial class RemoveVersionRealization
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -37,7 +40,7 @@ namespace LearningPlatformApi.Migrations
 
                     b.HasIndex("CategoriesTypeName", "CategoriesValueName");
 
-                    b.ToTable("CategoryEntityCourseEntity", (string)null);
+                    b.ToTable("CategoryEntityCourseEntity");
                 });
 
             modelBuilder.Entity("LearningPlatformApi.Persistence.Entities.CategoryEntity", b =>
@@ -210,7 +213,7 @@ namespace LearningPlatformApi.Migrations
 
                     b.HasIndex("UpdatedBy");
 
-                    b.ToTable("Courses", (string)null);
+                    b.ToTable("Courses");
                 });
 
             modelBuilder.Entity("LearningPlatformApi.Persistence.Entities.LessonEntity", b =>
@@ -270,7 +273,7 @@ namespace LearningPlatformApi.Migrations
 
                     b.HasIndex("UpdatedBy");
 
-                    b.ToTable("Lessons", (string)null);
+                    b.ToTable("Lessons");
                 });
 
             modelBuilder.Entity("LearningPlatformApi.Persistence.Entities.ModuleEntity", b =>
@@ -327,7 +330,7 @@ namespace LearningPlatformApi.Migrations
 
                     b.HasIndex("UpdatedBy");
 
-                    b.ToTable("Modules", (string)null);
+                    b.ToTable("Modules");
                 });
 
             modelBuilder.Entity("LearningPlatformApi.Persistence.Entities.Page.ContentBlockEntity", b =>
@@ -382,7 +385,7 @@ namespace LearningPlatformApi.Migrations
 
                     b.HasIndex("UpdatedBy");
 
-                    b.ToTable("ContentBlocks", (string)null);
+                    b.ToTable("ContentBlocks");
                 });
 
             modelBuilder.Entity("LearningPlatformApi.Persistence.Entities.Page.PageEntity", b =>
@@ -428,7 +431,7 @@ namespace LearningPlatformApi.Migrations
 
                     b.HasIndex("UpdatedBy");
 
-                    b.ToTable("Pages", (string)null);
+                    b.ToTable("Pages");
                 });
 
             modelBuilder.Entity("LearningPlatformApi.Persistence.Entities.Resource", b =>
@@ -450,7 +453,7 @@ namespace LearningPlatformApi.Migrations
 
                     b.HasKey("Id");
 
-                    b.ToTable("Resources", (string)null);
+                    b.ToTable("Resources");
                 });
 
             modelBuilder.Entity("LearningPlatformApi.Persistence.Entities.TestTaskEntity", b =>
@@ -637,7 +640,7 @@ namespace LearningPlatformApi.Migrations
 
                     b.HasIndex("ResourceId");
 
-                    b.ToTable("UserResources", (string)null);
+                    b.ToTable("UserResources");
                 });
 
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityRole", b =>

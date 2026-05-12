@@ -49,6 +49,21 @@ public class ModulesRepository(ApplicationContext context,
 
         return entities.Select(moduleMapper.Map).ToList();
     }
+    
+    public override async Task<Module> UpdateAsync(Module entity, CancellationToken cancellationToken = default)
+    {
+        var dbId = entity.Id;
+        var dbEntity = await context.Set<ModuleEntity>()
+            .FirstOrDefaultAsync(x => x.Id.Equals(dbId), cancellationToken);
+
+        if (dbEntity == null) throw new DomainException("Entity not found");
+
+        dbEntity.Name = entity.Name;
+        dbEntity.ModuleOrder = entity.ModuleOrder;
+        await context.SaveChangesAsync(cancellationToken);
+
+        return await GetByIdAsync(entity.Id, cancellationToken);
+    }
 
     public override async Task CreateAsync(Module entity, CancellationToken cancellationToken = default)
     {

@@ -13,7 +13,8 @@ public record Lesson : AuditableEntity<string>
         LessonOrder = lessonOrder;
         PassThreshold = passThreshold;
         PageContent = page;
-        Tasks = [];
+        CodingTasks = [];
+        TestTasks = [];
         ModuleId = moduleId;
         MarkAsCreated(creator, DateTimeOffset.UtcNow);
     }
@@ -28,13 +29,7 @@ public record Lesson : AuditableEntity<string>
 
     public string ModuleId { get; set; }
 
-    public List<BaseTask> Tasks { get; set; }
-
-    public void AddTask(BaseTask task)
-    {
-        if (Tasks.Any(t => t.Order == task.Order))
-            throw new DomainException($"Task with order {task.Order} already exists");
-
-        Tasks.Add(task);
-    }
+    public List<CodingTask> CodingTasks { get; set; }
+    
+    public List<TestTask> TestTasks { get; set; }
 }
