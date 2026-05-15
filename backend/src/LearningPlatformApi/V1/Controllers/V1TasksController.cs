@@ -52,7 +52,7 @@ public class V1TasksController(
         );
     }
 
-    [HttpGet("coding/{taskId}/execute", Name = "GetCodingTaskForExecutionAsync")]
+    [HttpGet("coding/{taskId}", Name = "GetCodingTaskForExecutionAsync")]
     public async Task<ActionResult<V1CodingTaskResDto>> GetCodingTaskForExecutionAsync(
         string lessonId,
         string taskId,
@@ -66,7 +66,7 @@ public class V1TasksController(
         );
     }
 
-    [HttpGet("test/{taskId}/execute", Name = "GetTestTaskForExecutionAsync")]
+    [HttpGet("test/{taskId}", Name = "GetTestTaskForExecutionAsync")]
     public async Task<ActionResult<V1TestTaskResDto>> GetTestTaskForExecutionAsync(
         string lessonId,
         string taskId,
