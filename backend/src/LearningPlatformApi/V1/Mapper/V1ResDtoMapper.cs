@@ -56,6 +56,9 @@ internal partial class V1ResDtoMapper : IV1ResDtoMapper
     public partial V1LessonShortResDto MapToShort(Lesson course);
 
     [MapperRequiredMapping(RequiredMappingStrategy.Target)]
+    public partial V1TaskShortInfo MapShort(BaseTask task);
+
+    [MapperRequiredMapping(RequiredMappingStrategy.Target)]
     public partial V1TaskShortInfo MapShort(CodingTask task);
 
     [MapperRequiredMapping(RequiredMappingStrategy.Target)]

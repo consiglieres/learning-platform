@@ -13,8 +13,8 @@ public record CodingTask : BaseTask
         MarkAsCreated(createdBy, DateTimeOffset.UtcNow);
     }
 
-    public string InitialCode { get; private set; }
-    public string TestCode { get; private set; }
+    public string InitialCode { get; set; }
+    public string TestCode { get; set; }
 
     public override bool CheckAnswer(object answer)
     {

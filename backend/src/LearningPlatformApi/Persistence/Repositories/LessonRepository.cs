@@ -10,14 +10,15 @@ using Microsoft.EntityFrameworkCore;
 
 namespace LearningPlatformApi.Persistence.Repositories;
 
-public class LessonRepository(ApplicationContext context,
-    IDbEntityMapper<Lesson, string, LessonEntity, string> lessonMapper, ILogger<LessonRepository> logger)
+public class LessonRepository(ApplicationContext context, ICodingTaskRepository codingTaskRepository,
+    ITestTaskRepository testTaskRepository, IDbEntityMapper<Lesson, string, LessonEntity, string> lessonMapper, 
+    ILogger<LessonRepository> logger)
     : AuditableRepository<Lesson, string, LessonEntity, string>(context, lessonMapper, logger),
     ILessonRepository
 {
     public override async Task<Lesson> GetByIdAsync(string id, CancellationToken cancellationToken = default)
     {
-        var entities = await context.Set<LessonEntity>()
+        var entity = await context.Set<LessonEntity>()
             .Where(x => x.Id.Equals(id))
             .Include(x => x.CreatedByUser)
             .Include(x => x.UpdatedByUser)
@@ -28,10 +29,19 @@ public class LessonRepository(ApplicationContext context,
             .Include(x => x.CodingTasks)
             .Include(x => x.TestTasks)
             .FirstOrDefaultAsync(cancellationToken);
+        if (entity == null) throw new DomainException("Entity not found");
+        
+        var lesson = lessonMapper.Map(entity);
+        
+        var codingTasks = await codingTaskRepository.GetByIdsAsync(
+            lesson.CodingTasks.Select(x => x.Id).ToList(), cancellationToken);
+        lesson.CodingTasks = codingTasks.ToList();
+        
+        var testTasks = await testTaskRepository.GetByIdsAsync(
+            lesson.TestTasks.Select(x => x.Id).ToList(), cancellationToken);
+        lesson.TestTasks = testTasks.ToList();
 
-        if (entities == null) throw new DomainException("Entity not found");
-
-        return lessonMapper.Map(entities);
+        return lessonMapper.Map(entity);
     }
 
     public async Task<IReadOnlyCollection<Lesson>> GetByIdsAsync(IReadOnlyCollection<string> ids, CancellationToken cancellationToken = default)

@@ -1,3 +1,4 @@
+using LearningPlatformApi.Domain.Entities.Tasks;
 using LearningPlatformApi.Persistence.Entities.Base;
 using LearningPlatformApi.Persistence.Entities.Page;
 
@@ -19,7 +20,7 @@ public class LessonEntity(string id) : AuditableDbEntity<string>(id)
 
     public string PageId { get; set; }
 
-    public IList<CodingTaskEntity> CodingTasks { get; set; }
+    public List<CodingTaskEntity> CodingTasks { get; set; }
     
-    public IList<TestTaskEntity> TestTasks { get; set; }
+    public List<TestTaskEntity> TestTasks { get; set; }
 }

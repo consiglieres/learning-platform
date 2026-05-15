@@ -32,7 +32,7 @@ public interface IV1ResDtoMapper
 
     V1LessonShortResDto MapToShort(Lesson course);
 
-    V1TaskShortInfo MapShort(CodingTask task);
+    V1TaskShortInfo MapShort(BaseTask task);
 
     V1TaskShortInfo MapShort(TestTask task);
 

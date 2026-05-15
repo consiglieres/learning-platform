@@ -15,11 +15,11 @@ public abstract record BaseTask : AuditableEntity<string>
         LessonId = lessonId;
     }
 
-    public string Name { get; private set; }
-    public int Order { get; private set; }
-    public Difficulty Difficulty { get; private set; }
+    public string Name { get; set; }
+    public int Order { get; set; }
+    public Difficulty Difficulty { get; set; }
 
-    public string LessonId { get; private set; }
+    public string LessonId { get; set; }
 
     public Page.Page PageContent { get; private set; }
 
