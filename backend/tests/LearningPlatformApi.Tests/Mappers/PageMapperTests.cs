@@ -28,7 +28,7 @@ public class PageMapperTests
             CreatedByUser = new UserEntity()
             {
                 Email = "test@example.com",
-                UserName = "testuser",
+                FullName = "testuser",
                 NormalizedEmail = "testuser"
             }
         };
@@ -53,7 +53,7 @@ public class PageMapperTests
         {
             Id = Guid.NewGuid().ToString(),
             Email = "test@example.com",
-            UserName = "testuser",
+            FullName = "testuser",
             NormalizedEmail = "testuser"
         };
         
@@ -208,7 +208,7 @@ public class PageMapperTests
             CreatedByUser = new UserEntity()
             {
                 Email = "test@example.com",
-                UserName = "testuser",
+                FullName = "testuser",
                 NormalizedEmail = "testuser"
             }
         };
@@ -263,7 +263,7 @@ public class PageMapperTests
             CreatedByUser = new UserEntity()
             {
                 Email = "test@example.com",
-                UserName = "testuser",
+                FullName = "testuser",
                 NormalizedEmail = "testuser"
             }
         };
@@ -286,7 +286,7 @@ public class PageMapperTests
             CreatedByUser = new UserEntity()
             {
                 Email = "test@example.com",
-                UserName = "testuser",
+                FullName = "testuser",
                 NormalizedEmail = "testuser"
             }
         };
@@ -309,7 +309,7 @@ public class PageMapperTests
             CreatedByUser = new UserEntity()
             {
                 Email = "test@example.com",
-                UserName = "testuser",
+                FullName = "testuser",
                 NormalizedEmail = "testuser"
             }
         };
@@ -431,7 +431,7 @@ public class PageMapperTests
         {
             Id = Guid.NewGuid().ToString(),
             Email = "test@example.com",
-            UserName = "testuser",
+            FullName = "testuser",
             NormalizedEmail = "testuser"
         };
         
@@ -488,7 +488,6 @@ public class PageMapperTests
                 },
             },
             CreatedBy = UserObjectMother.Create("user1"),
-            Version = EntityVersion.CreateDefault(),
         };
 
         // Act
