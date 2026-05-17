@@ -18,18 +18,19 @@
 
 @if (activeModal() === 'changePassword') {
   <app-change-password-modal
-    class="change-password-modal"
-    (closeModal)="closeModals()">
+    class="change-password-modal">
   </app-change-password-modal>
 }
 
 @if (activeModal() === 'changeEmail') {
   <app-change-email-modal
-    class="change-email-modal"
-    (closeModal)="closeModals()">
+    class="change-email-modal">
   </app-change-email-modal>
 }
 
-<app-header class="header"></app-header>
+<app-header class="header"
+            [class.header--absolute]="headerMode() === 'absolute'"
+            [class.header--relative]="headerMode() === 'relative'"
+></app-header>
 <router-outlet></router-outlet>
 <app-footer></app-footer>

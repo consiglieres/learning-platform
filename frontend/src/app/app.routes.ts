@@ -1,11 +1,11 @@
 import { Routes } from '@angular/router';
-import { MainLayout } from '../pages/layouts/main-layout/main-layout';
+import { authorizationGuard } from '../shared/guards/authorization.guard';
+
+// Синхронные импорты (будут включены в бандл лейаута)
 import { MainPage } from '../pages/main/main.page';
-import {CourseView} from '../pages/layouts/course-view/course-view';
-import {Course} from '../pages/course/course';
-import {Theme} from '../pages/theme/theme';
-import {Profile} from '../pages/profile/profile';
-import {authorizationGuard} from '../shared/guards/authorization.guard';
+import { Profile } from '../pages/profile/profile';
+import { Course } from '../pages/course/course';
+import { Theme } from '../pages/theme/theme';
 
 export const routes: Routes = [
   {
@@ -15,7 +15,10 @@ export const routes: Routes = [
   },
   {
     path: 'codevia',
-    component: MainLayout,
+    loadComponent: () =>
+      import('../pages/layouts/main-layout/main-layout').then(
+        (m) => m.MainLayout
+      ),
     children: [
       {
         path: '',
@@ -29,13 +32,17 @@ export const routes: Routes = [
       {
         path: 'profile',
         component: Profile,
-        canActivate: [authorizationGuard]
-      }
+        canActivate: [authorizationGuard],
+      },
     ],
   },
   {
     path: 'course/:courseId',
-    component: CourseView,
+    loadComponent: () =>
+      import('../pages/layouts/course-view/course-view').then(
+        (m) => m.CourseView
+      ),
+    canActivate: [authorizationGuard],
     children: [
       {
         path: '',
@@ -43,8 +50,8 @@ export const routes: Routes = [
       },
       {
         path: 'theme/:themeId',
-        component: Theme
+        component: Theme,
       },
-    ]
-  }
+    ],
+  },
 ];

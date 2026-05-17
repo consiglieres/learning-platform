@@ -1,17 +1,18 @@
-<app-breadcrumbs></app-breadcrumbs>
+
 
 @if (userData$ | async; as userData) {
   <section class="profile">
     <section class="user">
       <section class="information">
+        <app-breadcrumbs class="breadcrumps"></app-breadcrumbs>
         <div class="user-avatar">
           <img class="user-avatar__img"
-               [src]="userData.img || 'assets/default-avatar.png'"
+               src="assets/default-avatar.png"
                alt="avatar">
-          <h1 class="user-avatar__name">{{ userData.name || userData.login || userData.email }}</h1>
+          <h2 class="user-avatar__name">{{ userData.name || userData.login || userData.email }}</h2>
         </div>
         <section class="main-information">
-          <h2 class="main-information__logo">Основная информация</h2>
+          <h3 class="main-information__title">Основная информация</h3>
           <div class="second-information">
             <p class="second-information__text">Присоединился: {{ userData.dateConnection | date:'dd.MM.yyyy' }}</p>
             <p class="second-information__text">Email: {{ userData.email }}</p>
@@ -25,16 +26,24 @@
 
       <section class="courses">
         <div class="courses__header">
-          <h2 class="courses__title">Мои курсы</h2>
-          <span class="courses__count">{{ userData.courseComplete || '0' }}</span>
+          <h3 class="courses__title">Мои курсы</h3>
+          <p class="courses__count">{{ userData.courseComplete || '0' + " / 10 пройдено"}}</p>
         </div>
         <div class="courses__list">
           @if (courses$ | async; as courses) {
             @for (course of courses; track course.id) {
               <div class="course-item">
-                <h4 class="course-item__title">{{ course.title }}</h4>
-                <p class="course-item__desc">{{ course.description }}</p>
-                <button class="course-item__button">Продолжить обучение</button>
+                <img class="logo" src="assets/course-logo.png">
+                <section class="information">
+                  <h4 class="information__title">{{ course.title }}</h4>
+                  <section class="functional">
+                    <div class="progress-bar">
+                      <h6 class="progress-bar__title">прогресс: </h6>
+                      <div class="progress-bar__line"><h6>80 / 100</h6></div>
+                    </div>
+                    <button class="functional__button">Продолжить обучение</button>
+                  </section>
+                </section>
               </div>
             } @empty {
               <p class="courses__empty">У вас пока нет активных курсов</p>

@@ -1,15 +1,19 @@
-<main class="card">
-  <img src="" class="card__image" />
-  <h2 class="card__title">Название курса</h2>
+<main class="card" [routerLink]="['/course', course.id]">
+  <img src="assets/course-header.png" class="card__image" alt="course image" />
+  <h3 class="card__title">{{ course.title }}</h3>
   <section class="buble">
-    <div class="buble__type"></div>
+    <div class="buble__type">{{ course.language || 'Общий' }}</div>
     <div class="buble__line"></div>
-    <div class="buble__language"></div>
+    <div class="buble__language">{{ course.categories?.[0]?.value }}</div>
   </section>
   <section class="description">
-    <img class="description__time-img" src="" />
-    <p class="description__time-text"></p>
-    <img src="" alt="" class="description__task-image" />
-    <p class="description__task-text"></p>
+    <div class="description__item">
+      <img class="description__time-img" src="assets/clock.svg" alt="duration" />
+      <p class="description__time-text">{{ course.duration || '?' }} ч.</p>
+    </div>
+    <div class="description__item">
+      <img class="description__task-image" src="assets/task.svg" alt="tasks" />
+      <p class="description__task-text">{{ course.tasks || '?' }} заданий</p>
+    </div>
   </section>
 </main>

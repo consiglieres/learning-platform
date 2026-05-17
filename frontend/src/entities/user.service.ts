@@ -24,6 +24,7 @@ export class UserService {
 
   public register(data: IRegistrationModel): Observable<void> {
     const body = {
+      login: data.login,
       email: data.email,
       password: data.password,
       confirmPassword: data.confirmPassword

@@ -1,6 +1,6 @@
 import { Injectable, inject } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
-import { Observable } from 'rxjs';
+import {Observable, of} from 'rxjs';
 import {
   ICourseFull,
   ICourseCategory,
@@ -18,6 +18,11 @@ export class CourseService {
 
   public createDraft(data: ICourseDraft): Observable<ICourseFull> {
     return this._http.post<ICourseFull>(`${BASE_URL}/draft`, data);
+  }
+
+  public getCourses(): Observable<ICourse[]> {
+    // Заглушка; позже заменить на реальный эндпоинт
+    return of([]);
   }
 
   public getCourseLastVersion(courseId: string): Observable<ICourseFull> {

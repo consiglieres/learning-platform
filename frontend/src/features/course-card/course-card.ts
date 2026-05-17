@@ -1,11 +1,13 @@
-import { Component } from '@angular/core';
+import { Component, Input } from '@angular/core';
+import { RouterLink } from '@angular/router';
+import { ICourse } from '../../interfaces/courses.interface';
 
 @Component({
   selector: 'app-course-card',
-  imports: [],
+  imports: [RouterLink],
   templateUrl: './course-card.html',
-  styleUrl: './course-card.scss',
+  styleUrls: ['./course-card.scss'],
 })
 export class CourseCard {
-
+  @Input({ required: true }) course!: ICourse;
 }

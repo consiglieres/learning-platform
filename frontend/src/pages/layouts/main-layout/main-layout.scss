@@ -1,4 +1,12 @@
 .header {
-  position: absolute;
   width: 100%;
+
+  &.header--absolute {
+    position: absolute;
+  }
+
+  &.header--relative {
+    position: relative;
+  }
+
 }

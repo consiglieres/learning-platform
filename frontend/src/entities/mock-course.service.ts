@@ -15,25 +15,40 @@ export class MockCourseService {
   // Моковые курсы для профиля
   private mockCourses: ICourse[] = [
     {
-      id: '1',
-      title: 'Angular 21 для профессионалов',
+      id: '1', title: 'Angular 21 для профессионалов',
       description: 'Глубокое погружение в Signals и новейший синтаксис.',
-      status: 1,
-      categories: [{ type: 'frontend', value: 'Angular' }]
+      status: 1, categories: [{ type: 'frontend', value: 'Angular' }],
+      image: 'assets/course-logo.png', duration: 40, tasks: 12, language: 'Angular'
     },
     {
-      id: '2',
-      title: 'RxJS и реактивное программирование',
+      id: '2', title: 'RxJS и реактивное программирование',
       description: 'От Observables до Signals — плавный переход.',
-      status: 1,
-      categories: [{ type: 'frontend', value: 'RxJS' }]
+      status: 1, categories: [{ type: 'frontend', value: 'RxJS' }],
+      image: 'assets/course-logo.png', duration: 30, tasks: 10, language: 'RxJS'
     },
     {
-      id: '3',
-      title: 'Архитектура больших Angular-приложений',
+      id: '3', title: 'Архитектура больших Angular-приложений',
       description: 'Feature-Sliced Design, DI и монорепозиторий.',
-      status: 1,
-      categories: [{ type: 'architecture', value: 'FSD' }]
+      status: 1, categories: [{ type: 'architecture', value: 'FSD' }],
+      image: 'assets/course-logo.png', duration: 20, tasks: 8, language: 'Architecture'
+    },
+    {
+      id: '4', title: 'Python для анализа данных',
+      description: 'Pandas, NumPy, визуализация.',
+      status: 1, categories: [{ type: 'backend', value: 'Python' }],
+      image: 'assets/course-logo.png', duration: 50, tasks: 15, language: 'Python'
+    },
+    {
+      id: '5', title: 'C# и .NET Core',
+      description: 'Создание API, Entity Framework.',
+      status: 1, categories: [{ type: 'backend', value: 'C#' }],
+      image: 'assets/course-logo.png', duration: 45, tasks: 11, language: 'C#'
+    },
+    {
+      id: '6', title: 'DevOps с нуля',
+      description: 'Docker, Kubernetes, CI/CD.',
+      status: 1, categories: [{ type: 'devops', value: 'DevOps' }],
+      image: 'assets/course-logo.png', duration: 35, tasks: 9, language: 'DevOps'
     }
   ];
 
@@ -109,7 +124,13 @@ export class MockCourseService {
     return of(undefined).pipe(delay(300));
   }
 
-  public getMyCourses(): Observable<ICourse[]> {
+  public getCourses(): Observable<ICourse[]> {
     return of([...this.mockCourses]).pipe(delay(400));
+  }
+
+  // Обновлённый getMyCourses (можно оставить старый, если не хочешь менять)
+  public getMyCourses(): Observable<ICourse[]> {
+    // Допустим, профиль видит только первые 3 курса
+    return of([...this.mockCourses.slice(0, 3)]).pipe(delay(400));
   }
 }

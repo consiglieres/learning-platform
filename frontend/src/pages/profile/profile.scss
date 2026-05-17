@@ -1,0 +1,143 @@
+
+$title-color: #4A3B80;
+$text-color: #4A3B80;
+$background-color: #F8F5FF;
+
+h1, h2, h3, h4 {
+  color: $title-color;
+}
+
+h6 {
+  color: $text-color;
+}
+
+p {
+  color: $text-color
+}
+
+.breadcrumbs {
+  display: flex;
+  justify-content: start;
+  flex-direction: row;
+  top: 100px;
+}
+
+.profile {
+  display: flex;
+  justify-content: center;
+  flex-direction: row;
+  margin: 70px 0;
+
+  .user {
+    display: flex;
+    flex-direction: row;
+
+    .information {
+      margin-right: 58px;
+
+
+      .user-avatar {
+        display: flex;
+        flex-direction: row;
+        height: 180px;
+        margin-bottom: 40px;
+
+        .user-avatar__img {
+          width: 180px;
+          height: 180px;
+        }
+
+        .user-avatar__name {
+          color: $title-color;
+          align-content: center;
+          margin: 0;
+        }
+      }
+
+      .main-information {
+        background-color: $background-color;
+        //width: 525px;
+        //height: 271px;
+        border-radius: 20px;
+        padding: 30px 40px;
+
+        .main-information__title {
+          margin: 0;
+          align-content: center;
+        }
+
+        .edit-data {
+          display: flex;
+          justify-content: start;
+          flex-direction: column;
+
+          button {
+            background: none;
+            border: none;
+
+          }
+        }
+
+      }
+
+    }
+
+    .courses {
+      background-color: $background-color;
+      border-radius: 20px;
+      padding: 40px;
+
+      .courses__header {
+        display: flex;
+        justify-content: space-between;
+        flex-direction: row;
+        align-items: center;
+      }
+
+      .courses__list {
+
+        .course-item {
+          display: flex;
+          flex-direction: row;
+          background-color: white;
+          border-radius: 10px;
+          padding: 20px;
+          margin-bottom: 20px;
+          max-width: 978px;
+
+
+          .information {
+            display: flex;
+            flex-direction: column;
+            gap: 45px;
+            margin-right: 0;
+            margin-left: 15px;
+
+
+            .information__title {
+              margin: 0;
+            }
+
+            .functional {
+              display: flex;
+
+              .progress-bar {
+                display: flex;
+                justify-content: space-between;
+                flex-direction: row;
+                align-items: center;
+              }
+
+              .functional__button {
+                border-radius: 86px;
+                padding: 12px 30px;
+                max-height: 50px;
+                max-width: 291px;
+              }
+            }
+          }
+        }
+      }
+    }
+  }
+}

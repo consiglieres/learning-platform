@@ -71,6 +71,10 @@ export interface ICourse {
   description: string;
   status: number;
   categories: ICourseCategory[];
+  image?: string;
+  duration?: number;
+  tasks?: number;
+  language?: string;
 }
 
 export interface ICourseDraft {

@@ -62,6 +62,10 @@
   </section>
 
   <section class="course-list">
-    <app-course-card> </app-course-card>
+    @for (course of displayedCourses(); track course.id) {
+      <app-course-card [course]="course"></app-course-card>
+    } @empty {
+      <p class="course-list__empty">Курсы не найдены</p>
+    }
   </section>
 </main>
