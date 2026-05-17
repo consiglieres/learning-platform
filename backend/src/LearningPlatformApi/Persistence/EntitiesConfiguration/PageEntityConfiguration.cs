@@ -5,7 +5,7 @@ using Microsoft.EntityFrameworkCore.Metadata.Builders;
 
 namespace LearningPlatformApi.Persistence.EntitiesConfiguration;
 
-public class PageEntityConfiguration : VersionableDbEntityConfiguration<PageEntity, string>
+public class PageEntityConfiguration : AuditableDbEntityConfiguration<PageEntity, string>
 {
     protected override void OverrideConfigure(EntityTypeBuilder<PageEntity> modelBuilder)
     {
@@ -14,8 +14,8 @@ public class PageEntityConfiguration : VersionableDbEntityConfiguration<PageEnti
 
         modelBuilder.HasMany(e => e.ContentBlocks)
             .WithOne()
-            .HasForeignKey(e => new { e.PageId, e.PageVersion })
-            .HasPrincipalKey(e => new { e.Id, e.VersionOrder });
+            .HasForeignKey(e => new { e.PageId })
+            .HasPrincipalKey(e => new { e.Id });
 
         modelBuilder.Property(x => x.Order)
             .IsRequired();

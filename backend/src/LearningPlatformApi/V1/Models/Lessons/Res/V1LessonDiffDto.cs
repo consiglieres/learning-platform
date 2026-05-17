@@ -1,4 +1,4 @@
-namespace LearningPlatformApi.V1.Models.Lessons;
+namespace LearningPlatformApi.V1.Models.Lessons.Res;
 
 public class LessonDiffDto
 {

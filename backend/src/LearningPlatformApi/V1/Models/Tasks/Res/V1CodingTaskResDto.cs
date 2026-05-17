@@ -4,7 +4,7 @@ using LearningPlatformApi.V1.Models.Page;
 
 namespace LearningPlatformApi.V1.Models.Tasks;
 
-public class V1CodingTaskResDto : VersionableResDto
+public class V1CodingTaskResDto : AuditableResDto
 {
     public required string Name { get; set; }
 

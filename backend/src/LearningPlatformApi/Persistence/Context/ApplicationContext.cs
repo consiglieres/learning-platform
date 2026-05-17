@@ -1,5 +1,6 @@
 using LearningPlatformApi.Domain.ValueObjects.Page;
 using LearningPlatformApi.Persistence.Entities;
+using LearningPlatformApi.Persistence.Entities.Base;
 using LearningPlatformApi.Persistence.Entities.Page;
 using LearningPlatformApi.Persistence.Entities.ValueConverters;
 using LearningPlatformApi.Persistence.EntitiesConfiguration;

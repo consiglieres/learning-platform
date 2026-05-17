@@ -1,41 +1,22 @@
-using LearningPlatformApi.Domain.Entities.Courses;
-using LearningPlatformApi.Services.DataObjects.Request;
-using LearningPlatformApi.Services.DataObjects.Response.Lesson;
-using LearningPlatformApi.Services.DataObjects.Response.Shared;
-using OneOf;
+using LearningPlatformApi.Domain.Entities;
+using LearningPlatformApi.V1.Models.Lessons.Req;
+using LearningPlatformApi.V1.Models.Lessons.Res;
 
 namespace LearningPlatformApi.Services;
 
 public interface ILessonService
 {
-    Task<OneOf<NotFound, LessonContentDto>> GetLessonContentAsync(
-        string courseId,
-        string moduleId,
-        string topicId,
-        CancellationToken cancellationToken = default);
+    Task<V1LessonResDto> CreateAsync(V1CreateLessonReqDto request, User user, CancellationToken cancellationToken);
 
-    Task<OneOf<NotFound, ValidationFailed, Course>> ReorderLessonsAsync(
-        string courseId,
-        string moduleId,
-        ReorderLessonsRequest request,
-        CancellationToken cancellationToken = default);
+    Task<V1LessonResDto> UpdateAsync(string id, User user, V1UpdateLessonReqDto request, CancellationToken cancellationToken);
 
-    Task<OneOf<NotFound, ValidationFailed, Course>> DeleteLessonAsync(
-        string courseId,
-        string moduleId,
-        string topicId,
-        CancellationToken cancellationToken = default);
+    Task<V1LessonResDto> GetByIdAsync(string id, CancellationToken cancellationToken);
 
-    Task<OneOf<NotFound, ValidationFailed, Course>> UpdateLessonAsync(
-        string courseId,
-        string moduleId,
-        string topicId,
-        UpdateLessonRequest request,
-        CancellationToken cancellationToken = default);
+    Task DeleteAsync(string id, User user, CancellationToken cancellationToken);
 
-    Task<OneOf<NotFound, ValidationFailed, Course>> AddLessonAsync(
-        string courseId,
-        string moduleId,
-        CreateLessonRequest request,
-        CancellationToken cancellationToken = default);
+    Task<V1LessonResDto> RestoreAsync(string id, User user, CancellationToken cancellationToken);
+
+    Task<List<V1LessonResDto>> GetLessonsByIdsAsync(List<string> ids, CancellationToken cancellationToken);
+
+    Task<IReadOnlyCollection<V1LessonResDto>> ReorderLessonsAsync(string id, List<string> lessonIds, CancellationToken cancellationToken);
 }

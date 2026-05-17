@@ -15,7 +15,7 @@ public class CourseEntityConfiguration : PublicationDbEntityConfiguration<Course
 
         modelBuilder.HasMany(x => x.Modules)
             .WithOne()
-            .HasForeignKey(e => new { e.CourseId, e.CourseVersion })
-            .HasPrincipalKey(e => new { e.Id, e.VersionOrder });
+            .HasForeignKey(e => e.CourseId)
+            .HasPrincipalKey(e => e.Id);
     }
 }

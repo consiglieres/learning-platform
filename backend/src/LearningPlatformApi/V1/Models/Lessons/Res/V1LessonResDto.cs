@@ -2,9 +2,9 @@ using LearningPlatformApi.V1.Models.Base;
 using LearningPlatformApi.V1.Models.Page;
 using LearningPlatformApi.V1.Models.Tasks;
 
-namespace LearningPlatformApi.V1.Models.Lessons;
+namespace LearningPlatformApi.V1.Models.Lessons.Res;
 
-public class V1LessonResDto : VersionableResDto
+public class V1LessonResDto : AuditableResDto
 {
     public required string Name { get; set; }
 
@@ -16,5 +16,7 @@ public class V1LessonResDto : VersionableResDto
 
     public required string ModuleId { get; set; }
 
-    public required List<V1TaskShortInfo> Tasks { get; set; }
+    public required List<V1TaskShortInfo> CodingTasks { get; set; }
+    
+    public required List<V1TaskShortInfo> TestTasks { get; set; }
 }

@@ -1,7 +1,6 @@
 using LearningPlatformApi.Domain.Entities.Courses;
 using LearningPlatformApi.Domain.Entities.Page;
 using LearningPlatformApi.Domain.Entities.Tasks;
-using LearningPlatformApi.Domain.ValueObjects;
 using LearningPlatformApi.Persistence.Entities;
 using LearningPlatformApi.Persistence.Entities.Base;
 using LearningPlatformApi.Persistence.Entities.Page;
@@ -22,16 +21,9 @@ internal partial class LessonMapper(
             pageMapper.Map(entity.PageEntity), entity.ModuleId,
             userMapper.MapToDomain(entity.CreatedByUser))
         {
-            Tasks = entity.Tasks.Select<TaskBaseEntity, BaseTask>(x =>
-            {
-                if (x is CodingTaskEntity codingTaskEntity) return codingTaskMapper.Map(codingTaskEntity);
-
-                if (x is TestTaskEntity testTaskEntity) return testTaskMapper.Map(testTaskEntity);
-
-                throw new ArgumentOutOfRangeException();
-            }).ToList(),
+            CodingTasks = entity.CodingTasks.Select(codingTaskMapper.Map).ToList(),
+            TestTasks = entity.TestTasks.Select(testTaskMapper.Map).ToList(),
             Id = entity.Id,
-            Version = new EntityVersion(entity.VersionOrder, entity.Tag),
             CreatedAt = entity.CreatedAt,
             CreatedBy = userMapper.MapToDomain(entity.CreatedByUser),
             UpdatedAt = entity.UpdatedAt,
@@ -51,25 +43,14 @@ internal partial class LessonMapper(
             ModuleId = entity.ModuleId,
             PageEntity = pageMapper.Map(entity.PageContent),
             PageId = entity.PageContent.Id,
-            Tasks = entity.Tasks.Select<BaseTask, TaskBaseEntity>(x =>
-            {
-                if (x is CodingTask codingTaskEntity) return codingTaskMapper.Map(codingTaskEntity);
-
-                if (x is TestTask testTaskEntity) return testTaskMapper.Map(testTaskEntity);
-
-                throw new ArgumentOutOfRangeException();
-            }).ToList(),
-            VersionOrder = entity.Version.Order,
-            Tag = entity.Version.Tag,
+            CodingTasks = entity.CodingTasks.Select(codingTaskMapper.Map).ToList(),
+            TestTasks = entity.TestTasks.Select(testTaskMapper.Map).ToList(),
             CreatedAt = entity.CreatedAt,
             CreatedBy = entity.CreatedBy.Id,
-            CreatedByUser = userMapper.MapToEntity(entity.CreatedBy),
             UpdatedAt = entity.UpdatedAt,
             UpdatedBy = entity.UpdatedBy?.Id,
-            UpdatedByUser = entity.UpdatedBy == null ? null : userMapper.MapToEntity(entity.UpdatedBy),
             DeletedAt = entity.DeletedAt,
             DeletedBy = entity.DeletedBy?.Id,
-            DeletedByUser = entity.DeletedBy == null ? null : userMapper.MapToEntity(entity.DeletedBy)
         };
     }
 

@@ -6,7 +6,9 @@ public interface IDbRepository<TDomainEntity, TId>
     where TDomainEntity : DomainEntity<TId>
     where TId : IEquatable<TId>
 {
-    Task<TDomainEntity?> GetByIdAsync(TId id, CancellationToken cancellationToken = default);
+    Task<TDomainEntity?> FindByIdAsync(TId id, CancellationToken cancellationToken = default);
+
+    Task<TDomainEntity> GetByIdAsync(TId id, CancellationToken cancellationToken = default);
 
     Task CreateAsync(TDomainEntity entity, CancellationToken cancellationToken = default);
 

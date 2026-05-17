@@ -4,7 +4,7 @@ using LearningPlatformApi.Persistence.Entities.Page;
 namespace LearningPlatformApi.Persistence.Entities.Base;
 
 [NotMapped]
-public abstract class TaskBaseEntity(string id) : VersionableDbEntity<string>(id)
+public abstract class TaskBaseEntity(string id) : AuditableDbEntity<string>(id)
 {
     public string Name { get; set; }
 

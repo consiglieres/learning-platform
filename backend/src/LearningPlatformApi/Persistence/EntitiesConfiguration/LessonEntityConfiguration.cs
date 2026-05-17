@@ -5,7 +5,7 @@ using Microsoft.EntityFrameworkCore.Metadata.Builders;
 
 namespace LearningPlatformApi.Persistence.EntitiesConfiguration;
 
-public class LessonEntityConfiguration : VersionableDbEntityConfiguration<LessonEntity, string>
+public class LessonEntityConfiguration : AuditableDbEntityConfiguration<LessonEntity, string>
 {
     protected override void OverrideConfigure(EntityTypeBuilder<LessonEntity> modelBuilder)
     {
@@ -14,5 +14,15 @@ public class LessonEntityConfiguration : VersionableDbEntityConfiguration<Lesson
         modelBuilder.HasIndex(x => new { x.ModuleId, x.LessonOrder })
             .IsUnique()
             .HasDatabaseName("IX_ModuleId_LessonOrder");
+
+        modelBuilder.HasMany(x => x.CodingTasks)
+            .WithOne(x => x.Lesson)
+            .HasForeignKey(e => new { e.LessonId })
+            .HasPrincipalKey(e => new { e.Id });
+        
+        modelBuilder.HasMany(x => x.TestTasks)
+            .WithOne(x => x.Lesson)
+            .HasForeignKey(e => new { e.LessonId })
+            .HasPrincipalKey(e => new { e.Id });
     }
 }

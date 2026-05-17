@@ -4,7 +4,7 @@ using LearningPlatformApi.Domain.Exceptions;
 
 namespace LearningPlatformApi.Domain.Entities.Courses;
 
-public record Lesson : VersionableEntity<string>
+public record Lesson : AuditableEntity<string>
 {
     public Lesson(string name, int lessonOrder, int passThreshold, Page.Page page, string moduleId, User creator)
         : base(Guid.NewGuid().ToString())
@@ -13,28 +13,23 @@ public record Lesson : VersionableEntity<string>
         LessonOrder = lessonOrder;
         PassThreshold = passThreshold;
         PageContent = page;
-        Tasks = [];
+        CodingTasks = [];
+        TestTasks = [];
         ModuleId = moduleId;
         MarkAsCreated(creator, DateTimeOffset.UtcNow);
     }
 
-    public string Name { get; private set; }
+    public string Name { get; set; }
 
-    public int LessonOrder { get; private set; }
+    public int LessonOrder { get; set; }
 
-    public int PassThreshold { get; private set; }
+    public int PassThreshold { get; set; }
 
-    public Page.Page PageContent { get; private set; }
+    public Page.Page PageContent { get; set; }
 
     public string ModuleId { get; set; }
 
-    public List<BaseTask> Tasks { get; set; }
-
-    public void AddTask(BaseTask task)
-    {
-        if (Tasks.Any(t => t.Order == task.Order))
-            throw new DomainException($"Task with order {task.Order} already exists");
-
-        Tasks.Add(task);
-    }
+    public List<CodingTask> CodingTasks { get; set; }
+    
+    public List<TestTask> TestTasks { get; set; }
 }

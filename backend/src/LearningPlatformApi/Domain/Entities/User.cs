@@ -4,7 +4,7 @@ namespace LearningPlatformApi.Domain.Entities;
 
 public record User(string Id) : DomainEntity<string>(Id)
 {
-    public required string UserName { get; set; }
+    public required string FullName { get; set; }
 
     public required string Email { get; set; }
 

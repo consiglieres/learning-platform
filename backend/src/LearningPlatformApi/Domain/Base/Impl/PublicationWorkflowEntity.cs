@@ -4,7 +4,7 @@ using LearningPlatformApi.Domain.ValueObjects;
 
 namespace LearningPlatformApi.Domain.Base.Impl;
 
-public abstract record PublicationWorkflowEntity<TKey> : VersionableEntity<TKey>, IPublicationWorkflow
+public abstract record PublicationWorkflowEntity<TKey> : AuditableEntity<TKey>, IPublicationWorkflow
 {
     protected PublicationWorkflowEntity(TKey id) : base(id)
     {

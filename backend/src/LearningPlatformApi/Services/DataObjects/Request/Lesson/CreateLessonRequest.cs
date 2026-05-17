@@ -1,3 +1,3 @@
-namespace LearningPlatformApi.Services.DataObjects.Request;
+namespace LearningPlatformApi.Services.DataObjects.Request.Lesson;
 
 public sealed record CreateLessonRequest(string Name, int LessonOrder, int PassThreshold);

@@ -32,14 +32,14 @@ public abstract record AuditableEntity<TKey>(TKey Id)
         DeletedAt = deletedAt;
     }
 
-    public void Restore(User deletedBy, DateTimeOffset deletedAt)
+    public void Restore(User updatedBy, DateTimeOffset updatedAt)
     {
         if (!IsDeleted())
             throw new DomainException("Entity is not deleted");
 
         DeletedBy = null;
         DeletedAt = null;
-        MarkAsUpdated(deletedBy, deletedAt);
+        MarkAsUpdated(updatedBy, updatedAt);
     }
 
     public bool IsDeleted()

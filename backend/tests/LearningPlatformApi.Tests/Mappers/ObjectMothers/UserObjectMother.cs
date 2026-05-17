@@ -13,7 +13,7 @@ public class UserObjectMother
     {
         var user = new User(id)
         {
-            UserName = userName,
+            FullName = userName,
             Email = email,
             NormalizedEmail = email.ToUpperInvariant(),
             IsActive = isActive,

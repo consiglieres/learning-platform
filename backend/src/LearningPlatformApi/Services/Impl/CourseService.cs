@@ -2,7 +2,6 @@ using LearningPlatformApi.Domain.Entities;
 using LearningPlatformApi.Domain.Entities.Courses;
 using LearningPlatformApi.Domain.HandleStates;
 using LearningPlatformApi.Domain.Repositories;
-using LearningPlatformApi.Domain.ValueObjects;
 using LearningPlatformApi.Persistence.Repositories.Base;
 using LearningPlatformApi.Services.DataObjects.Request;
 using LearningPlatformApi.Services.DataObjects.Request.Course;
@@ -34,16 +33,9 @@ public class CourseService(
         await courseRepository.CreateAsync(course, cancellationToken);
         await pageRepository.CreateAsync(course.IntroductionPage, cancellationToken);
         await unitOfWork.SaveChangesAsync(cancellationToken);
-        var created = await courseRepository.GetLastAsync(course.Id, cancellationToken);
+        var created = await courseRepository.GetByIdAsync(course.Id, cancellationToken);
 
         return new Success<Course>(created);
-    }
-
-    public async Task<OneOf<EntityNotExists, Success<Course>>> GetCourseLastAsync(string courseId,
-        CancellationToken cancellationToken = default)
-    {
-        var draft = await courseRepository.GetLastAsync(courseId, cancellationToken);
-        return new Success<Course>(draft);
     }
 
     public async Task<OneOf<EntityNotExists, Success<IReadOnlyCollection<TypedCategory>>>> GetCourseCategoriesAsync(
@@ -54,10 +46,9 @@ public class CourseService(
         return new Success<IReadOnlyCollection<TypedCategory>>(categories);
     }
 
-    public async Task<OneOf<EntityNotExists, Success<Course>>> GetCourseVersionAsync(string courseId, int version,
-        CancellationToken cancellationToken = default)
+    public async Task<OneOf<EntityNotExists, Success<Course>>> GetCourseAsync(string courseId, CancellationToken cancellationToken = default)
     {
-        var draft = await courseRepository.GetAsync(courseId, new EntityVersion(version), cancellationToken);
+        var draft = await courseRepository.GetByIdAsync(courseId, cancellationToken);
         return new Success<Course>(draft);
     }
 
@@ -65,17 +56,16 @@ public class CourseService(
         string courseId, UpdateCourseInfoRequest request,
         CancellationToken cancellationToken = default)
     {
-        var existingCourse = await courseRepository.GetLastAsync(courseId, cancellationToken);
+        var existingCourse = await courseRepository.GetByIdAsync(courseId, cancellationToken);
 
         var (title, description, categories) = request;
         if (title != null) existingCourse.Title = title;
         if (description != null) existingCourse.Description = description;
         if (categories != null && categories.Any()) existingCourse.ResetCategories(categories);
 
-        existingCourse.Version = EntityVersion.IncrementVersion(existingCourse.Version);
-        await courseRepository.CreateAsync(existingCourse, cancellationToken);
+        await courseRepository.UpdateAsync(existingCourse, cancellationToken);
         await unitOfWork.SaveChangesAsync(cancellationToken);
-        var updated = await GetCourseLastAsync(courseId, cancellationToken);
+        var updated = await GetCourseAsync(courseId, cancellationToken);
 
         if (updated.IsT0)
         {
@@ -96,7 +86,7 @@ public class CourseService(
     public async Task<OneOf<NotFound, ValidationFailed, Success>> ApprovePublishCourseAsync(string courseId, User user,
         ModerationCourseComment? comment, CancellationToken cancellationToken = default)
     {
-        var courseResult = await GetCourseLastAsync(courseId, cancellationToken);
+        var courseResult = await GetCourseAsync(courseId, cancellationToken);
 
         if (courseResult.IsT0)
             return new NotFound();
@@ -119,7 +109,7 @@ public class CourseService(
     public async Task<OneOf<NotFound, ValidationFailed, Success>> SubmitForModerationCourseAsync(
         string courseId, User user, CancellationToken cancellationToken = default)
     {
-        var courseResult = await GetCourseLastAsync(courseId, cancellationToken);
+        var courseResult = await GetCourseAsync(courseId, cancellationToken);
 
         if (courseResult.IsT0)
             return new NotFound();
@@ -142,7 +132,7 @@ public class CourseService(
     public async Task<OneOf<NotFound, ValidationFailed, Success>> RejectCourseAsync(
         string courseId, User user, ModerationCourseComment comment, CancellationToken cancellationToken = default)
     {
-        var courseResult = await GetCourseLastAsync(courseId, cancellationToken);
+        var courseResult = await GetCourseAsync(courseId, cancellationToken);
 
         if (courseResult.IsT0)
             return new NotFound();
@@ -166,7 +156,7 @@ public class CourseService(
     public async Task<OneOf<NotFound, ValidationFailed, Success>> UnpublishCourseAsync(string courseId, User user,
         CancellationToken cancellationToken = default)
     {
-        var courseResult = await GetCourseLastAsync(courseId, cancellationToken);
+        var courseResult = await GetCourseAsync(courseId, cancellationToken);
 
         if (courseResult.IsT0)
             return new NotFound();
@@ -189,7 +179,7 @@ public class CourseService(
     public async Task<OneOf<NotFound, ValidationFailed, Success>> ArchiveCourseAsync(string courseId, User user,
         CancellationToken cancellationToken = default)
     {
-        var courseResult = await GetCourseLastAsync(courseId, cancellationToken);
+        var courseResult = await GetCourseAsync(courseId, cancellationToken);
 
         if (courseResult.IsT0)
             return new NotFound();
@@ -213,7 +203,7 @@ public class CourseService(
         User user,
         CancellationToken cancellationToken = default)
     {
-        var courseResult = await GetCourseLastAsync(courseId, cancellationToken);
+        var courseResult = await GetCourseAsync(courseId, cancellationToken);
 
         if (courseResult.IsT0)
             return new NotFound();

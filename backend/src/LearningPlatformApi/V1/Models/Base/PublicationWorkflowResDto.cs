@@ -4,7 +4,7 @@ using LearningPlatformApi.V2.Account.Res;
 
 namespace LearningPlatformApi.V1.Models.Base;
 
-public class PublicationWorkflowResDto : VersionableResDto
+public class PublicationWorkflowResDto : AuditableResDto
 {
     public string? ModerationComment { get; set; }
 

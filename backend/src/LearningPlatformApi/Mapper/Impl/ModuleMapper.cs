@@ -1,6 +1,5 @@
 using LearningPlatformApi.Domain.Entities.Courses;
 using LearningPlatformApi.Domain.Entities.Page;
-using LearningPlatformApi.Domain.ValueObjects;
 using LearningPlatformApi.Persistence.Entities;
 using LearningPlatformApi.Persistence.Entities.Page;
 using Riok.Mapperly.Abstractions;
@@ -22,7 +21,6 @@ internal partial class ModuleMapper(
         {
             Page = pageMapper.Map(entity.Page),
             Id = entity.Id,
-            Version = new EntityVersion(entity.VersionOrder, entity.Tag),
             CreatedAt = entity.CreatedAt,
             CreatedBy = userMapper.MapToDomain(entity.CreatedByUser),
             UpdatedAt = entity.UpdatedAt,
@@ -42,8 +40,6 @@ internal partial class ModuleMapper(
             PageId = entity.Page.Id,
             CourseId = entity.CourseId,
             Lessons = entity.Lessons.Select(lessonMapper.Map).ToList(),
-            VersionOrder = entity.Version.Order,
-            Tag = entity.Version.Tag,
             CreatedAt = entity.CreatedAt,
             CreatedBy = entity.CreatedBy.Id,
             UpdatedAt = entity.UpdatedAt,

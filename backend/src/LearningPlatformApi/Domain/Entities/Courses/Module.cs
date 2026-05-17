@@ -4,11 +4,23 @@ using LearningPlatformApi.Domain.ValueObjects.Page;
 
 namespace LearningPlatformApi.Domain.Entities.Courses;
 
-public record Module : VersionableEntity<string>
+public record Module : AuditableEntity<string>
 {
     public Module(string name, int moduleOrder, string courseId, User creator,
         IReadOnlyCollection<Lesson> lessons)
         : base(Guid.NewGuid().ToString())
+    {
+        Name = name;
+        ModuleOrder = moduleOrder;
+        CourseId = courseId;
+        Lessons = lessons.ToList();
+        Page = Entities.Page.Page.EmptyPage(PageType.Introduction, creator);
+        MarkAsCreated(creator, DateTimeOffset.UtcNow);
+    }
+
+    public Module(string id, string name, int moduleOrder, string courseId, User creator,
+        IReadOnlyCollection<Lesson> lessons)
+        : base(id)
     {
         Name = name;
         ModuleOrder = moduleOrder;

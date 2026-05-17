@@ -6,6 +6,7 @@ using LearningPlatformApi.V1.Models.Account.Res;
 using LearningPlatformApi.V1.Models.Courses.Req;
 using LearningPlatformApi.V1.Models.Courses.Res;
 using LearningPlatformApi.V1.Models.Lessons;
+using LearningPlatformApi.V1.Models.Lessons.Res;
 using LearningPlatformApi.V1.Models.Module.Res;
 using LearningPlatformApi.V1.Models.Page;
 using LearningPlatformApi.V1.Models.Tasks;
@@ -31,7 +32,7 @@ public interface IV1ResDtoMapper
 
     V1LessonShortResDto MapToShort(Lesson course);
 
-    V1TaskShortInfo MapShort(CodingTask task);
+    V1TaskShortInfo MapShort(BaseTask task);
 
     V1TaskShortInfo MapShort(TestTask task);
 

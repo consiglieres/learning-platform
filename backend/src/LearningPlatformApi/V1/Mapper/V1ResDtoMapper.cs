@@ -8,6 +8,7 @@ using LearningPlatformApi.V1.Models.Base;
 using LearningPlatformApi.V1.Models.Courses.Req;
 using LearningPlatformApi.V1.Models.Courses.Res;
 using LearningPlatformApi.V1.Models.Lessons;
+using LearningPlatformApi.V1.Models.Lessons.Res;
 using LearningPlatformApi.V1.Models.Module.Res;
 using LearningPlatformApi.V1.Models.Page;
 using LearningPlatformApi.V1.Models.Tasks;
@@ -55,6 +56,9 @@ internal partial class V1ResDtoMapper : IV1ResDtoMapper
     public partial V1LessonShortResDto MapToShort(Lesson course);
 
     [MapperRequiredMapping(RequiredMappingStrategy.Target)]
+    public partial V1TaskShortInfo MapShort(BaseTask task);
+
+    [MapperRequiredMapping(RequiredMappingStrategy.Target)]
     public partial V1TaskShortInfo MapShort(CodingTask task);
 
     [MapperRequiredMapping(RequiredMappingStrategy.Target)]
@@ -72,7 +76,6 @@ internal partial class V1ResDtoMapper : IV1ResDtoMapper
 
     public partial V1PageContentBlock Map(PageContentBlock page);
 
-    public partial VersionDto Map(EntityVersion version);
 
     private string MapLists(Lesson lessons)
     {

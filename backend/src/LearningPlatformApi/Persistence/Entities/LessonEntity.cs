@@ -1,9 +1,10 @@
+using LearningPlatformApi.Domain.Entities.Tasks;
 using LearningPlatformApi.Persistence.Entities.Base;
 using LearningPlatformApi.Persistence.Entities.Page;
 
 namespace LearningPlatformApi.Persistence.Entities;
 
-public class LessonEntity(string id) : VersionableDbEntity<string>(id)
+public class LessonEntity(string id) : AuditableDbEntity<string>(id)
 {
     public string Name { get; set; }
 
@@ -19,5 +20,7 @@ public class LessonEntity(string id) : VersionableDbEntity<string>(id)
 
     public string PageId { get; set; }
 
-    public IReadOnlyCollection<TaskBaseEntity> Tasks { get; set; }
+    public List<CodingTaskEntity> CodingTasks { get; set; }
+    
+    public List<TestTaskEntity> TestTasks { get; set; }
 }

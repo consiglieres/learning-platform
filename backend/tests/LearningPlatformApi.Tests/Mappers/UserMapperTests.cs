@@ -19,7 +19,7 @@ public class UserMapperTests
         var entity = new UserEntity
         {
             Id = "user-123",
-            UserName = "testuser",
+            FullName = "testuser",
             Email = "test@example.com",
             NormalizedEmail = "TEST@EXAMPLE.COM",
             EmailConfirmed = true,
@@ -44,7 +44,7 @@ public class UserMapperTests
         // Assert
         result.Should().NotBeNull();
         result.Id.Should().Be("user-123");
-        result.UserName.Should().Be("testuser");
+        result.FullName.Should().Be("testuser");
         result.Email.Should().Be("test@example.com");
         result.NormalizedEmail.Should().Be("TEST@EXAMPLE.COM");
         result.EmailConfirmed.Should().BeTrue();
@@ -68,7 +68,7 @@ public class UserMapperTests
         var entity = new UserEntity
         {
             Id = "user-456",
-            UserName = "testuser2",
+            FullName = "testuser2",
             Email = "test2@example.com",
             NormalizedEmail = "TEST2@EXAMPLE.COM",
             LockoutEnd = null
@@ -88,7 +88,7 @@ public class UserMapperTests
         var entity = new UserEntity
         {
             Id = "user-789",
-            UserName = "testuser3",
+            FullName = "testuser3",
             Email = "test3@example.com",
             NormalizedEmail = "TEST3@EXAMPLE.COM",
             LastLoginAt = null
@@ -108,7 +108,7 @@ public class UserMapperTests
         var entity = new UserEntity
         {
             Id = "user-min",
-            UserName = "minimal",
+            FullName = "minimal",
             Email = "minimal@example.com",
             NormalizedEmail = "MINIMAL@EXAMPLE.COM"
         };
@@ -119,7 +119,7 @@ public class UserMapperTests
         // Assert
         result.Should().NotBeNull();
         result.Id.Should().Be("user-min");
-        result.UserName.Should().Be("minimal");
+        result.FullName.Should().Be("minimal");
         result.Email.Should().Be("minimal@example.com");
         result.NormalizedEmail.Should().Be("MINIMAL@EXAMPLE.COM");
         
@@ -141,7 +141,7 @@ public class UserMapperTests
         // Arrange
         var user = new User("user-123")
         {
-            UserName = "testuser",
+            FullName = "testuser",
             Email = "test@example.com",
             NormalizedEmail = "TEST@EXAMPLE.COM",
             EmailConfirmed = true,
@@ -164,7 +164,7 @@ public class UserMapperTests
         // Assert
         result.Should().NotBeNull();
         result.Id.Should().Be("user-123");
-        result.UserName.Should().Be("testuser");
+        result.FullName.Should().Be("testuser");
         result.Email.Should().Be("test@example.com");
         result.NormalizedEmail.Should().Be("TEST@EXAMPLE.COM");
         result.EmailConfirmed.Should().BeTrue();
@@ -187,7 +187,7 @@ public class UserMapperTests
         // Arrange
         var user = new User("user-456")
         {
-            UserName = "testuser2",
+            FullName = "testuser2",
             Email = "test2@example.com",
             NormalizedEmail = "TEST2@EXAMPLE.COM",
             LockoutEnd = null
@@ -206,7 +206,7 @@ public class UserMapperTests
         // Arrange
         var user = new User("user-789")
         {
-            UserName = "testuser3",
+            FullName = "testuser3",
             Email = "test3@example.com",
             NormalizedEmail = "TEST3@EXAMPLE.COM",
             LastLoginAt = null
@@ -225,7 +225,7 @@ public class UserMapperTests
         // Arrange
         var user = new User("user-min")
         {
-            UserName = "minimal",
+            FullName = "minimal",
             Email = "minimal@example.com",
             NormalizedEmail = "MINIMAL@EXAMPLE.COM"
         };
@@ -236,7 +236,7 @@ public class UserMapperTests
         // Assert
         result.Should().NotBeNull();
         result.Id.Should().Be("user-min");
-        result.UserName.Should().Be("minimal");
+        result.FullName.Should().Be("minimal");
         result.Email.Should().Be("minimal@example.com");
         result.NormalizedEmail.Should().Be("MINIMAL@EXAMPLE.COM");
         
@@ -336,7 +336,7 @@ public class UserMapperTests
         var originalEntity = new UserEntity
         {
             Id = "user-123",
-            UserName = "testuser",
+            FullName = "testuser",
             Email = "test@example.com",
             NormalizedEmail = "TEST@EXAMPLE.COM",
             EmailConfirmed = true,
@@ -371,7 +371,7 @@ public class UserMapperTests
         // Arrange
         var originalUser = new User("user-456")
         {
-            UserName = "minimal",
+            FullName = "minimal",
             Email = "minimal@example.com",
             NormalizedEmail = "MINIMAL@EXAMPLE.COM"
         };

@@ -61,25 +61,6 @@ public class V1CoursesController(
     }
 
     /// <summary>
-    ///     Получение последней версии курса
-    /// </summary>
-    [HttpGet("{courseId}/last")]
-    public async Task<ActionResult<V1Course>> GetCourseLastAsync(string courseId)
-    {
-        var result = await courseService.GetCourseLastAsync(courseId);
-
-        return result.Match<ActionResult<V1Course>>(
-            notExists => NotFound(new ProblemDetails
-            {
-                Title = "Course Not Found",
-                Detail = $"Course with id {notExists.EntityId} not found",
-                Status = StatusCodes.Status404NotFound
-            }),
-            success => Ok(resDtoMapper.Map(success.Value))
-        );
-    }
-
-    /// <summary>
     ///     Получение категорий
     /// </summary>
     [HttpGet("categories")]
@@ -102,10 +83,10 @@ public class V1CoursesController(
     /// <summary>
     ///     Получение конкретной версии курса
     /// </summary>
-    [HttpGet("{courseId}/version/{version}")]
-    public async Task<IActionResult> GetCourseVersionAsync(string courseId, int version)
+    [HttpGet("{courseId}")]
+    public async Task<IActionResult> GetCourseAsync(string courseId)
     {
-        var result = await courseService.GetCourseVersionAsync(courseId, version);
+        var result = await courseService.GetCourseAsync(courseId);
 
         return result.Match<IActionResult>(
             notExists => NotFound(new ProblemDetails

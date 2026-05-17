@@ -1,6 +1,6 @@
 using LearningPlatformApi.V1.Models.Base;
 
-namespace LearningPlatformApi.V1.Models.Lessons;
+namespace LearningPlatformApi.V1.Models.Lessons.Res;
 
 public class V1LessonShortResDto : AuditableResDto
 {

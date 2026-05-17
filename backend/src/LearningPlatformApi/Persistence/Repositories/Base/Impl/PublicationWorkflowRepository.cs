@@ -6,8 +6,7 @@ using Microsoft.EntityFrameworkCore;
 namespace LearningPlatformApi.Persistence.Repositories.Base.Impl;
 
 public abstract class PublicationWorkflowRepository<TPublicationEntity, TPublicationId, TDbEntity, TDbId>
-    : VersionedRepository<TPublicationEntity, TPublicationId, TDbEntity, TDbId>,
-        IPublicationWorkflowRepository<TPublicationEntity, TPublicationId>
+    : AuditableRepository<TPublicationEntity, TPublicationId, TDbEntity, TDbId>, IPublicationWorkflowRepository<TPublicationEntity, TPublicationId>
     where TPublicationEntity : PublicationWorkflowEntity<TPublicationId>
     where TPublicationId : IEquatable<TPublicationId>
     where TDbEntity : PublicationDbEntity<TDbId>

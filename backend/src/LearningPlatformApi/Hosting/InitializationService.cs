@@ -53,6 +53,7 @@ public class InitializationService(
             {
                 adminUser = new UserEntity
                 {
+                    FullName = adminEmail,
                     UserName = adminEmail,
                     Email = adminEmail,
                     EmailConfirmed = true,

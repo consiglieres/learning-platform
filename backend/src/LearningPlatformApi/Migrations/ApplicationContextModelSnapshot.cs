@@ -24,21 +24,18 @@ namespace LearningPlatformApi.Migrations
 
             modelBuilder.Entity("CategoryEntityCourseEntity", b =>
                 {
+                    b.Property<string>("CoursesId")
+                        .HasColumnType("text");
+
                     b.Property<string>("CategoriesTypeName")
                         .HasColumnType("text");
 
                     b.Property<string>("CategoriesValueName")
                         .HasColumnType("text");
 
-                    b.Property<string>("CoursesId")
-                        .HasColumnType("text");
+                    b.HasKey("CoursesId", "CategoriesTypeName", "CategoriesValueName");
 
-                    b.Property<int>("CoursesVersionOrder")
-                        .HasColumnType("integer");
-
-                    b.HasKey("CategoriesTypeName", "CategoriesValueName", "CoursesId", "CoursesVersionOrder");
-
-                    b.HasIndex("CoursesId", "CoursesVersionOrder");
+                    b.HasIndex("CategoriesTypeName", "CategoriesValueName");
 
                     b.ToTable("CategoryEntityCourseEntity");
                 });
@@ -60,9 +57,6 @@ namespace LearningPlatformApi.Migrations
                 {
                     b.Property<string>("Id")
                         .HasColumnType("text");
-
-                    b.Property<int>("VersionOrder")
-                        .HasColumnType("integer");
 
                     b.Property<DateTimeOffset>("CreatedAt")
                         .HasColumnType("timestamp with time zone");
@@ -92,9 +86,6 @@ namespace LearningPlatformApi.Migrations
                         .IsRequired()
                         .HasColumnType("text");
 
-                    b.Property<int>("LessonVersionOrder")
-                        .HasColumnType("integer");
-
                     b.Property<string>("Name")
                         .IsRequired()
                         .HasColumnType("text");
@@ -104,12 +95,6 @@ namespace LearningPlatformApi.Migrations
 
                     b.Property<string>("PageId")
                         .IsRequired()
-                        .HasColumnType("text");
-
-                    b.Property<int>("PageVersionOrder")
-                        .HasColumnType("integer");
-
-                    b.Property<string>("Tag")
                         .HasColumnType("text");
 
                     b.Property<string>("TestCode")
@@ -122,28 +107,25 @@ namespace LearningPlatformApi.Migrations
                     b.Property<string>("UpdatedBy")
                         .HasColumnType("text");
 
-                    b.HasKey("Id", "VersionOrder");
+                    b.HasKey("Id");
 
                     b.HasIndex("CreatedBy");
 
                     b.HasIndex("DeletedBy");
 
+                    b.HasIndex("LessonId");
+
+                    b.HasIndex("PageId");
+
                     b.HasIndex("UpdatedBy");
 
-                    b.HasIndex("LessonId", "LessonVersionOrder");
-
-                    b.HasIndex("PageId", "PageVersionOrder");
-
-                    b.ToTable("CodingTasks", (string)null);
+                    b.ToTable("CodingTasks");
                 });
 
             modelBuilder.Entity("LearningPlatformApi.Persistence.Entities.CourseEntity", b =>
                 {
                     b.Property<string>("Id")
                         .HasColumnType("text");
-
-                    b.Property<int>("VersionOrder")
-                        .HasColumnType("integer");
 
                     b.Property<DateTimeOffset>("CreatedAt")
                         .HasColumnType("timestamp with time zone");
@@ -165,13 +147,11 @@ namespace LearningPlatformApi.Migrations
                     b.Property<string>("IntroductionPageId")
                         .HasColumnType("text");
 
-                    b.Property<int?>("IntroductionPageVersionOrder")
-                        .HasColumnType("integer");
-
                     b.Property<string>("ModerationComment")
                         .HasColumnType("text");
 
                     b.Property<string>("PageId")
+                        .IsRequired()
                         .HasColumnType("text");
 
                     b.Property<DateTimeOffset?>("PublishedAt")
@@ -196,9 +176,6 @@ namespace LearningPlatformApi.Migrations
                     b.Property<DateTimeOffset?>("SubmittedForModerationAt")
                         .HasColumnType("timestamp with time zone");
 
-                    b.Property<string>("Tag")
-                        .HasColumnType("text");
-
                     b.Property<string>("Title")
                         .IsRequired()
                         .HasColumnType("text");
@@ -209,19 +186,19 @@ namespace LearningPlatformApi.Migrations
                     b.Property<string>("UpdatedBy")
                         .HasColumnType("text");
 
-                    b.HasKey("Id", "VersionOrder");
+                    b.HasKey("Id");
 
                     b.HasIndex("CreatedBy");
 
                     b.HasIndex("DeletedBy");
+
+                    b.HasIndex("IntroductionPageId");
 
                     b.HasIndex("PublishedByUserId");
 
                     b.HasIndex("SubmittedByUserId");
 
                     b.HasIndex("UpdatedBy");
-
-                    b.HasIndex("IntroductionPageId", "IntroductionPageVersionOrder");
 
                     b.ToTable("Courses");
                 });
@@ -230,9 +207,6 @@ namespace LearningPlatformApi.Migrations
                 {
                     b.Property<string>("Id")
                         .HasColumnType("text");
-
-                    b.Property<int>("VersionOrder")
-                        .HasColumnType("integer");
 
                     b.Property<DateTimeOffset>("CreatedAt")
                         .HasColumnType("timestamp with time zone");
@@ -254,18 +228,12 @@ namespace LearningPlatformApi.Migrations
                         .IsRequired()
                         .HasColumnType("text");
 
-                    b.Property<int>("ModuleVersionOrder")
-                        .HasColumnType("integer");
-
                     b.Property<string>("Name")
                         .IsRequired()
                         .HasColumnType("text");
 
                     b.Property<string>("PageEntityId")
                         .HasColumnType("text");
-
-                    b.Property<int?>("PageEntityVersionOrder")
-                        .HasColumnType("integer");
 
                     b.Property<string>("PageId")
                         .IsRequired()
@@ -274,30 +242,23 @@ namespace LearningPlatformApi.Migrations
                     b.Property<int>("PassThreshold")
                         .HasColumnType("integer");
 
-                    b.Property<string>("Tag")
-                        .HasColumnType("text");
-
                     b.Property<DateTimeOffset?>("UpdatedAt")
                         .HasColumnType("timestamp with time zone");
 
                     b.Property<string>("UpdatedBy")
                         .HasColumnType("text");
 
-                    b.HasKey("Id", "VersionOrder");
+                    b.HasKey("Id");
 
                     b.HasIndex("CreatedBy");
 
                     b.HasIndex("DeletedBy");
 
+                    b.HasIndex("ModuleId");
+
+                    b.HasIndex("PageEntityId");
+
                     b.HasIndex("UpdatedBy");
-
-                    b.HasIndex("ModuleId", "LessonOrder")
-                        .IsUnique()
-                        .HasDatabaseName("IX_ModuleId_LessonOrder");
-
-                    b.HasIndex("ModuleId", "ModuleVersionOrder");
-
-                    b.HasIndex("PageEntityId", "PageEntityVersionOrder");
 
                     b.ToTable("Lessons");
                 });
@@ -307,15 +268,12 @@ namespace LearningPlatformApi.Migrations
                     b.Property<string>("Id")
                         .HasColumnType("text");
 
-                    b.Property<int>("VersionOrder")
-                        .HasColumnType("integer");
+                    b.Property<string>("CourseEntityId")
+                        .HasColumnType("text");
 
                     b.Property<string>("CourseId")
                         .IsRequired()
                         .HasColumnType("text");
-
-                    b.Property<int>("CourseVersion")
-                        .HasColumnType("integer");
 
                     b.Property<DateTimeOffset>("CreatedAt")
                         .HasColumnType("timestamp with time zone");
@@ -341,34 +299,23 @@ namespace LearningPlatformApi.Migrations
                         .IsRequired()
                         .HasColumnType("text");
 
-                    b.Property<int>("PageVersionOrder")
-                        .HasColumnType("integer");
-
-                    b.Property<string>("Tag")
-                        .HasColumnType("text");
-
                     b.Property<DateTimeOffset?>("UpdatedAt")
                         .HasColumnType("timestamp with time zone");
 
                     b.Property<string>("UpdatedBy")
                         .HasColumnType("text");
 
-                    b.HasKey("Id", "VersionOrder");
+                    b.HasKey("Id");
+
+                    b.HasIndex("CourseEntityId");
 
                     b.HasIndex("CreatedBy");
 
                     b.HasIndex("DeletedBy");
 
+                    b.HasIndex("PageId");
+
                     b.HasIndex("UpdatedBy");
-
-                    b.HasIndex("CourseId", "CourseVersion");
-
-                    b.HasIndex("PageId", "PageVersionOrder")
-                        .IsUnique();
-
-                    b.HasIndex("CourseId", "ModuleOrder", "VersionOrder")
-                        .IsUnique()
-                        .HasDatabaseName("IX_CourseId_ModuleOrder");
 
                     b.ToTable("Modules");
                 });
@@ -398,12 +345,12 @@ namespace LearningPlatformApi.Migrations
                     b.Property<int>("Order")
                         .HasColumnType("integer");
 
+                    b.Property<string>("PageEntityId")
+                        .HasColumnType("text");
+
                     b.Property<string>("PageId")
                         .IsRequired()
                         .HasColumnType("text");
-
-                    b.Property<int>("PageVersion")
-                        .HasColumnType("integer");
 
                     b.Property<string>("Type")
                         .IsRequired()
@@ -421,24 +368,17 @@ namespace LearningPlatformApi.Migrations
 
                     b.HasIndex("DeletedBy");
 
+                    b.HasIndex("PageEntityId");
+
                     b.HasIndex("UpdatedBy");
 
-                    b.HasIndex("PageId", "PageVersion");
-
-                    b.HasIndex("PageId", "Order", "PageVersion")
-                        .IsUnique()
-                        .HasDatabaseName("IX_ContentBlocks_PageId");
-
-                    b.ToTable("ContentBlocks", (string)null);
+                    b.ToTable("ContentBlocks");
                 });
 
             modelBuilder.Entity("LearningPlatformApi.Persistence.Entities.Page.PageEntity", b =>
                 {
                     b.Property<string>("Id")
                         .HasColumnType("text");
-
-                    b.Property<int>("VersionOrder")
-                        .HasColumnType("integer");
 
                     b.Property<DateTimeOffset>("CreatedAt")
                         .HasColumnType("timestamp with time zone");
@@ -456,9 +396,6 @@ namespace LearningPlatformApi.Migrations
                     b.Property<int>("Order")
                         .HasColumnType("integer");
 
-                    b.Property<string>("Tag")
-                        .HasColumnType("text");
-
                     b.Property<string>("TypeCode")
                         .IsRequired()
                         .HasColumnType("text");
@@ -473,7 +410,7 @@ namespace LearningPlatformApi.Migrations
                     b.Property<string>("UpdatedBy")
                         .HasColumnType("text");
 
-                    b.HasKey("Id", "VersionOrder");
+                    b.HasKey("Id");
 
                     b.HasIndex("CreatedBy");
 
@@ -481,7 +418,7 @@ namespace LearningPlatformApi.Migrations
 
                     b.HasIndex("UpdatedBy");
 
-                    b.ToTable("Pages", (string)null);
+                    b.ToTable("Pages");
                 });
 
             modelBuilder.Entity("LearningPlatformApi.Persistence.Entities.Resource", b =>
@@ -511,9 +448,6 @@ namespace LearningPlatformApi.Migrations
                     b.Property<string>("Id")
                         .HasColumnType("text");
 
-                    b.Property<int>("VersionOrder")
-                        .HasColumnType("integer");
-
                     b.PrimitiveCollection<string[]>("CorrectAnswer")
                         .IsRequired()
                         .HasColumnType("text[]");
@@ -539,10 +473,8 @@ namespace LearningPlatformApi.Migrations
                         .HasColumnType("integer");
 
                     b.Property<string>("LessonId")
+                        .IsRequired()
                         .HasColumnType("text");
-
-                    b.Property<int?>("LessonVersionOrder")
-                        .HasColumnType("integer");
 
                     b.Property<string>("Name")
                         .IsRequired()
@@ -556,16 +488,11 @@ namespace LearningPlatformApi.Migrations
                         .HasColumnType("integer");
 
                     b.Property<string>("PageId")
-                        .HasColumnType("text");
-
-                    b.Property<int?>("PageVersionOrder")
-                        .HasColumnType("integer");
-
-                    b.Property<string>("Question")
                         .IsRequired()
                         .HasColumnType("text");
 
-                    b.Property<string>("Tag")
+                    b.Property<string>("Question")
+                        .IsRequired()
                         .HasColumnType("text");
 
                     b.Property<DateTimeOffset?>("UpdatedAt")
@@ -574,19 +501,19 @@ namespace LearningPlatformApi.Migrations
                     b.Property<string>("UpdatedBy")
                         .HasColumnType("text");
 
-                    b.HasKey("Id", "VersionOrder");
+                    b.HasKey("Id");
 
                     b.HasIndex("CreatedBy");
 
                     b.HasIndex("DeletedBy");
 
+                    b.HasIndex("LessonId");
+
+                    b.HasIndex("PageId");
+
                     b.HasIndex("UpdatedBy");
 
-                    b.HasIndex("LessonId", "LessonVersionOrder");
-
-                    b.HasIndex("PageId", "PageVersionOrder");
-
-                    b.ToTable("TestTask", (string)null);
+                    b.ToTable("TestTask");
                 });
 
             modelBuilder.Entity("LearningPlatformApi.Persistence.Entities.UserEntity", b =>
@@ -611,6 +538,10 @@ namespace LearningPlatformApi.Migrations
 
                     b.Property<bool>("EmailConfirmed")
                         .HasColumnType("boolean");
+
+                    b.Property<string>("FullName")
+                        .IsRequired()
+                        .HasColumnType("text");
 
                     b.Property<bool>("IsActive")
                         .HasColumnType("boolean");
@@ -651,7 +582,6 @@ namespace LearningPlatformApi.Migrations
                         .HasColumnType("timestamp with time zone");
 
                     b.Property<string>("UserName")
-                        .IsRequired()
                         .HasMaxLength(256)
                         .HasColumnType("character varying(256)");
 
@@ -827,15 +757,15 @@ namespace LearningPlatformApi.Migrations
 
             modelBuilder.Entity("CategoryEntityCourseEntity", b =>
                 {
-                    b.HasOne("LearningPlatformApi.Persistence.Entities.CategoryEntity", null)
+                    b.HasOne("LearningPlatformApi.Persistence.Entities.CourseEntity", null)
                         .WithMany()
-                        .HasForeignKey("CategoriesTypeName", "CategoriesValueName")
+                        .HasForeignKey("CoursesId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
-                    b.HasOne("LearningPlatformApi.Persistence.Entities.CourseEntity", null)
+                    b.HasOne("LearningPlatformApi.Persistence.Entities.CategoryEntity", null)
                         .WithMany()
-                        .HasForeignKey("CoursesId", "CoursesVersionOrder")
+                        .HasForeignKey("CategoriesTypeName", "CategoriesValueName")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
                 });
@@ -853,22 +783,22 @@ namespace LearningPlatformApi.Migrations
                         .HasForeignKey("DeletedBy")
                         .OnDelete(DeleteBehavior.Restrict);
 
-                    b.HasOne("LearningPlatformApi.Persistence.Entities.UserEntity", "UpdatedByUser")
-                        .WithMany()
-                        .HasForeignKey("UpdatedBy")
-                        .OnDelete(DeleteBehavior.Restrict);
-
                     b.HasOne("LearningPlatformApi.Persistence.Entities.LessonEntity", "Lesson")
-                        .WithMany()
-                        .HasForeignKey("LessonId", "LessonVersionOrder")
+                        .WithMany("CodingTasks")
+                        .HasForeignKey("LessonId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
                     b.HasOne("LearningPlatformApi.Persistence.Entities.Page.PageEntity", "Page")
                         .WithMany()
-                        .HasForeignKey("PageId", "PageVersionOrder")
+                        .HasForeignKey("PageId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
+
+                    b.HasOne("LearningPlatformApi.Persistence.Entities.UserEntity", "UpdatedByUser")
+                        .WithMany()
+                        .HasForeignKey("UpdatedBy")
+                        .OnDelete(DeleteBehavior.Restrict);
 
                     b.Navigation("CreatedByUser");
 
@@ -894,6 +824,10 @@ namespace LearningPlatformApi.Migrations
                         .HasForeignKey("DeletedBy")
                         .OnDelete(DeleteBehavior.Restrict);
 
+                    b.HasOne("LearningPlatformApi.Persistence.Entities.Page.PageEntity", "IntroductionPage")
+                        .WithMany()
+                        .HasForeignKey("IntroductionPageId");
+
                     b.HasOne("LearningPlatformApi.Persistence.Entities.UserEntity", "PublishedByUser")
                         .WithMany()
                         .HasForeignKey("PublishedByUserId");
@@ -906,10 +840,6 @@ namespace LearningPlatformApi.Migrations
                         .WithMany()
                         .HasForeignKey("UpdatedBy")
                         .OnDelete(DeleteBehavior.Restrict);
-
-                    b.HasOne("LearningPlatformApi.Persistence.Entities.Page.PageEntity", "IntroductionPage")
-                        .WithMany()
-                        .HasForeignKey("IntroductionPageId", "IntroductionPageVersionOrder");
 
                     b.Navigation("CreatedByUser");
 
@@ -937,20 +867,20 @@ namespace LearningPlatformApi.Migrations
                         .HasForeignKey("DeletedBy")
                         .OnDelete(DeleteBehavior.Restrict);
 
-                    b.HasOne("LearningPlatformApi.Persistence.Entities.UserEntity", "UpdatedByUser")
-                        .WithMany()
-                        .HasForeignKey("UpdatedBy")
-                        .OnDelete(DeleteBehavior.Restrict);
-
                     b.HasOne("LearningPlatformApi.Persistence.Entities.ModuleEntity", "Module")
                         .WithMany("Lessons")
-                        .HasForeignKey("ModuleId", "ModuleVersionOrder")
+                        .HasForeignKey("ModuleId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
                     b.HasOne("LearningPlatformApi.Persistence.Entities.Page.PageEntity", "PageEntity")
                         .WithMany()
-                        .HasForeignKey("PageEntityId", "PageEntityVersionOrder");
+                        .HasForeignKey("PageEntityId");
+
+                    b.HasOne("LearningPlatformApi.Persistence.Entities.UserEntity", "UpdatedByUser")
+                        .WithMany()
+                        .HasForeignKey("UpdatedBy")
+                        .OnDelete(DeleteBehavior.Restrict);
 
                     b.Navigation("CreatedByUser");
 
@@ -965,6 +895,10 @@ namespace LearningPlatformApi.Migrations
 
             modelBuilder.Entity("LearningPlatformApi.Persistence.Entities.ModuleEntity", b =>
                 {
+                    b.HasOne("LearningPlatformApi.Persistence.Entities.CourseEntity", null)
+                        .WithMany("Modules")
+                        .HasForeignKey("CourseEntityId");
+
                     b.HasOne("LearningPlatformApi.Persistence.Entities.UserEntity", "CreatedByUser")
                         .WithMany()
                         .HasForeignKey("CreatedBy")
@@ -976,22 +910,16 @@ namespace LearningPlatformApi.Migrations
                         .HasForeignKey("DeletedBy")
                         .OnDelete(DeleteBehavior.Restrict);
 
+                    b.HasOne("LearningPlatformApi.Persistence.Entities.Page.PageEntity", "Page")
+                        .WithMany()
+                        .HasForeignKey("PageId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
                     b.HasOne("LearningPlatformApi.Persistence.Entities.UserEntity", "UpdatedByUser")
                         .WithMany()
                         .HasForeignKey("UpdatedBy")
                         .OnDelete(DeleteBehavior.Restrict);
-
-                    b.HasOne("LearningPlatformApi.Persistence.Entities.CourseEntity", null)
-                        .WithMany("Modules")
-                        .HasForeignKey("CourseId", "CourseVersion")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.HasOne("LearningPlatformApi.Persistence.Entities.Page.PageEntity", "Page")
-                        .WithOne()
-                        .HasForeignKey("LearningPlatformApi.Persistence.Entities.ModuleEntity", "PageId", "PageVersionOrder")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
 
                     b.Navigation("CreatedByUser");
 
@@ -1015,16 +943,14 @@ namespace LearningPlatformApi.Migrations
                         .HasForeignKey("DeletedBy")
                         .OnDelete(DeleteBehavior.Restrict);
 
+                    b.HasOne("LearningPlatformApi.Persistence.Entities.Page.PageEntity", null)
+                        .WithMany("ContentBlocks")
+                        .HasForeignKey("PageEntityId");
+
                     b.HasOne("LearningPlatformApi.Persistence.Entities.UserEntity", "UpdatedByUser")
                         .WithMany()
                         .HasForeignKey("UpdatedBy")
                         .OnDelete(DeleteBehavior.Restrict);
-
-                    b.HasOne("LearningPlatformApi.Persistence.Entities.Page.PageEntity", null)
-                        .WithMany("ContentBlocks")
-                        .HasForeignKey("PageId", "PageVersion")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
 
                     b.Navigation("CreatedByUser");
 
@@ -1071,18 +997,22 @@ namespace LearningPlatformApi.Migrations
                         .HasForeignKey("DeletedBy")
                         .OnDelete(DeleteBehavior.Restrict);
 
+                    b.HasOne("LearningPlatformApi.Persistence.Entities.LessonEntity", "Lesson")
+                        .WithMany("TestTasks")
+                        .HasForeignKey("LessonId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.HasOne("LearningPlatformApi.Persistence.Entities.Page.PageEntity", "Page")
+                        .WithMany()
+                        .HasForeignKey("PageId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
                     b.HasOne("LearningPlatformApi.Persistence.Entities.UserEntity", "UpdatedByUser")
                         .WithMany()
                         .HasForeignKey("UpdatedBy")
                         .OnDelete(DeleteBehavior.Restrict);
-
-                    b.HasOne("LearningPlatformApi.Persistence.Entities.LessonEntity", "Lesson")
-                        .WithMany()
-                        .HasForeignKey("LessonId", "LessonVersionOrder");
-
-                    b.HasOne("LearningPlatformApi.Persistence.Entities.Page.PageEntity", "Page")
-                        .WithMany()
-                        .HasForeignKey("PageId", "PageVersionOrder");
 
                     b.Navigation("CreatedByUser");
 
@@ -1168,6 +1098,13 @@ namespace LearningPlatformApi.Migrations
             modelBuilder.Entity("LearningPlatformApi.Persistence.Entities.CourseEntity", b =>
                 {
                     b.Navigation("Modules");
+                });
+
+            modelBuilder.Entity("LearningPlatformApi.Persistence.Entities.LessonEntity", b =>
+                {
+                    b.Navigation("CodingTasks");
+
+                    b.Navigation("TestTasks");
                 });
 
             modelBuilder.Entity("LearningPlatformApi.Persistence.Entities.ModuleEntity", b =>

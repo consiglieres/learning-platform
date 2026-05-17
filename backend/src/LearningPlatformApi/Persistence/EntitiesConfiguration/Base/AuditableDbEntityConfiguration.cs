@@ -29,9 +29,10 @@ public abstract class AuditableDbEntityConfiguration<TEntity, TKey> : IEntityTyp
             .HasForeignKey(e => e.DeletedBy)
             .HasPrincipalKey(u => u.Id)
             .OnDelete(DeleteBehavior.Restrict);
-
-        OverrideConfigure(builder);
     }
 
-    protected abstract void OverrideConfigure(EntityTypeBuilder<TEntity> modelBuilder);
+    protected virtual void OverrideConfigure(EntityTypeBuilder<TEntity> modelBuilder)
+    {
+        Configure(modelBuilder);
+    }
 }

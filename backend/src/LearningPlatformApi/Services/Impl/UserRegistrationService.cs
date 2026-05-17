@@ -31,6 +31,7 @@ public class UserRegistrationService(
         {
             Email = registerModel.Email,
             UserName = registerModel.Email,
+            FullName = registerModel.FullName,
             EmailConfirmed = false,
             IsActive = true,
             CreatedAt = DateTimeOffset.UtcNow,
