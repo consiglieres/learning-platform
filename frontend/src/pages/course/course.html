@@ -4,15 +4,17 @@
       <a class="breadcrumbs__link" routerLink="/">{{ breadcrumbs()[0] }}</a> /
       <span class="breadcrumbs__current">{{ breadcrumbs()[1] }}</span>
     </div>
-    <h1 class="header__title">{{ courseTitle() }}</h1>
-    <section class="bubles">
-      <div class="bubles__main">Стек:</div>
-      @for (lang of languages(); track lang) {
-        <div class="bubles__language">{{ lang }}</div>
-      }
-    </section>
-    <span class="header__descriptions">{{ headerDescription() }}</span>
-    <button class="header__button" routerLink="/register">Начать обучение</button>
+    @if (courseDetail(); as course) {
+      <h1 class="header__title">{{ course.title }}</h1>
+      <section class="bubles">
+        <div class="bubles__main">Стек:</div>
+        @for (cat of course.categories; track cat.type) {
+          <div class="bubles__language">{{ cat.value }}</div>
+        }
+      </section>
+      <span class="header__descriptions">{{ course.description }}</span>
+      <button class="header__button" routerLink="/register">Начать обучение</button>
+    }
   </header>
 
   <section class="advantages">
@@ -47,15 +49,30 @@
       <div class="loading-spinner">Загрузка...</div>
     } @else if (error()) {
       <div class="error-message">{{ error() }}</div>
-    } @else {
-      <div class="categories-list">
-        @for (cat of categories(); track cat.type) {
-          <div class="category-item">
-            <!-- Используем type как заголовок, value как описание (или наоборот) -->
-            <h3>{{ cat.type }}</h3>
-            <p>{{ cat.value }}</p>
-            <!-- Если нужна ссылка на страницу категории, можно построить маршрут -->
-            <button [routerLink]="['/category', cat.type]">Подробнее</button>
+    } @else if (courseDetail(); as course) {
+      <div class="modules-list">
+        @for (module of course.modules; track module.id) {
+          <div class="module-item" [class.expanded]="module.expanded">
+            <div class="module-header" (click)="toggleModule(module)">
+              <div class="module-info">
+                <h3 class="module-title">{{ module.title }}</h3>
+                <div class="module-meta">
+                  <span class="module-duration">⏱ {{ module.duration }} ч.</span>
+                  <span class="module-tasks">📋 {{ module.tasksCount }} заданий</span>
+                </div>
+              </div>
+              <div class="module-toggle-icon">{{ module.expanded ? '▲' : '▼' }}</div>
+            </div>
+            @if (module.expanded) {
+              <div class="module-topics">
+                @for (topic of module.topics; track topic.title) {
+                  <div class="topic-item">
+                    <h4 class="topic-title">{{ topic.title }}</h4>
+                    <p class="topic-description">{{ topic.description }}</p>
+                  </div>
+                }
+              </div>
+            }
           </div>
         }
       </div>

@@ -1,6 +1,88 @@
+$title-color: #4A3B80;
+$text-color: #4A3B80;
+$background-color: #F8F5FF;
+
+h1, h2, h3, h4 {
+  color: $title-color;
+}
+
+h6 {
+  color: $text-color;
+}
+
+p {
+  color: $text-color
+}
+
+
 .card {
   border-radius: 30px;
   max-width: 547px;
   height: 655px;
   background-color: #F8F5FF;
+
+  .buble, .description {
+    margin: 0 40px 0 40px;
+  }
+
+  .card__title {
+    margin: 40px 40px 0 40px;
+  }
+
+  .buble {
+
+    .buble__line {
+      display: flex;
+      flex-direction: row;
+      justify-content: start;
+      margin: 18px 0 25px 0;
+      gap: 5px;
+
+      .buble__line-1, .buble__line-2, .buble__line-3 {
+        height: 20px;
+        width: 20px;
+        border-radius: 100px;
+      }
+
+      .buble__line-1 {
+        background-color: gray;
+      }
+
+      .buble__line-2 {
+        background-color: gray;
+      }
+
+      .buble__line-3 {
+        background-color: gray;
+      }
+    }
+
+    .buble__language {
+      background-color: #8DD177;
+      border-radius: 100px;
+      text-align: center;
+      align-content: center;
+      color: white;
+      height: 42px;
+      max-width: 172px;
+    }
+  }
+
+  .description {
+    height: 18vh;
+    display: flex;
+    justify-content: end;
+    flex-direction: column;
+    gap: 15px;
+
+    .description__item {
+      display: flex;
+      justify-content: start;
+      flex-direction: row;
+
+      .description__time-text, .description__task-text {
+        margin: 0;
+      }
+    }
+  }
 }

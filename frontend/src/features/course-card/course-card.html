@@ -1,18 +1,22 @@
 <main class="card" [routerLink]="['/course', course.id]">
   <img src="assets/course-header.png" class="card__image" alt="course image" />
-  <h3 class="card__title">{{ course.title }}</h3>
+  <h4 class="card__title">{{ course.title }}</h4>
   <section class="buble">
-    <div class="buble__type">{{ course.language || 'Общий' }}</div>
-    <div class="buble__line"></div>
-    <div class="buble__language">{{ course.categories?.[0]?.value }}</div>
+<!--    <div class="buble__type">{{ course.categories?.[0]?.value || 'Общий' }}</div>-->
+    <div class="buble__line">
+      <div class="buble__line-1"></div>
+      <div class="buble__line-2"></div>
+      <div class="buble__line-3"></div>
+    </div>
+    <div class="buble__language">{{ course.language }}</div>
   </section>
   <section class="description">
     <div class="description__item">
-      <img class="description__time-img" src="assets/clock.svg" alt="duration" />
-      <p class="description__time-text">{{ course.duration || '?' }} ч.</p>
+      <img class="description__time-image" src="assets/clock-purple.png" alt="duration" />
+      <p class="description__time-text">{{ course.duration || '?' }} часов теории</p>
     </div>
     <div class="description__item">
-      <img class="description__task-image" src="assets/task.svg" alt="tasks" />
+      <img class="description__task-image" src="assets/task-purple.png" alt="tasks" />
       <p class="description__task-text">{{ course.tasks || '?' }} заданий</p>
     </div>
   </section>

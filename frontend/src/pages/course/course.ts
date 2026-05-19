@@ -1,32 +1,54 @@
-// course.component.ts
 import { Component, inject, signal, OnInit } from '@angular/core';
-import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
-import { RouterLink } from '@angular/router';
+import {ActivatedRoute, RouterLink} from '@angular/router';
 import { CourseService } from '../../entities/course.service';
-import { ICourseCategory } from '../../interfaces/courses.interface';
+import {switchMap, take} from 'rxjs';
+import {MockCourseService} from '../../entities/mock-course.service';
+
+interface ITopic {
+  title: string;
+  description: string;
+}
+
+interface IModule {
+  id: string;
+  title: string;
+  duration: number;
+  tasksCount: number;
+  topics: ITopic[];
+  expanded?: boolean; // локальное состояние раскрытия
+}
+
+interface ICourseDetail {
+  id: string;
+  title: string;
+  description: string;
+  image?: string;
+  duration?: number;
+  tasks?: number;
+  language?: string;
+  categories: any[];
+  modules: IModule[];
+}
 
 @Component({
   selector: 'app-course',
   standalone: true,
   imports: [RouterLink],
   templateUrl: './course.html',
-  styleUrls: ['./course.scss']
+  styleUrls: ['./course.scss'],
+  providers: [MockCourseService]
 })
-export class Course implements OnInit {
-  private courseService = inject(CourseService);
 
-  public categories = signal<ICourseCategory[]>([]);
+export class Course implements OnInit {
+  private route = inject(ActivatedRoute);
+  private courseService = inject(CourseService);
+  private mockCourseService = inject(MockCourseService)
+
+  public courseDetail = signal<ICourseDetail | null>(null);
   public loading = signal(true);
   public error = signal<string | null>(null);
 
-  // Статические блоки (оставляем как есть)
-  public breadcrumbs = signal(['Главная', 'Курс']);
-  public courseTitle = signal('Fullstack JavaScript-разработчик');
-  public languages = signal(['JavaScript', 'TypeScript', 'Node.js']);
-  public headerDescription = signal(
-    'Освойте востребованный стек технологий на практике. Проекты, максимально приближённые к реальным задачам индустрии, и экосистема поддержки, которая не даст сойти с дистанции.'
-  );
-
+  // Статические преимущества и описания (можно позже вынести в сервис)
   public advantagesTop = signal([
     { img: 'assets/advantages.png', title: '500+ довольных студентов', desc: 'уже закончили курс' },
     { img: 'assets/advantages.png', title: 'Учись самостоятельно', desc: 'в свободное время' },
@@ -44,24 +66,38 @@ export class Course implements OnInit {
     { title: 'Отработайте ошибки', description: 'и изучайте курс дальше' }
   ]);
 
-  ngOnInit() {
-    this.loadCategories();
+  // Для хлебных крошек
+  public breadcrumbs = signal(['Главная', 'Курс']);
+
+  ngOnInit(): void {
+    this.route.paramMap.pipe(
+      switchMap(params => {
+        const id = params.get('courseId');
+        if (id) {
+          return this.mockCourseService.getCourseById(id);
+        }
+        return [];
+      }),
+      take(1)
+    ).subscribe({
+      next: (data: any) => {
+        if (data.modules) {
+          data.modules.forEach((m: IModule) => m.expanded = false);
+        }
+        this.courseDetail.set(data as ICourseDetail);
+        this.loading.set(false);
+        // Обновим хлебные крошки заголовком курса
+        this.breadcrumbs.set(['Главная', data.title]);
+      },
+      error: (err) => {
+        this.error.set('Ошибка загрузки данных курса');
+        this.loading.set(false);
+      }
+    });
   }
 
-  private loadCategories() {
-    this.loading.set(true);
-    this.courseService.getCategories()
-      .pipe(takeUntilDestroyed())
-      .subscribe({
-        next: (data: ICourseCategory[]) => {
-          this.categories.set(data);
-          this.loading.set(false);
-        },
-        error: (err) => {
-          this.error.set('Ошибка загрузки категорий');
-          this.loading.set(false);
-          console.error(err);
-        }
-      });
+  // Метод для переключения аккордеона
+  public toggleModule(module: IModule): void {
+    module.expanded = !module.expanded;
   }
 }

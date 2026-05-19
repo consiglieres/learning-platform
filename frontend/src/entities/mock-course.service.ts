@@ -1,5 +1,5 @@
 import { Injectable } from '@angular/core';
-import { Observable, of } from 'rxjs';
+import {Observable, of, throwError} from 'rxjs';
 import { delay } from 'rxjs/operators';
 import {
   ICourseFull,
@@ -132,5 +132,35 @@ export class MockCourseService {
   public getMyCourses(): Observable<ICourse[]> {
     // Допустим, профиль видит только первые 3 курса
     return of([...this.mockCourses.slice(0, 3)]).pipe(delay(400));
+  }
+
+  private generateModules(courseId: string) {
+    const baseModules = [
+      { title: 'Введение', duration: 2, tasksCount: 3 },
+      { title: 'Основная часть', duration: 5, tasksCount: 6 },
+      { title: 'Продвинутый уровень', duration: 4, tasksCount: 4 },
+      { title: 'Практический проект', duration: 6, tasksCount: 5 }
+    ];
+    return baseModules.map((m, i) => ({
+      id: `${courseId}_${i}`,
+      ...m,
+      topics: [
+        { title: `Тема ${i*2+1}`, description: `Описание темы ${i*2+1}` },
+        { title: `Тема ${i*2+2}`, description: `Описание темы ${i*2+2}` }
+      ]
+    }));
+  }
+
+  public getCourseById(courseId: string): Observable<any> {
+    const found = this.mockCourses.find(c => c.id === courseId);
+    if (!found) {
+      return throwError(() => new Error('Курс не найден')).pipe(delay(300));
+    }
+    const modules = this.generateModules(courseId);
+    const courseDetail = {
+      ...found,
+      modules
+    };
+    return of(courseDetail).pipe(delay(400));
   }
 }

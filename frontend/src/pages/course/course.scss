@@ -1,0 +1,15 @@
+$title-color: #4A3B80;
+$text-color: #4A3B80;
+$background-color: #F8F5FF;
+
+h1, h2, h3, h4 {
+  color: $title-color;
+}
+
+h6 {
+  color: $text-color;
+}
+
+p {
+  color: $text-color
+}

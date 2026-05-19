@@ -17,18 +17,22 @@
 
   .list-header {
     display: flex;
-    justify-content: center;
+    justify-content: space-around;
     flex-direction: row;
     align-items: center;
-    gap: 115px;
+    //gap: 115px;
     margin: 150px 0 60px 0;
+
+    .list-header__title {
+      max-width: 455px;
+    }
 
     .list-header__block {
       display: flex;
       justify-content: space-evenly;
       flex-direction: column;
       background-color: #9889cf;
-      width: 1111px;
+      max-width: 1111px;
       height: 163px;
       border-radius: 15px;
       padding: 0 20px 0 20px;
@@ -62,5 +66,7 @@
   .course-list {
     display: grid;
     grid-template-columns: repeat(3, 1fr);
+    gap: 10px;
+    margin-bottom: 150px;
   }
 }
