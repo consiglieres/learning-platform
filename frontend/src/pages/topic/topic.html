@@ -1,0 +1,55 @@
+<section class="topic">
+  <section class="science">
+    <div class="button">
+      <button class="button__theme">Теория</button>
+      <button class="button__task">Задание</button>
+    </div>
+
+    <section class="main">
+      <div class="content__wrapper"></div>
+
+      <section class="content">
+        <h4 class="content__title">{{ topicTitle() }}</h4>
+
+        <h6 class="content__description">{{ topicDescription() }}</h6>
+      </section>
+    </section>
+  </section>
+
+  <section class="practics">
+    <h3 class="practics__title">Выберите задание</h3>
+    @for(task of tasks(); track task.id){
+      <div class="task">
+        <div class="task__buble"></div>
+        <div class="content">
+          <p class="task__name">{{task.title}}</p>
+          @if(task.completed){
+            <img [src]="" class="task__checker-">
+          }
+          @else{
+            <img [src]="" class="task__checker-complict">
+          }
+        </div>
+      </div>
+    }
+
+    <div class="task-information">
+      <p class="task-information__text">Прогресс: {{ completedCount }} / {{ tasks().length }}</p>
+      <div class="task-information__bar" [style.width.%]="(completedCount / tasks().length) * 100"></div>
+    </div>
+    <div class="rating">
+      <div class="level">
+        <div class="level__buble-green"></div>
+        <p>10 б.</p>
+      </div>
+      <div class="level">
+        <div class="level__buble-yelow"></div>
+        <p>25 б.</p>
+      </div>
+      <div class="level">
+        <div class="level__buble-red"></div>
+        <p>50 б.</p>
+      </div>
+    </div>
+  </section>
+</section>

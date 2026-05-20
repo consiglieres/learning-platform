@@ -77,4 +77,9 @@ export class CourseService {
       subscriber.complete();
     });
   }
+
+  public getCourseById(courseId: string): Observable<any> {
+    // Временная заглушка
+    return of(null);
+  }
 }

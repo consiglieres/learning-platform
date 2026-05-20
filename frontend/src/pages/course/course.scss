@@ -74,16 +74,27 @@ p {
       flex-direction: row;
       justify-content: center;
       gap: 10px;
+      width: 87%;
     }
 
     .card {
       height: 140px;
+      width: 87%;
       display: flex;
       justify-content: start;
       align-items: center;
       background-color: $background-card;
       border-radius: 20px;
       padding: 0 30px;
+
+      .card-top {
+        max-width: 28.48vw;
+
+      }
+
+      .card-bottom {
+        max-width: 43.22vw;
+      }
 
       .card__img {
         height: 70px;
@@ -93,25 +104,12 @@ p {
       }
 
       .content__title, .content__description {
-        max-width: 700px;
-        min-width: 440px;
         width: 100%;
         margin: 0;
         color: white;
+        text-align: start;
       }
     }
-
-    .card-top {
-      width: 547px;
-      min-width: 207px;
-    }
-
-    .card-bottom {
-      width: 830px;
-      min-width: 400px;
-    }
-
-
   }
 
   .content {
@@ -119,18 +117,19 @@ p {
     justify-content: center;
     flex-direction: column;
     align-items: center;
+    width: 100%;
+    min-width: 70%;
 
     .content__title {
-      text-align: center;
-      align-content: center;
-      align-items: center;
+      width: 87%;
+      text-align: start;
     }
 
     .modules-list {
       display: flex;
       justify-content: start;
       flex-direction: column;
-      max-width: 1680px;
+      max-width: 87.5vw;
       width: 100%;
 
       .module-item {
@@ -168,7 +167,7 @@ p {
             height: 40px;
             width: 40px;
             margin-right: 20px;
-
+            color: white;
           }
         }
       }

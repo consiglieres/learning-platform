@@ -101,8 +101,18 @@ export interface IModerationComment {
 }
 
 export interface ITopic {
+  id: string;
   title: string;
   time: string;
-  task: string;
+  task?: ITask[];
   description: string;
 }
+
+export interface ITask {
+  id: string;
+  title: string;
+  points: number;
+  type?: 'quiz' | 'code' | 'theory';
+  completed?: boolean;
+}
+

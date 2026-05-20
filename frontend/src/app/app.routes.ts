@@ -5,7 +5,7 @@ import { authorizationGuard } from '../shared/guards/authorization.guard';
 import { MainPage } from '../pages/main/main.page';
 import { Profile } from '../pages/profile/profile';
 import { Course } from '../pages/course/course';
-import { Theme } from '../pages/theme/theme';
+import { Topic } from '../pages/topic/topic';
 
 export const routes: Routes = [
   {
@@ -49,8 +49,8 @@ export const routes: Routes = [
         component: Course,
       },
       {
-        path: 'theme/:themeId',
-        component: Theme,
+        path: 'topic/:themeId',
+        component: Topic,
       },
     ],
   },

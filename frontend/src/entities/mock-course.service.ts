@@ -7,7 +7,7 @@ import {
   ICourseDraft,
   ICourseUpdate,
   IModerationComment,
-  ICourse
+  ICourse, ITask
 } from '../interfaces/courses.interface';
 
 @Injectable()
@@ -134,23 +134,6 @@ export class MockCourseService {
     return of([...this.mockCourses.slice(0, 3)]).pipe(delay(400));
   }
 
-  private generateModules(courseId: string) {
-    const baseModules = [
-      { title: 'Введение', duration: 2, tasksCount: 3 },
-      { title: 'Основная часть', duration: 5, tasksCount: 6 },
-      { title: 'Продвинутый уровень', duration: 4, tasksCount: 4 },
-      { title: 'Практический проект', duration: 6, tasksCount: 5 }
-    ];
-    return baseModules.map((m, i) => ({
-      id: `${courseId}_${i}`,
-      ...m,
-      topics: [
-        { title: `Тема ${i*2+1}`, description: `Описание темы ${i*2+1}` },
-        { title: `Тема ${i*2+2}`, description: `Описание темы ${i*2+2}` }
-      ]
-    }));
-  }
-
   public getCourseById(courseId: string): Observable<any> {
     const found = this.mockCourses.find(c => c.id === courseId);
     if (!found) {
@@ -163,4 +146,47 @@ export class MockCourseService {
     };
     return of(courseDetail).pipe(delay(400));
   }
+
+  private generateModules(courseId: string) {
+    const baseModules = [
+      { title: 'Введение', duration: 2, tasksCount: 3 },
+      { title: 'Основная часть', duration: 5, tasksCount: 6 },
+      { title: 'Продвинутый уровень', duration: 4, tasksCount: 4 },
+      { title: 'Практический проект', duration: 6, tasksCount: 5 }
+    ];
+    return baseModules.map((m, i) => {
+      const moduleId = `${courseId}_${i}`;
+      return {
+        id: moduleId,
+        title: m.title,
+        duration: m.duration,
+        tasksCount: m.tasksCount,
+        topics: [
+          {
+            id: `${moduleId}_0`,
+            title: `Тема ${i*2+1}`,
+            description: `Описание темы ${i*2+1}`,
+            tasks: this.generateTasksForTopic(`${moduleId}_0`)   // 👈 добавляем
+          },
+          {
+            id: `${moduleId}_1`,
+            title: `Тема ${i*2+2}`,
+            description: `Описание темы ${i*2+2}`,
+            tasks: this.generateTasksForTopic(`${moduleId}_1`)   // 👈 добавляем
+          }
+        ]
+      };
+    });
+  }
+
+
+  private generateTasksForTopic(topicId: string): ITask[] {
+    return [
+      { id: `${topicId}_task1`, title: 'Изучить теорию', points: 10 },
+      { id: `${topicId}_task2`, title: 'Практическое задание', points: 25 },
+      { id: `${topicId}_task3`, title: 'Финальный тест', points: 50 }
+    ];
+  }
+
+
 }

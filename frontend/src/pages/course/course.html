@@ -12,7 +12,7 @@
         }
       </section>
       <span class="header__descriptions">{{ course.description }}</span>
-      <button class="header__button" routerLink="/theme">Начать обучение</button>
+      <button class="header__button" (click)="startLearning()">Начать обучение</button>
     }
   </header>
 
@@ -81,7 +81,7 @@
     <section class="left">
       <h3>Как проходит обучение?</h3>
       <p>Выбирайте сложность задания самостоятельно, фокусируясь на устранении пробелов и закреплении навыков на практике</p>
-      <button class="left__button" routerLink="/register">Начать обучение</button>
+      <button class="left__button" (click)="startLearning()">Начать обучение</button>
     </section>
     @for (desc of descriptions(); track desc.title) {
     <section class="description">

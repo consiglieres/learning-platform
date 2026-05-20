@@ -1,10 +1,12 @@
 import { Component, inject, signal, OnInit } from '@angular/core';
-import {ActivatedRoute, RouterLink} from '@angular/router';
+import {ActivatedRoute, Router, RouterLink} from '@angular/router';
 import { CourseService } from '../../entities/course.service';
 import {switchMap, take} from 'rxjs';
 import {MockCourseService} from '../../entities/mock-course.service';
+import {ProgressService} from '../../entities/progress.service';
 
 interface ITopic {
+  id: string;
   title: string;
   description: string;
 }
@@ -36,13 +38,14 @@ interface ICourseDetail {
   imports: [RouterLink],
   templateUrl: './course.html',
   styleUrls: ['./course.scss'],
-  providers: [MockCourseService]
+  providers: [MockCourseService, ProgressService]
 })
 
 export class Course implements OnInit {
   private route = inject(ActivatedRoute);
-  private courseService = inject(CourseService);
-  private mockCourseService = inject(MockCourseService)
+  private router = inject(Router)
+  private mockCourseService = inject(MockCourseService);
+  private progressService = inject(ProgressService);
 
   public courseDetail = signal<ICourseDetail | null>(null);
   public loading = signal(true);
@@ -73,21 +76,17 @@ export class Course implements OnInit {
     this.route.paramMap.pipe(
       switchMap(params => {
         const id = params.get('courseId');
-        if (id) {
-          return this.mockCourseService.getCourseById(id);
-        }
-        return [];
+        return id ? this.mockCourseService.getCourseById(id) : [];
       }),
       take(1)
     ).subscribe({
       next: (data: any) => {
-        if (data.modules) {
+        if (data?.modules) {
           data.modules.forEach((m: IModule) => m.expanded = false);
         }
         this.courseDetail.set(data as ICourseDetail);
         this.loading.set(false);
-        // Обновим хлебные крошки заголовком курса
-        this.breadcrumbs.set(['Главная', data.title]);
+        this.breadcrumbs.set(['Главная', data?.title || 'Курс']);
       },
       error: (err) => {
         this.error.set('Ошибка загрузки данных курса');
@@ -99,5 +98,27 @@ export class Course implements OnInit {
   // Метод для переключения аккордеона
   public toggleModule(module: IModule): void {
     module.expanded = !module.expanded;
+  }
+
+  public startLearning(): void {
+    const course = this.courseDetail();
+    if (!course?.modules?.length) return;
+
+    // Ищем первую тему в первом модуле
+    const firstTopicId = course.modules[0]?.topics?.[0]?.id;
+    if (!firstTopicId) return;
+
+    // Проверяем сохранённый прогресс
+    const lastTopicId = this.progressService.getLastTopic(course.id);
+
+    const targetTopicId = lastTopicId || firstTopicId;
+    this.router.navigate(['/course', course.id, 'topic', targetTopicId]);
+  }
+
+  public goToTopic(topicId: string): void {
+    const course = this.courseDetail();
+    if (!course) return;
+    this.progressService.setLastTopic(course.id, topicId);
+    this.router.navigate(['/course', course.id, 'topic', topicId]);
   }
 }

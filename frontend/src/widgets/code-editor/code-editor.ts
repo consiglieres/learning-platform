@@ -10,7 +10,7 @@ import { history, historyKeymap } from '@codemirror/commands';
 
 @Component({
   selector: 'app-code-editor',
-  imports: [FormField],
+  imports: [],
   templateUrl: './code-editor.html',
   providers: [TaskService],
   styleUrl: './code-editor.scss',
