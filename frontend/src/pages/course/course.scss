@@ -1,6 +1,8 @@
 $title-color: #4A3B80;
 $text-color: #4A3B80;
 $background-color: #F8F5FF;
+$background-card: #9889CF;
+$background-theme-card: #F8F5FF;
 
 h1, h2, h3, h4 {
   color: $title-color;
@@ -12,4 +14,197 @@ h6 {
 
 p {
   color: $text-color
+}
+
+.course {
+  display: flex;
+  justify-content: center;
+  flex-direction: column;
+
+
+  .header {
+    display: flex;
+    flex-direction: column;
+    //background-image: url(../../../public/assets/course-header.png);
+    background-color: gray;
+    border-radius: 0px 0px 198px 198px;
+    padding: 198px 0px 120px 109px;
+
+    .breadcrumbs {
+
+    }
+
+    .header__title {
+      color: white;
+      margin: 25px 0;
+    }
+
+    .bubles__language {
+      color: white;
+      border-radius: 100px;
+      background-color: green;
+      border: white 1px solid;
+      height: 42px;
+      width: 113px;
+      text-align: center;
+      align-content: center;
+    }
+
+    .header__descriptions {
+      margin: 60px 0;
+    }
+
+    .header__button {
+      max-width: 269px;
+      border-radius: 86px;
+    }
+  }
+
+  .advantages {
+    display: flex;
+    justify-content: center;
+    justify-items: center;
+    flex-direction: column;
+    margin: 100px 0;
+    gap: 10px;
+    align-items: center;
+
+    .top, .bottom {
+      display: flex;
+      flex-direction: row;
+      justify-content: center;
+      gap: 10px;
+    }
+
+    .card {
+      height: 140px;
+      display: flex;
+      justify-content: start;
+      align-items: center;
+      background-color: $background-card;
+      border-radius: 20px;
+      padding: 0 30px;
+
+      .card__img {
+        height: 70px;
+        width: 70px;
+        align-items: center;
+        margin-right: 20px;
+      }
+
+      .content__title, .content__description {
+        max-width: 700px;
+        min-width: 440px;
+        width: 100%;
+        margin: 0;
+        color: white;
+      }
+    }
+
+    .card-top {
+      width: 547px;
+      min-width: 207px;
+    }
+
+    .card-bottom {
+      width: 830px;
+      min-width: 400px;
+    }
+
+
+  }
+
+  .content {
+    display: flex;
+    justify-content: center;
+    flex-direction: column;
+    align-items: center;
+
+    .content__title {
+      text-align: center;
+      align-content: center;
+      align-items: center;
+    }
+
+    .modules-list {
+      display: flex;
+      justify-content: start;
+      flex-direction: column;
+      max-width: 1680px;
+      width: 100%;
+
+      .module-item {
+        display: flex;
+        flex-direction: column;
+        background-color: #F8F5FF;
+        border-radius: 20px;
+        margin-bottom: 10px;
+
+        .module-header {
+          display: flex;
+          flex-direction: row;
+          justify-content: space-between;
+          align-items: center;
+
+          .module-info {
+            margin-left: 20px;
+
+            .module-title {
+              margin: 20px 0;
+            }
+
+            .module-meta {
+              display: flex;
+              flex-direction: row;
+            }
+          }
+
+          .module-toggle-icon {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            background-color: $background-card;
+            border-radius: 100px;
+            height: 40px;
+            width: 40px;
+            margin-right: 20px;
+
+          }
+        }
+      }
+    }
+
+    .module-topics {
+      .topic-item {
+        margin-left: 20px;
+      }
+    }
+  }
+
+  .quetions {
+    display: flex;
+    justify-content: center;
+    flex-direction: row;
+    margin: 140px;
+    gap: 20px;
+
+    .left {
+      max-width: 547px;
+    }
+
+    .description {
+      display: flex;
+      flex-direction: column;
+      max-width: 360px;
+      align-content: center;
+
+
+      h4 {
+        margin: 20px 0 0 0;
+      }
+      p {
+        margin: 10px 0 0 0;
+      }
+    }
+  }
 }

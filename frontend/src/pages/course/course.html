@@ -7,23 +7,22 @@
     @if (courseDetail(); as course) {
       <h1 class="header__title">{{ course.title }}</h1>
       <section class="bubles">
-        <div class="bubles__main">Стек:</div>
         @for (cat of course.categories; track cat.type) {
           <div class="bubles__language">{{ cat.value }}</div>
         }
       </section>
       <span class="header__descriptions">{{ course.description }}</span>
-      <button class="header__button" routerLink="/register">Начать обучение</button>
+      <button class="header__button" routerLink="/theme">Начать обучение</button>
     }
   </header>
 
   <section class="advantages">
-    <section class="top">
+    <section class="top card-top">
       @for (card of advantagesTop(); track card.title) {
         <div class="card">
-          <img class="card__img" [src]="card.img" alt="advantage">
+          <img class="card__img" src="assets/graduation.png" alt="advantage">
           <section class="content">
-            <h3 class="content__title">{{ card.title }}</h3>
+            <h4 class="content__title">{{ card.title }}</h4>
             <p class="content__description">{{ card.desc }}</p>
           </section>
         </div>
@@ -31,10 +30,10 @@
     </section>
     <section class="bottom">
       @for (card of advantagesBottom(); track card.title) {
-        <div class="card">
-          <img class="card__img" [src]="card.img" alt="advantage">
+        <div class="card card-bottom">
+          <img class="card__img" src="assets/graduation.png" alt="advantage">
           <section class="content">
-            <h3 class="content__title">{{ card.title }}</h3>
+            <h4 class="content__title">{{ card.title }}</h4>
             <p class="content__description">{{ card.desc }}</p>
           </section>
         </div>
@@ -44,7 +43,7 @@
 
   <!-- ПРОГРАММА ОБУЧЕНИЯ: используем категории с полями type/value -->
   <section class="content">
-    <h2>Программа обучения</h2>
+    <h2 class="content__title">Программа обучения</h2>
     @if (loading()) {
       <div class="loading-spinner">Загрузка...</div>
     } @else if (error()) {
@@ -57,8 +56,8 @@
               <div class="module-info">
                 <h3 class="module-title">{{ module.title }}</h3>
                 <div class="module-meta">
-                  <span class="module-duration">⏱ {{ module.duration }} ч.</span>
-                  <span class="module-tasks">📋 {{ module.tasksCount }} заданий</span>
+                  <p class="module-duration">⏱ {{ module.duration }} часов теории</p>
+                  <p class="module-tasks">📋 {{ module.tasksCount }} заданий</p>
                 </div>
               </div>
               <div class="module-toggle-icon">{{ module.expanded ? '▲' : '▼' }}</div>
@@ -67,7 +66,6 @@
               <div class="module-topics">
                 @for (topic of module.topics; track topic.title) {
                   <div class="topic-item">
-                    <h4 class="topic-title">{{ topic.title }}</h4>
                     <p class="topic-description">{{ topic.description }}</p>
                   </div>
                 }
@@ -81,15 +79,16 @@
 
   <section class="quetions">
     <section class="left">
-      <h2>Как проходит обучение?</h2>
+      <h3>Как проходит обучение?</h3>
       <p>Выбирайте сложность задания самостоятельно, фокусируясь на устранении пробелов и закреплении навыков на практике</p>
       <button class="left__button" routerLink="/register">Начать обучение</button>
     </section>
+    @for (desc of descriptions(); track desc.title) {
     <section class="description">
-      @for (desc of descriptions(); track desc.title) {
-        <h3>{{ desc.title }}</h3>
-        <p>{{ desc.description }}</p>
-      }
+      <img src="assets/card-cpurse-bottom.png">
+      <h4>{{ desc.title }}</h4>
+      <p>{{ desc.description }}</p>
     </section>
+    }
   </section>
 </section>
