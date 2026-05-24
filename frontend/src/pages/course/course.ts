@@ -1,6 +1,5 @@
 import { Component, inject, signal, OnInit } from '@angular/core';
 import {ActivatedRoute, Router, RouterLink} from '@angular/router';
-import { CourseService } from '../../entities/course.service';
 import {switchMap, take} from 'rxjs';
 import {MockCourseService} from '../../entities/mock-course.service';
 import {ProgressService} from '../../entities/progress.service';

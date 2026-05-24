@@ -70,7 +70,6 @@ export class CourseService {
   }
 
   public getMyCourses(): Observable<ICourse[]> {
-    // TODO: заменить на реальный запрос, например:
     // return this._http.get<ICourse[]>(`${BASE_URL}/my`);
     return new Observable(subscriber => {
       subscriber.next([]);

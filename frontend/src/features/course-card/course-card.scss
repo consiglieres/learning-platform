@@ -1,17 +1,17 @@
-$title-color: #4A3B80;
-$text-color: #4A3B80;
+$violet-color: #4A3B80;
+$green-color: #65AC27;
 $background-color: #F8F5FF;
 
 h1, h2, h3, h4 {
-  color: $title-color;
+  color: $violet-color;
 }
 
 h6 {
-  color: $text-color;
+  color: $violet-color;
 }
 
 p {
-  color: $text-color
+  color: $violet-color
 }
 
 
@@ -45,7 +45,7 @@ p {
       }
 
       .buble__line-1 {
-        background-color: gray;
+        background-color: $green-color;
       }
 
       .buble__line-2 {

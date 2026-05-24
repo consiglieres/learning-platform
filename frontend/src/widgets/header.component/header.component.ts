@@ -38,7 +38,7 @@
 //     this._modalService.openAuthorization();
 //   }
 // }
-import { Component, inject, signal, DestroyRef, OnInit } from '@angular/core';
+import {Component, inject, signal, DestroyRef, OnInit, computed} from '@angular/core';
 import { RouterLink, Router, NavigationEnd } from '@angular/router';
 import { AsyncPipe } from '@angular/common';
 import { filter } from 'rxjs/operators';
@@ -60,7 +60,10 @@ export class HeaderComponent implements OnInit {
 
   public readonly userData$ = this._userService.userData$;
 
+  public isTopicPage = signal(false);
   public isProfilePage = signal(false);
+
+  public readonly isSpecialPage = computed(() => this.isProfilePage() || this.isTopicPage());
 
   ngOnInit() {
     this._router.events
@@ -69,7 +72,9 @@ export class HeaderComponent implements OnInit {
         takeUntilDestroyed(this._destroyRef)
       )
       .subscribe((event: NavigationEnd) => {
-        this.isProfilePage.set(event.urlAfterRedirects.includes('/codevia/profile'));
+        const url = event.urlAfterRedirects;
+        this.isProfilePage.set(url.includes('/codevia/profile'));
+        this.isTopicPage.set(url.includes('/topic/'));
       });
   }
 

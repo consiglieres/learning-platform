@@ -11,7 +11,7 @@ import {
 
 const BASE_URL = 'http://localhost:5172/api/v2/accounts';
 
-@Injectable()   // ← без providedIn: 'root'
+@Injectable()
 export class UserService {
   private readonly _http = inject(HttpClient);
 

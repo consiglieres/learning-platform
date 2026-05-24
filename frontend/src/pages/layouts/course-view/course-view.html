@@ -1,3 +1,6 @@
-<app-header class="header"></app-header>
+<app-header class="header"
+            [class.header--absolute]="headerMode() === 'absolute'"
+            [class.header--relative]="headerMode() === 'relative'"
+></app-header>
 <router-outlet></router-outlet>
 <app-footer></app-footer>

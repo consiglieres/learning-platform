@@ -8,6 +8,7 @@ import {
   IChangePassword,
   IChangeEmail
 } from '../interfaces/user.interface';
+import {ITask} from '../interfaces/courses.interface';
 
 const STORAGE_KEY = 'mock_users';
 const SESSION_KEY = 'mock_session';
@@ -172,5 +173,19 @@ export class MockUserService {
         localStorage.removeItem(SESSION_KEY);
       }
     }
+  }
+
+  private generateTasksForTopic(topicId: string, isFirstTopic: boolean = false): ITask[] {
+    if (isFirstTopic) {
+      return [
+        { id: `${topicId}_task1`, title: 'Задание 1', points: 10, type: 'code', completed: false},
+      ];
+    }
+
+    return [
+      { id: `${topicId}_task1`, title: 'Задание 1', points: 10, type: 'theory', completed: false },
+      { id: `${topicId}_task2`, title: 'Задание 2', points: 25, type: 'theory', completed: false },
+      { id: `${topicId}_task3`, title: 'Задание 3', points: 50, type: 'theory', completed: false },
+    ];
   }
 }

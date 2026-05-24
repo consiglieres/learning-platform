@@ -15,13 +15,10 @@ export class MainPage implements OnInit {
   private readonly _courseService = inject(CourseService);
   private readonly _filterService = inject(FilterService);
 
-  // Исходные курсы (загружаются один раз)
   private allCourses: ICourse[] = [];
 
-  // Отображаемые курсы
   public displayedCourses = signal<ICourse[]>([]);
 
-  // Значения фильтров (могут быть сигналами или обычными полями, можно оставить сигналы)
   public searchData = signal('');
   public direction = signal('');
   public difficulty = signal('');

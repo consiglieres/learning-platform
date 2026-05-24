@@ -114,5 +114,9 @@ export interface ITask {
   points: number;
   type?: 'quiz' | 'code' | 'theory';
   completed?: boolean;
+  codeStarter?: string;
+  codeSolution?: string;
+  codeLanguage?: string;
+  taskDescription?: string;
 }
 

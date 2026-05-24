@@ -32,5 +32,4 @@ export class Topic {
       this.expandedTopic = title;
     }
   }
-
 }

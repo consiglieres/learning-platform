@@ -2,13 +2,12 @@ import {Component, effect, inject, signal} from '@angular/core';
 import { FooterComponent } from '../../../widgets/footer.component/footer.component';
 import { HeaderComponent } from '../../../widgets/header.component/header.component';
 import {NavigationEnd, Router, RouterOutlet} from '@angular/router';
-import {RegistrationModal} from '../../../widgets/registration-modal/registration-modal';
-import {AuthorizationModal} from '../../../widgets/authorization-modal/authorization-modal';
+import {RegistrationModal} from '../../../features/registration-modal/registration-modal';
+import {AuthorizationModal} from '../../../features/authorization-modal/authorization-modal';
 import {ModalService} from '../../../entities/modal.service';
-import {ChangePasswordModal} from '../../../widgets/change-password-modal/change-password-modal';
-import {ChangeEmailModal} from '../../../widgets/change-email-modal/change-email-modal';
+import {ChangePasswordModal} from '../../../features/change-password-modal/change-password-modal';
+import {ChangeEmailModal} from '../../../features/change-email-modal/change-email-modal';
 import {filter, Subscription} from 'rxjs';
-import {NgClass} from '@angular/common';
 
 @Component({
   selector: 'app-main-layout',
@@ -28,9 +27,7 @@ export class MainLayout {
 
 
   ngOnInit(): void {
-    // Определяем начальный режим
     this.setHeaderMode(this._router.url);
-    // Отслеживаем смену маршрута
     this.routerSub = this._router.events
       .pipe(filter(e => e instanceof NavigationEnd))
       .subscribe((e: NavigationEnd) => {

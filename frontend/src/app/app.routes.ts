@@ -1,7 +1,5 @@
 import { Routes } from '@angular/router';
 import { authorizationGuard } from '../shared/guards/authorization.guard';
-
-// Синхронные импорты (будут включены в бандл лейаута)
 import { MainPage } from '../pages/main/main.page';
 import { Profile } from '../pages/profile/profile';
 import { Course } from '../pages/course/course';

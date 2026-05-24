@@ -1,2 +1,12 @@
-<div #editor></div>
-<button (click)="runCode()">Запустить код</button>
+<div class="code-editor">
+  <div #editor class="editor-container"></div>
+  <div class="toolbar">
+    <button class="run-button" (click)="runCode()" [disabled]="isChecking()">
+      {{ isChecking() ? 'Проверка...' : 'Проверить' }}
+    </button>
+  </div>
+  <div class="notification">
+    <p class="notification__title">Результат</p>
+    <app-task-notification class="notification__message" [message]="resultMessage()" [type]="resultType()"></app-task-notification>
+  </div>
+</div>

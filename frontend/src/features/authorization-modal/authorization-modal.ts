@@ -109,7 +109,6 @@ export class AuthorizationModal {
 
   public authentificationData() {
     const formValue = this.userAuthorizationForm().value();
-    // Поля формы точно соответствуют IAuthorization
     const userData: IAuthorization = formValue as IAuthorization;
 
     const validationResult = this._validationService.validateAuthorization(userData);
@@ -125,10 +124,8 @@ export class AuthorizationModal {
       .subscribe({
         next: async () => {
           try {
-            // Подгружаем данные пользователя (в моке они уже есть, но не помешает)
             await this._userService.getUserDataPromise();
           } catch {
-            // Даже если данные не загрузились, сессия уже установлена
           } finally {
             this.closeModal.emit();
           }
@@ -144,6 +141,6 @@ export class AuthorizationModal {
   }
 
   public switchToRegistration(): void {
-    this._modalService.open('registration');;
+    this._modalService.open('registration');
   }
 }

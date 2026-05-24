@@ -1,14 +1,16 @@
-import { HttpClient } from '@angular/common/http';
-import { inject, Injectable } from '@angular/core';
-import { Observable } from 'rxjs';
+import { Injectable } from '@angular/core';
+import {Observable, of} from 'rxjs';
+import {delay} from 'rxjs/operators';
 
-@Injectable()
+@Injectable({ providedIn: 'root' })
 export class TaskService {
-  private readonly url: string = '';
-
-  private _http = inject(HttpClient);
-
-  public checkCode(code: string): Observable<any> {
-    return this._http.post(this.url, code);
+  checkCode(userCode: string, expectedSolution: string): Observable<{ success: boolean; message: string }> {
+    const normalize = (code: string) => code.replace(/\s+/g, ' ').trim();
+    const isEqual = normalize(userCode) === normalize(expectedSolution);
+    const result = isEqual
+      ? { success: true, message: '✅ Решение верное!' }
+      : { success: false, message: '❌ Решение неверное. Попробуйте ещё раз.' };
+    return of(result).pipe(delay(500));
   }
+
 }
