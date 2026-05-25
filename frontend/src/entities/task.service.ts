@@ -8,8 +8,8 @@ export class TaskService {
     const normalize = (code: string) => code.replace(/\s+/g, ' ').trim();
     const isEqual = normalize(userCode) === normalize(expectedSolution);
     const result = isEqual
-      ? { success: true, message: '✅ Решение верное!' }
-      : { success: false, message: '❌ Решение неверное. Попробуйте ещё раз.' };
+      ? { success: true, message: 'Решение верное!' }
+      : { success: false, message: 'Решение неверное. Попробуйте ещё раз.' };
     return of(result).pipe(delay(500));
   }
 

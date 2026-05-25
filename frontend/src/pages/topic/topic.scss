@@ -90,9 +90,12 @@ p {
       flex-direction: column;
       border: $color-pink 1px solid;
       border-radius: 20px;
-      //margin-top: 42px;
       align-items: center;
       padding: 0 45px 45px 45px;
+
+      &--code-mode {
+        padding: 0;
+      }
 
       .code-editor-block {
         width: 100%;

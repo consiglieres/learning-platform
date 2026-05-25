@@ -28,7 +28,7 @@
     @else{
       <div class="practics__exit-none"></div>
     }
-      <section class="tasks">
+      <section class="tasks" [class.tasks--code-mode]="selectedTask()?.type === 'code'">
         @if (selectedTask()?.type === 'code') {
           <div class="code-editor-block">
             <app-code-editor

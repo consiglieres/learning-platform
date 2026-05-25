@@ -1,3 +1,5 @@
+$background-color: #9889CF;
+
 .main {
   display: flex;
   flex-direction: column;
@@ -9,10 +11,21 @@
     flex-direction: column;
     height: 940px;
     width: 100%;
-    background-color: gray;
+    background-image: linear-gradient(rgba(0,0,0,0.5), rgba(0,0,0,0.5)), url("../../../public/assets/header.jpg");
+    background-position: center;
+    background-size: cover;
+    background-repeat: no-repeat;
     align-items: center;
     text-align: center;
-    border-radius: 0px 0px 150px 150px;
+    border-radius: 0 0 150px 150px;
+
+    .header__button {
+      border-radius: 86px;
+      background-color: $background-color;
+      color: white;
+      width: 269px;
+      height: 60px;
+    }
   }
 
   .list-header {

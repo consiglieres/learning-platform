@@ -193,34 +193,32 @@ export class MockCourseService {
   }
 
   private getTopicDescription(language: string, moduleIndex: number, topicIndex: number): string {
+    const langName = this.getLanguageDisplayName(language);
     if (moduleIndex === 0 && topicIndex === 0) {
       switch (language) {
         case 'angular':
-          return `
-                  <div><strong>Angular</strong> — это платформа для создания клиентских приложений. Изучим сигналы (signals).</div>
-                  <div>Пример сигнала</div>
-                  <pre><code>const count = signal(0);
+          return `<div>Angular — это платформа для создания клиентских приложений. В этой теме вы изучите <strong>сигналы</strong> и компоненты.</div>
+                <pre><code>const count = signal(0);
 count.set(5);
 console.log(count()); // 5</code></pre>`;
         case 'python':
-          return `
-                  <div><strong>Python</strong> — простой язык. Пример функции:</div>
-                  <pre><code>def greet(name):
+          return `<div>Python — интерпретируемый язык с простым синтаксисом. Вы научитесь писать функции и работать с данными.</div>
+                <pre><code>def greet(name):
     return f"Привет, {name}!"</code></pre>`;
         case 'csharp':
-          return `
-                  <div><strong>C#</strong> — современный язык. Пример программы:</div>
-                  <pre><code>using System;
+          return `<div>C# — современный объектно-ориентированный язык. Первая программа:</div>
+                <pre><code>using System;
 class Program {
     static void Main() {
         Console.WriteLine("Hello, World!");
     }
 }</code></pre>`;
         default:
-          return `<div>Изучите основы.</div>`;
+          return `<div>Основы ${langName}. Изучите синтаксис и напишите первый код.</div>`;
       }
     }
-    return `<div>Продолжайте изучение ${this.getLanguageDisplayName(language)}.</div>`;
+    // Для остальных тем – краткое описание
+    return `<div>Продолжайте изучение ${langName}. В этой теме вас ждут практические упражнения.</div>`;
   }
 
   private generateTasksForTopic(topicId: string, language: string, isFirstTopic: boolean): ITask[] {
